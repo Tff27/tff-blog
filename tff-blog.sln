@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tff-blog", "tff-blog\tff-blog.csproj", "{D5AB524A-F102-42B1-B089-ABB862EA5662}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tff-blog", "tff-blog\tff-blog.csproj", "{D5AB524A-F102-42B1-B089-ABB862EA5662}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C106A434-E1BB-4180-93C6-ABAF4F2EF712}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
