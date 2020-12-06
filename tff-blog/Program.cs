@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace tff_blog
+namespace tffBlog
 {
     public class Program
     {
