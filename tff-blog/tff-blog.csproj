@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>tffBlog</AssemblyName>
+    <RootNamespace>tffBlog</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +14,7 @@
 
   <ItemGroup>
     <Folder Include="Styles\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 </Project>

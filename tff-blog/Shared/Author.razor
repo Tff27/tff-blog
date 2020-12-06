@@ -1,5 +1,22 @@
-﻿<h3>Author</h3>
+﻿@inject HttpClient Http
+
+<div>
+    <div>
+        <img src="@this.author.PhotoUrl" />
+    </div>
+    <div>
+        <p id="name">@this.author.Name</p>
+    </div>
+    <div>
+        <p id="description">@this.author.Description</p>
+    </div>
+</div>
 
 @code {
+    private ViewModels.Author author;
 
+    protected override async Task OnInitializedAsync()
+    {
+        author = await Http.GetFromJsonAsync<ViewModels.Author>("data/author.json");
+    }
 }
