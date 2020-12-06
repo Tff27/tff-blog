@@ -1,22 +1,23 @@
 ﻿@inject HttpClient Http
 
-<div class="authorbar">
-    <div class="photo">
-        <img src="@this.author.PhotoUrl" />
+@if (author == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="authorbar">
+        <img class="photo" src="@this.author.PhotoUrl" />
+        <p class="name">@this.author.Name</p>
+        <p>@this.author.Description</p>
     </div>
-    <div class="name">
-        <p id="name">@this.author.Name</p>
-    </div>
-    <div class="description">
-        <p id="description">@this.author.Description</p>
-    </div>
-</div>
+}
 
 @code {
     private ViewModels.Author author;
 
     protected override async Task OnInitializedAsync()
     {
-        author = await Http.GetFromJsonAsync<ViewModels.Author>("data/author.json");
+        this.author = await Http.GetFromJsonAsync<ViewModels.Author>("data/author.json");
     }
 }
