@@ -1,0 +1,9 @@
+﻿<img class="icon @(InvertColor? "inverted" : string.Empty)" src="@IconImage" />
+
+@code {
+    [Parameter]
+    public string IconImage { get; set; }
+
+    [Parameter]
+    public bool InvertColor { get; set; }
+}

@@ -1,6 +1,6 @@
 ﻿namespace tffBlog.ViewModels
 {
-    public class Author
+    public class AuthorViewModel
     {
         public string PhotoUrl { get; set; }
 

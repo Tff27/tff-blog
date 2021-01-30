@@ -14,10 +14,10 @@ else
 }
 
 @code {
-    private ViewModels.Author author;
+    private ViewModels.AuthorViewModel author;
 
     protected override async Task OnInitializedAsync()
     {
-        this.author = await Http.GetFromJsonAsync<ViewModels.Author>("data/author.json");
+        this.author = await Http.GetFromJsonAsync<ViewModels.AuthorViewModel>("data/author.json");
     }
 }

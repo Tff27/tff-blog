@@ -5,7 +5,11 @@ html, body {
 }
 
 a, .btn-link {
-    color: #0366d6;
+    color: lightgray;
+}
+
+a:hover {
+    color: lightgray;
 }
 
 .btn-primary {
