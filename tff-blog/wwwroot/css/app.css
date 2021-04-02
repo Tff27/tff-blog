@@ -1,15 +1,36 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-html, body {
+html {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    line-height: 1.15;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    color: #bfbfbf;
+}
+
+body {
+    margin: 0;
+}
+
+article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
+    display: block
+}
+
+aside, footer, header, main {
+    padding-left: 2rem;
+    padding-right: 2rem;
 }
 
 a, .btn-link {
-    color: lightgray;
+    color: #fafafa;
 }
 
-a:hover {
-    color: lightgray;
+    a:hover {
+        color: #fafafa;
+    }
+
+.span {
+    outline: none;
 }
 
 .btn-primary {
