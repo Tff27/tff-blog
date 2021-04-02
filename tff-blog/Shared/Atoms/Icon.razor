@@ -1,4 +1,4 @@
-﻿<img class="icon @(InvertColor? "inverted" : string.Empty)" src="@IconImage" />
+﻿<img class=@IconCssClass src="@IconImage" />
 
 @code {
     [Parameter]
@@ -6,4 +6,6 @@
 
     [Parameter]
     public bool InvertColor { get; set; }
+
+    private string IconCssClass => InvertColor ? "icon inverted" : "icon";
 }
