@@ -1,0 +1,60 @@
+﻿@inject HttpClient Http
+
+<div class="post-container">
+    @foreach (var post in PostList.Posts)
+    {
+        <PostCardComponent Post="@post" />
+    }
+</div>
+
+@code {
+    public PostListViewModel PostList { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.PostList = mockData();
+
+        //this.PostList = await Http.GetFromJsonAsync<PostListViewModel>("data/post-list.json");
+    }
+
+    private PostListViewModel mockData()
+    {
+        var PostListfiller = new PostListViewModel()
+        {
+            Posts = new List<PostViewModel>()
+{
+                new PostViewModel()
+                {
+                     Title = "Arroz",
+                     Date = DateTime.Now,
+                     Image = "images/landscape.jpg",
+                     Text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+                     Tags = new List<TagEnum>()
+         {
+                        TagEnum.Net,
+                        TagEnum.Azure
+                     }
+                 },
+                 new PostViewModel()
+                 {
+                    Title = "Arroz",
+                    Date = DateTime.Now,
+                    Image = "images/landscape.jpg",
+                    Text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+                    Tags = new List<TagEnum>()
+                  },
+                new PostViewModel()
+                {
+                    Title = "Arroz",
+                                Date = DateTime.Now,
+                                Image = "images/landscape.jpg",
+                                Text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+                                Tags = new List<TagEnum>()
+                        },
+                    },
+        };
+
+        return PostListfiller;
+    }
+}
