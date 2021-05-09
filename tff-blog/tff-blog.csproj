@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Shared\Molecules\" />
     <Folder Include="Styles\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>

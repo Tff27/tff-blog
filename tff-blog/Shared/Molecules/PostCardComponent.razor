@@ -1,0 +1,21 @@
+﻿<div class="card">
+    <img src=@Post.Image alt=@Post.Title>
+    <div class="container">
+        <h1><b>@Post.Title</b></h1>
+        <div class="info-container">
+            <span>@Post.Date</span>
+            @foreach (var tag in Post.Tags)
+            {
+                <span class="tag">@tag</span>
+            }
+        </div>
+        <p>
+            @Post.Text
+        </p>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public PostViewModel Post { get; set; }
+}
