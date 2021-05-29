@@ -32,14 +32,22 @@ else
             }
         </tbody>
     </table>
+
+    <Markdown MarkdownContent="@markdowncontent" />
 }
 
 @code {
     private WeatherForecast[] forecasts;
 
+    private string markdowncontent;
+
     protected override async Task OnInitializedAsync()
     {
         forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+
+        var markdownRequest = await Http.GetAsync($"sample-data/markdowntext.md");
+
+        markdowncontent = markdownRequest.IsSuccessStatusCode ? await markdownRequest.Content.ReadAsStringAsync() : null;
     }
 
     public class WeatherForecast
