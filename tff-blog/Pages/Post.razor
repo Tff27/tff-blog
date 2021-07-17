@@ -1,0 +1,38 @@
+﻿@page "/post/{slug}"
+@inject HttpClient Http
+
+@if (postdetails == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <article>
+        <img src=@postdetails.Image alt=@postdetails.Title>
+        <div class="container">
+            <h1><b>@postdetails.Title</b></h1>
+            <div class="info-container">
+                <span>@postdetails.Date</span>
+                @foreach (var tag in postdetails.Tags)
+                {
+                    <span class="tag">@tag</span>
+                }
+            </div>
+            <p>
+                <Markdown MarkdownContent="@postdetails.Text" />
+            </p>
+        </div>
+    </article>
+}
+
+@code {
+    [Parameter]
+    public string slug { get; set; }
+
+    private PostViewModel postdetails;
+
+    protected override async Task OnInitializedAsync()
+    {
+        postdetails = await Http.GetFromJsonAsync<PostViewModel>($"sample-data/lorem.json");
+    }
+}

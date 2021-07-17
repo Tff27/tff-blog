@@ -1,6 +1,5 @@
 .page {
     min-height: 100vh;
-    min-width: 100vw;
     display: grid;
     grid-template-columns: 1.5fr 0.5fr;
     grid-template-rows: auto 2.5fr auto;
