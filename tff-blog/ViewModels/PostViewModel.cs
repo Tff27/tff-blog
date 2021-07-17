@@ -20,5 +20,7 @@ namespace tffBlog.ViewModels
         public string Text { get; set; }
 
         public IEnumerable<TagEnum> Tags { get; set; }
+
+        public string Slug { get; set; }
     }
 }

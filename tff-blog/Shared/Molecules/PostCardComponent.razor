@@ -1,4 +1,6 @@
-﻿<div class="card">
+﻿@inject NavigationManager UriHelper
+
+<div class="card" @onclick="@GoToPostDetails">
     <img src=@Post.Image alt=@Post.Title>
     <div class="container">
         <h1><b>@Post.Title</b></h1>
@@ -10,7 +12,7 @@
             }
         </div>
         <p>
-            @Post.Text
+          <Markdown MarkdownContent="@Post.Text" />
         </p>
     </div>
 </div>
@@ -18,4 +20,9 @@
 @code {
     [Parameter]
     public PostViewModel Post { get; set; }
+
+    void GoToPostDetails()
+    {
+        UriHelper.NavigateTo($"post/{Post.Slug}");
+    }
 }
