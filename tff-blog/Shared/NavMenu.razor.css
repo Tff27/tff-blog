@@ -42,7 +42,7 @@
 .navbar-toggler {
     min-height: 30px;
     border-width: 0.1px;
-    border-color: #1a1c20;
+    border-color: var(--primary-color);
     border-radius: 5px;
     background-color: rgba(255, 255, 255, 0.1);
 }
@@ -94,7 +94,7 @@
 
 .oi {
     width: 2rem;
-    color: #bfbfbf
+    color: var(--secondary-color);
 }
 
 @media (min-width: 768px) {
