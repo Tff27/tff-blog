@@ -1,11 +1,17 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+:root {
+    --primary-color: #1a1c20;
+    --secondary-color: #bfbfbf;
+    --tertiary-color: #0a0b0c;
+}
+
 html {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     line-height: 1.15;
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
-    color: #bfbfbf;
+    color: var(--secondary-color);
 }
 
 body {
@@ -73,3 +79,60 @@ a, .btn-link {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+.loader {
+    background-color: var(--primary-color);
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+}
+
+.background,
+.spinner {
+    position: absolute;
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+}
+
+.background {
+    border-radius: 50%;
+    background-image: linear-gradient(0deg, #0f1013, #252730);
+    box-shadow: 0 4px 4px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3), 0 1px 2px 1px rgba(0, 0, 0, 0) inset, 0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+}
+
+.logo {
+    z-index: 2;
+}
+
+.spinner {
+    border-radius: 50%;
+    border-top: 3px solid var(--secondary-color);
+    box-shadow: 0 -8px 8px var(--primary-color);
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

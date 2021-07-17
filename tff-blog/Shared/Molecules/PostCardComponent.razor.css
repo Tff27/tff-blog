@@ -27,8 +27,8 @@ img {
 
 .tag {
     border-radius: 8%;
-    background: #bfbfbf;
-    color: #0a0b0c;
+    background: var(--secondary-color);
+    color: var(--tertiary-color);
     margin-left: 0.4rem;
     padding: 0.15rem;
 }
