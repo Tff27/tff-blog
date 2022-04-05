@@ -10,8 +10,7 @@ namespace tffBlog.Enum
         Net,
         Azure,
         JavaScript,
-        CI,
-        CD,
+        CICD,
         DevOps,
         BotFramework
     }
