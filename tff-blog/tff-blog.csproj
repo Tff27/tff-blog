@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Styles\**" />
-    <Content Remove="Styles\**" />
-    <EmbeddedResource Remove="Styles\**" />
-    <None Remove="Styles\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="HtmlSanitizer" Version="5.0.404" />
     <PackageReference Include="Markdig" Version="0.26.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.3" />
