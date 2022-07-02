@@ -1,10 +1,6 @@
 ﻿@page "/post/{slug}"
-@inject HttpClient Http
+@inject IHttpClientFactory ClientFactory
 @inject NavigationManager UriHelper
-@using Markdig;
-@using YamlDotNet.Serialization;
-@using YamlDotNet.Serialization.NamingConventions;
-@using System.Text.RegularExpressions;
 
 @if (postdetails == null)
 {
@@ -40,37 +36,13 @@ else
     {
         try
         {
-            var markdownRequest = await Http.GetAsync($"posts/{slug}.md");
-
-            if (!markdownRequest.IsSuccessStatusCode)
-            {
-                throw new Exception("Content not found!");
-            }
-
-            var markdown = await markdownRequest.Content.ReadAsStringAsync();
-
-            postdetails = GetFrontMatterFromString(markdown);
+            var client = ClientFactory.CreateClient("WebAPI");
+            
+            postdetails = (await client.GetFromJsonAsync<IEnumerable<PostViewModel>>($"?postName={slug}")).First();
         }
         catch (Exception)
         {
             UriHelper.NavigateTo("404");
         }
-    }
-
-    private PostViewModel GetFrontMatterFromString(string markdown)
-    {
-        var YamlDeserializer = new DeserializerBuilder()
-           .WithNamingConvention(CamelCaseNamingConvention.Instance)
-           .IgnoreUnmatchedProperties()
-           .Build();
-
-        var expression = "(?:---)(?<yaml>[\\s\\S]*?)(?:---)";
-
-        var result = Regex.Match(markdown, expression).Groups.GetValueOrDefault("yaml").Value;
-        var frontMatter = YamlDeserializer.Deserialize<PostViewModel>(result);
-
-        frontMatter.Text = markdown;
-
-        return frontMatter;
     }
 }

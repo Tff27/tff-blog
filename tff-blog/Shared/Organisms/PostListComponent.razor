@@ -1,4 +1,4 @@
-﻿@inject HttpClient Http
+﻿@inject IHttpClientFactory ClientFactory
 
 <div class="post-container">
     @foreach (var post in PostList.Posts)
@@ -12,8 +12,12 @@
 
     protected override async Task OnInitializedAsync()
     {
+        var client = ClientFactory.CreateClient("WebAPI");
+
         this.PostList = new PostListViewModel();
 
-        this.PostList.Posts = await Http.GetFromJsonAsync<IEnumerable<PostViewModel>>("metadata/metadata.json");
+        this.PostList.Posts = await client.GetFromJsonAsync<IEnumerable<PostViewModel>>(string.Empty);
+
+        //TODO: add failure page
     }
 }
