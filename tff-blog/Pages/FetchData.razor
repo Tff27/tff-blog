@@ -1,5 +1,5 @@
 ﻿@page "/fetchdata"
-@inject HttpClient Http
+@inject IHttpClientFactory ClientFactory
 
 <h1>Weather forecast</h1>
 
@@ -43,9 +43,11 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+        var client = ClientFactory.CreateClient("Client");
 
-        var markdownRequest = await Http.GetAsync($"sample-data/markdowntext.md");
+        forecasts = await client.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+
+        var markdownRequest = await client.GetAsync($"sample-data/markdowntext.md");
 
         markdowncontent = markdownRequest.IsSuccessStatusCode ? await markdownRequest.Content.ReadAsStringAsync() : null;
     }
