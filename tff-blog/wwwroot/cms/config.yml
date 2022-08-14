@@ -1,0 +1,45 @@
+﻿backend:
+  name: "github"
+  repo: "Tff27/demo-netlify-blazor"
+  branch: "main"
+  api_root: "https://api.github.com"
+  site_domain: "cms.netlify.com"
+  base_url: "https://api.netlify.com"
+  auth_endpoint: "auth"
+publish_mode: editorial_workflow
+media_folder: "wwwroot/images"
+site_url: https://tiagofonseca.dev/
+display_url: https://tiagofonseca.dev/
+logo_url: https://tiagofonseca.dev/images/logo_icon.png
+locale: 'en'
+slug:
+  encoding: "ascii"
+  clean_accents: true
+  sanitize_replacement: "_"
+collections:
+  - name: "blog" # Used in routes, e.g., /admin/collections/blog
+    label: "Blog" # Used in the UI
+    folder: "wwwroot/posts" # The path to the folder where the documents are stored
+    create: true # Allow users to create new documents in this collection
+    slug: "{{fields.slug}}"
+    preview_path: https://tiagofonseca.dev/post/{{fields.slug}}
+    fields: # The fields for each document, usually in front matter
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Image", name: "image", widget: "image" }
+      - { label: "Tags", 
+          name: "tags", 
+          widget: "select", 
+          multiple: true, 
+          options: [
+            { label: "dotNet", value: "0" }, 
+            { label: "Azure", value: "1" }, 
+            { label: "JavaScript", value: "2" }, 
+            { label: "CICD", value: "3" },
+            { label: "DevOps", value: "4" },
+            { label: "BotFramework", value: "5" },
+            { label: "Leadership", value: "6" }
+          ]
+      }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Body", name: "body", widget: "markdown" }
