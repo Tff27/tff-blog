@@ -2,11 +2,12 @@
 {
     public enum TagEnum
     {
-        Net,
+        dotNet,
         Azure,
         JavaScript,
         CICD,
         DevOps,
-        BotFramework
+        BotFramework,
+        Leadership
     }
 }
