@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\shared\tff-blog-shared\tff-blog-shared.csproj" />
+    <ProjectReference Include="..\tff-blog-shared\tff-blog-shared.csproj" />
   </ItemGroup>
 
 </Project>

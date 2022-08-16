@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tff-blog-api", "tff-blog-api\tff-blog-api.csproj", "{F2840203-3500-4847-B718-13C6FD1BD06F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tff-blog-shared", "..\shared\tff-blog-shared\tff-blog-shared.csproj", "{51CAF0AB-3181-4DA4-A9A8-C0100223D74E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tff-blog-shared", "tff-blog-shared\tff-blog-shared.csproj", "{51CAF0AB-3181-4DA4-A9A8-C0100223D74E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

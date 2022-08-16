@@ -1,4 +1,4 @@
-﻿namespace Tff.Blog.Enum
+﻿namespace Tff.Blog.Shared.Enum
 {
     public enum TagEnum
     {

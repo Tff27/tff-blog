@@ -19,7 +19,7 @@
     <PackageReference Include="YamlDotNet" Version="11.2.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\shared\tff-blog-shared\tff-blog-shared.csproj" />
+    <ProjectReference Include="..\tff-blog-shared\tff-blog-shared.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">
