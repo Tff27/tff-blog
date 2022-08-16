@@ -5,13 +5,13 @@ on:
     - master
 env:
   AZURE_FUNCTIONAPP_NAME: tff-blog-api
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: tff-blog-api/published
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: tff-blog-api\published
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 6.0.x
   WORKING_DIRECTORY: tff-blog-api
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@master
     - name: Setup .NET Core
