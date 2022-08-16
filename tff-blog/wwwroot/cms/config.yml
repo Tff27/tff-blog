@@ -1,6 +1,6 @@
 ﻿backend:
   name: "github"
-  repo: "Tff27/demo-netlify-blazor"
+  repo: "Tff27/tff-blog"
   branch: "main"
   api_root: "https://api.github.com"
   site_domain: "cms.netlify.com"

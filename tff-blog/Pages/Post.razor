@@ -30,7 +30,7 @@ else
     [Parameter]
     public string slug { get; set; }
 
-    private PostViewModel postdetails;
+    private PostModel postdetails;
 
     protected override async Task OnInitializedAsync()
     {
@@ -38,7 +38,7 @@ else
         {
             var client = ClientFactory.CreateClient("WebAPI");
             
-            postdetails = (await client.GetFromJsonAsync<IEnumerable<PostViewModel>>($"?postName={slug}")).First();
+            postdetails = (await client.GetFromJsonAsync<IEnumerable<PostModel>>($"?postName={slug}")).First();
         }
         catch (Exception)
         {

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "tff-blog-api": {
+      "commandName": "Project",
+      "commandLineArgs": "--csharp --cors *"
+    }
+  }
+}

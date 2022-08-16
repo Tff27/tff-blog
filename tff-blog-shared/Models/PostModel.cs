@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using tffBlog.Enum;
+﻿using Tff.Blog.Shared.Enum;
 
-namespace tffBlog.ViewModels
+namespace Tff.Blog.Shared.Models
 {
-    public class PostViewModel
+    public class PostModel
     {
-        public PostViewModel()
+        public PostModel()
         {
             Tags = new List<TagEnum>();
         }

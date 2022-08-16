@@ -10,3 +10,8 @@ Build with .net 6 and blazor WebAssembly.
 * Share my personal working experiences.
 * Share tools that i use.
 * Learn Blazor.
+
+#TFF Blog API
+
+## Main Goals
+* Retrieve post data for the blog

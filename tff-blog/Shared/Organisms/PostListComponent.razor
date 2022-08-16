@@ -16,7 +16,7 @@
 
         this.PostList = new PostListViewModel();
 
-        this.PostList.Posts = await client.GetFromJsonAsync<IEnumerable<PostViewModel>>(string.Empty);
+        this.PostList.Posts = await client.GetFromJsonAsync<IEnumerable<PostModel>>(string.Empty);
 
         //TODO: add failure page
     }
