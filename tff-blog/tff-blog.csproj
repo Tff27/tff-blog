@@ -2,8 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <AssemblyName>tffBlog</AssemblyName>
-    <RootNamespace>tffBlog</RootNamespace>
+    <AssemblyName>Tff.Blog</AssemblyName>
+    <RootNamespace>Tff.Blog</RootNamespace>
+    <UserSecretsId>f9eef876-aeb0-4706-811c-953b147b0f85</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +20,10 @@
   <ItemGroup>
     <Folder Include="wwwroot\images\" />
     <Folder Include="wwwroot\cms\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\shared\tff-blog-shared\tff-blog-shared.csproj" />
   </ItemGroup>
 
 </Project>

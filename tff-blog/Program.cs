@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Ganss.XSS;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using tffBlog;
+using Tff.Blog;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");

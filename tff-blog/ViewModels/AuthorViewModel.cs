@@ -1,4 +1,4 @@
-﻿namespace tffBlog.ViewModels
+﻿namespace Tff.Blog.ViewModels
 {
     public class AuthorViewModel
     {

@@ -1,14 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30717.126
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tff-blog", "tff-blog\tff-blog.csproj", "{D5AB524A-F102-42B1-B089-ABB862EA5662}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C106A434-E1BB-4180-93C6-ABAF4F2EF712}"
 	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tff-blog-api", "tff-blog-api\tff-blog-api.csproj", "{F2840203-3500-4847-B718-13C6FD1BD06F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tff-blog-shared", "..\shared\tff-blog-shared\tff-blog-shared.csproj", "{51CAF0AB-3181-4DA4-A9A8-C0100223D74E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +26,14 @@ Global
 		{D5AB524A-F102-42B1-B089-ABB862EA5662}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5AB524A-F102-42B1-B089-ABB862EA5662}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5AB524A-F102-42B1-B089-ABB862EA5662}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2840203-3500-4847-B718-13C6FD1BD06F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2840203-3500-4847-B718-13C6FD1BD06F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2840203-3500-4847-B718-13C6FD1BD06F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2840203-3500-4847-B718-13C6FD1BD06F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51CAF0AB-3181-4DA4-A9A8-C0100223D74E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51CAF0AB-3181-4DA4-A9A8-C0100223D74E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51CAF0AB-3181-4DA4-A9A8-C0100223D74E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51CAF0AB-3181-4DA4-A9A8-C0100223D74E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
