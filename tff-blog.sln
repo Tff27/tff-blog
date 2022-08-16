@@ -14,7 +14,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tff-blog-api", "tff-blog-api\tff-blog-api.csproj", "{F2840203-3500-4847-B718-13C6FD1BD06F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tff-blog-shared", "tff-blog-shared\tff-blog-shared.csproj", "{51CAF0AB-3181-4DA4-A9A8-C0100223D74E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tff-blog-shared", "tff-blog-shared\tff-blog-shared.csproj", "{51CAF0AB-3181-4DA4-A9A8-C0100223D74E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{F6CAC183-FC0B-4B26-B72E-B14E82F05B72}"
+	ProjectSection(SolutionItems) = preProject
+		.github\dependabot.yml = .github\dependabot.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{49697542-F4C0-435B-9AB1-F15FD1EA43D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +44,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F6CAC183-FC0B-4B26-B72E-B14E82F05B72} = {C106A434-E1BB-4180-93C6-ABAF4F2EF712}
+		{49697542-F4C0-435B-9AB1-F15FD1EA43D2} = {F6CAC183-FC0B-4B26-B72E-B14E82F05B72}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AEDB7C94-BD7B-4E77-8D26-D64B6AB30488}
