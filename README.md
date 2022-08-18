@@ -1,8 +1,7 @@
 # TFF Blog
 
 ![Build](https://github.com/Tff27/tff-blog/actions/workflows/dotnet.yml/badge.svg)
-![Client Deploy](https://github.com/Tff27/tff-blog/actions/workflows/azure-static-web-apps-black-tree-01f647703.yml/badge.svg)
-![Api Deploy](https://github.com/Tff27/tff-blog/actions/workflows/tff-blog-api.yml/badge.svg)
+![Deploy](https://github.com/Tff27/tff-blog/actions/workflows/azure-static-web-apps-black-tree-01f647703.yml/badge.svg)
 
 TFF Blog is my personal blog. 
 Build with .net 6 and blazor WebAssembly.

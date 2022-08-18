@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <AssemblyName>Tff.Blog</AssemblyName>
-    <RootNamespace>Tff.Blog</RootNamespace>
+    <AssemblyName>Tff.Blog.Client</AssemblyName>
+    <RootNamespace>Tff.Blog.Client</RootNamespace>
     <UserSecretsId>f9eef876-aeb0-4706-811c-953b147b0f85</UserSecretsId>
   </PropertyGroup>
 
