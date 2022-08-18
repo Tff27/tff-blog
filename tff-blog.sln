@@ -19,14 +19,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{F6CAC183-FC0B-4B26-B72E-B14E82F05B72}"
 	ProjectSection(SolutionItems) = preProject
 		.github\dependabot.yml = .github\dependabot.yml
-		.github\workflows\tff-blog-api.yml = .github\workflows\tff-blog-api.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{49697542-F4C0-435B-9AB1-F15FD1EA43D2}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\azure-static-web-apps-black-tree-01f647703.yml = .github\workflows\azure-static-web-apps-black-tree-01f647703.yml
 		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
-		.github\workflows\tff-blog-api.yml = .github\workflows\tff-blog-api.yml
 	EndProjectSection
 EndProject
 Global
