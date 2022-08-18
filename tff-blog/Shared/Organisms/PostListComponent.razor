@@ -12,17 +12,17 @@
 
     protected override async Task OnInitializedAsync()
     {
-        //try
-        //{
+        try
+        {
             var client = ClientFactory.CreateClient("WebAPI");
 
             this.PostList = new PostListViewModel();
 
             this.PostList.Posts = await client.GetFromJsonAsync<IEnumerable<PostModel>>(string.Empty);
-        //}
-        //catch (Exception ex)
-        //{
-        //    this.PostList = new PostListViewModel();
-        //}
+        }
+        catch (Exception)
+        {
+            this.PostList = new PostListViewModel();
+        }
     }
 }

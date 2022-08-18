@@ -29,7 +29,7 @@ namespace Tff.Blog.Api
 
         private static readonly string appName = "tff-blog";
         private static readonly string repoOwner = "tff27";
-        private static readonly string repoName = "demo-netlify-blazor";
+        private static readonly string repoName = "tff-blog";
         private static readonly string repoPostsPath = "wwwroot/posts";
 
         [FunctionName("BlogPosts")]
