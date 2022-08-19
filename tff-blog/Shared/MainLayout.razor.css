@@ -49,7 +49,6 @@ footer {
     }
 
     footer {
-        max-height: 15vh;
         grid-area: 4 / 1 / 4 / 3;
     }
 }
