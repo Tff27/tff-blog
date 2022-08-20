@@ -15,6 +15,7 @@ using YamlDotNet.Serialization.NamingConventions;
 using YamlDotNet.Serialization;
 using System.Text;
 using Tff.Blog.Shared.Models;
+using Tff.Blog.Api.Configuration;
 
 namespace Tff.Blog.Api
 {
@@ -29,8 +30,6 @@ namespace Tff.Blog.Api
 
         private static readonly string appName = "tff-blog";
         private static readonly string repoOwner = "tff27";
-        private static readonly string repoName = "tff-blog";
-        private static readonly string repoPostsPath = "wwwroot/posts";
 
         [FunctionName("BlogPosts")]
         public static async Task<IActionResult> Run(
@@ -39,6 +38,9 @@ namespace Tff.Blog.Api
         {
             try
             {
+                var repoName = Settings.GetRepoName();
+                var repoPostsPath = Settings.GetRepoPostsPath();
+
                 string postName = req.Query["postName"];
                 string sortField = req.Query["sortField"];
                 string sortOrder = req.Query["sortOrder"];
@@ -94,9 +96,9 @@ namespace Tff.Blog.Api
                 log.LogError($"Error fetching info: {argumentException.Message}");
                 return new BadRequestObjectResult(argumentException.Message);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                log.LogError($"Error fetching info");
+                log.LogError($"Error fetching info: {ex.Message}");
                 return new BadRequestResult();
             }
         }
