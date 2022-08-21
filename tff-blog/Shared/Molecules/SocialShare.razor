@@ -1,0 +1,35 @@
+﻿<div class="social-share">
+    Share:
+
+    <a href="https://www.facebook.com/sharer/sharer.php?u=@UrlToShare" target="_blank" rel="noopener noreferrer nofollow">
+        <Icon IconImage="icons/facebook.svg" InvertColor="true" />
+    </a>
+
+    <a href="https://www.linkedin.com/sharing/share-offsite/?url=@UrlToShare" target="_blank" rel="noopener noreferrer nofollow">
+        <Icon IconImage="icons/linkedin.svg" InvertColor="true" />
+    </a>
+
+    <a href="https://twitter.com/intent/tweet?url=@UrlToShare&text=@EncodedText" target="_blank" rel="noopener noreferrer nofollow">
+        <Icon IconImage="icons/twitter.svg" InvertColor="true" />
+    </a>
+
+    <a href="mailto:?subject=@TextToShare&body=@MailBody" target="_blank" rel="noopener noreferrer nofollow">
+        <Icon IconImage="icons/mail.svg" InvertColor="true" />
+    </a>
+</div>
+
+@code {
+    [Parameter]
+    public string UrlToShare { get; set; }
+    [Parameter]
+    public string TextToShare { get; set; }
+
+    private string EncodedText;
+    private string MailBody;
+
+    protected override async Task OnInitializedAsync()
+    {
+        EncodedText = System.Net.WebUtility.UrlEncode(TextToShare);
+        MailBody = $"{@TextToShare}%0D%0A{@UrlToShare}";
+    }
+}
