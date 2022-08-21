@@ -54,6 +54,9 @@ namespace Tff.Blog.Api
                 log.LogInformation($"Retrieve info for {postName ?? "all posts"}");
 
                 var github = new GitHubClient(new ProductHeaderValue(appName));
+                var tokenAuth = new Credentials(Settings.GetGitToken());
+                github.Credentials = tokenAuth;
+
 
                 var docs = await github
                     .Repository
