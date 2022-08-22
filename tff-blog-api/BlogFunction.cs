@@ -16,18 +16,12 @@ using YamlDotNet.Serialization;
 using System.Text;
 using Tff.Blog.Shared.Models;
 using Tff.Blog.Api.Configuration;
+using Tff.Blog.Shared.Converters;
 
 namespace Tff.Blog.Api
 {
     public static class BlogFunction
     {
-        static readonly JsonSerializerOptions Options = new()
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            PropertyNameCaseInsensitive = true,
-            WriteIndented = true,
-        };
-
         private static readonly string appName = "tff-blog";
         private static readonly string repoOwner = "tff27";
 
@@ -46,7 +40,7 @@ namespace Tff.Blog.Api
                 string sortOrder = req.Query["sortOrder"];
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                dynamic parsedBody = string.IsNullOrEmpty(requestBody) ? null : JsonSerializer.Deserialize<dynamic>(requestBody, Options);
+                dynamic parsedBody = string.IsNullOrEmpty(requestBody) ? null : JsonSerializer.Deserialize<dynamic>(requestBody, JsonSettings.Options);
                 postName ??= parsedBody?.postName;
                 sortField ??= parsedBody?.sortField;
                 sortOrder ??= parsedBody?.sortOrder;
@@ -69,12 +63,12 @@ namespace Tff.Blog.Api
                 {
                     foreach (var post in docs)
                     {
-                        postList.Add(CreateMetadataForMdFile(Encoding.Default.GetString(await github.Repository.Content.GetRawContent(repoOwner, repoName, post.Path))));
+                        postList.Add(MarkdownToModelConverter.CreateModelFromMarkdown<PostModel>(Encoding.Default.GetString(await github.Repository.Content.GetRawContent(repoOwner, repoName, post.Path))));
                     }
                 }
                 else
                 {
-                    postList.Add(CreateMetadataForMdFile(Encoding.Default.GetString(await github.Repository.Content.GetRawContent(repoOwner, repoName, $"{repoPostsPath}/{postName}.md"))));
+                    postList.Add(MarkdownToModelConverter.CreateModelFromMarkdown<PostModel>(Encoding.Default.GetString(await github.Repository.Content.GetRawContent(repoOwner, repoName, $"{repoPostsPath}/{postName}.md"))));
                 }
 
                 if (sortOrder != null)
@@ -89,7 +83,7 @@ namespace Tff.Blog.Api
                     SortMetadata(ref postList, sortField, sortOrder);
                 }
 
-                var responseMessage = JsonSerializer.Serialize(postList, Options);
+                var responseMessage = JsonSerializer.Serialize(postList, JsonSettings.Options);
 
                 log.LogInformation($"Success retrieving info for {postName ?? "all posts"}");
                 return new OkObjectResult(responseMessage);
@@ -104,24 +98,6 @@ namespace Tff.Blog.Api
                 log.LogError($"Error fetching info: {ex.Message}");
                 return new BadRequestResult();
             }
-        }
-
-        static PostModel CreateMetadataForMdFile(string markdown)
-        {
-            var YamlDeserializer = new DeserializerBuilder()
-              .WithNamingConvention(CamelCaseNamingConvention.Instance)
-              .IgnoreUnmatchedProperties()
-              .Build();
-
-            var expression = "(?:---\\n)(?<frontmatter>[\\s\\S]*?)(?:---\\n)";
-
-            var result = Regex.Match(markdown, expression).Groups.GetValueOrDefault("frontmatter").Value;
-            var post = YamlDeserializer.Deserialize<PostModel>(result);
-
-            Regex regex = new(expression);
-            post.Text = (regex.Replace(markdown, string.Empty)).Trim();
-
-            return post;
         }
 
         private static void SortMetadata(ref List<PostModel> postList, string SortField, string SortOrder)

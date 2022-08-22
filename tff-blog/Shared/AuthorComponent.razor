@@ -1,4 +1,5 @@
-﻿@inject IHttpClientFactory ClientFactory
+﻿@using Tff.Blog.Shared.Converters
+@inject IHttpClientFactory ClientFactory
 
 @if (author == null)
 {
@@ -7,18 +8,21 @@
 else
 {
     <div class="authorbar">
-        <img class="photo" src="@this.author.PhotoUrl" />
+        <img class="photo" src="@this.author.Photo" />
         <p class="name">@this.author.Name</p>
-        <p>@this.author.Description</p>
+        <Markdown MarkdownContent=@this.author.Text/>
     </div>
 }
 
 @code {
-    private ViewModels.AuthorViewModel author;
+    private AuthorModel author;
 
     protected override async Task OnInitializedAsync()
     {
         var client = ClientFactory.CreateClient("Client");
-        this.author = await client.GetFromJsonAsync<ViewModels.AuthorViewModel>("data/author.json");
+        var authorRequest = await client.GetAsync($"pages/author.md");
+        var authorResult = authorRequest.IsSuccessStatusCode ? await authorRequest.Content.ReadAsStringAsync() : null;
+
+        author = MarkdownToModelConverter.CreateModelFromMarkdown<AuthorModel>(authorResult);
     }
 }

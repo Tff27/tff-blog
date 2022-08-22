@@ -2,7 +2,7 @@
 
 namespace Tff.Blog.Shared.Models
 {
-    public class PostModel
+    public class PostModel : MarkdownModel
     {
         public PostModel()
         {
@@ -14,8 +14,6 @@ namespace Tff.Blog.Shared.Models
         public DateTime Date { get; set; }
 
         public string Title { get; set; }
-
-        public string Text { get; set; }
 
         public IEnumerable<TagEnum> Tags { get; set; }
 
