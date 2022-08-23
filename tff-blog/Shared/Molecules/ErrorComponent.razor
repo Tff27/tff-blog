@@ -1,0 +1,12 @@
+﻿<div class="error-container">
+    <ErrorCode ErrorCodeText="@ErrorCodeText"/>
+    <p>@ErrorText</p>
+</div>
+
+@code {
+    [Parameter]
+    public string ErrorCodeText { get; set; }
+
+    [Parameter]
+    public string ErrorText { get; set; }
+}

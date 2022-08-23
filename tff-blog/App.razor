@@ -6,8 +6,7 @@
     <NotFound>
         <PageTitle>Not found</PageTitle>
         <LayoutView Layout="@typeof(MainLayout)">
-            <h1>404</h1>
-            <p>Sorry, there's nothing at this address.</p>
+            <ErrorComponent ErrorText="How you got here is a mystery, try to navigate away..." ErrorCodeText="404" />
         </LayoutView>
     </NotFound>
 </Router>

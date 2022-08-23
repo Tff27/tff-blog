@@ -39,12 +39,12 @@ else
         try
         {
             var client = ClientFactory.CreateClient("WebAPI");
-            
+
             postdetails = (await client.GetFromJsonAsync<IEnumerable<PostModel>>($"?postName={slug}")).First();
         }
         catch (Exception)
         {
-            UriHelper.NavigateTo("404");
+            UriHelper.NavigateTo("404", replace: true);
         }
     }
 }
