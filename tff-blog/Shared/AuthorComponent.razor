@@ -1,16 +1,28 @@
 ﻿@using Tff.Blog.Shared.Converters
 @inject IHttpClientFactory ClientFactory
+@inject NavigationManager UriHelper
 
 @if (author == null)
 {
-    <p><em>Loading...</em></p>
+    //TODO add skeleton loader
 }
 else
 {
     <div class="authorbar">
         <img class="photo" src="@this.author.Photo" />
         <p class="name">@this.author.Name</p>
-        <Markdown MarkdownContent=@this.author.Text/>
+        <div class="author-contacts">
+            <NavLink href="https://github.com/Tff27" target="_blank">
+                <Icon IconImage="icons/github.svg" InvertColor="false" />
+            </NavLink>
+            <NavLink href="https://www.linkedin.com/in/tiagofonseca27/" target="_blank">
+                <Icon IconImage="icons/linkedin.svg" InvertColor="false" />
+            </NavLink>
+            <NavLink href="https://twitter.com/tff_27" target="_blank">
+                <Icon IconImage="icons/twitter.svg" InvertColor="false" />
+            </NavLink>
+        </div>
+        <Markdown MarkdownContent=@this.author.Text />
     </div>
 }
 
@@ -19,10 +31,17 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var client = ClientFactory.CreateClient("Client");
-        var authorRequest = await client.GetAsync($"pages/author.md");
-        var authorResult = authorRequest.IsSuccessStatusCode ? await authorRequest.Content.ReadAsStringAsync() : null;
+        try
+        {
+            var client = ClientFactory.CreateClient("Client");
+            var authorRequest = await client.GetAsync($"pages/author.md");
+            var authorResult = authorRequest.IsSuccessStatusCode ? await authorRequest.Content.ReadAsStringAsync() : null;
 
-        author = MarkdownToModelConverter.CreateModelFromMarkdown<AuthorModel>(authorResult);
+            author = MarkdownToModelConverter.CreateModelFromMarkdown<AuthorModel>(authorResult);
+        }
+        catch (Exception)
+        {
+            UriHelper.NavigateTo("404", replace: true);
+        }
     }
 }

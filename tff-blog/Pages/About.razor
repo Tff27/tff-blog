@@ -1,0 +1,29 @@
+﻿@page "/about"
+@using Tff.Blog.Shared.Converters
+@inject IHttpClientFactory ClientFactory
+@inject NavigationManager UriHelper
+
+@if (aboutPage != null)
+{
+    <Markdown MarkdownContent="@aboutPage.Text" />
+}
+
+@code {
+    private AboutModel aboutPage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var client = ClientFactory.CreateClient("Client");
+            var aboutRequest = await client.GetAsync($"pages/about.md");
+            var aboutResult = aboutRequest.IsSuccessStatusCode ? await aboutRequest.Content.ReadAsStringAsync() : null;
+
+            aboutPage = MarkdownToModelConverter.CreateModelFromMarkdown<AboutModel>(aboutResult);
+        }
+        catch (Exception)
+        {
+            UriHelper.NavigateTo("404", replace: true);
+        }
+    }
+}
