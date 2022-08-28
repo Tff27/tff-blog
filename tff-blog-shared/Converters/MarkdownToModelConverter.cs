@@ -14,12 +14,12 @@ namespace Tff.Blog.Shared.Converters
               .IgnoreUnmatchedProperties()
               .Build();
 
-            var expression = "(?:---\\r?\\n)(?<frontmatter>[\\s\\S]+?)(?:---\\r?\\n)";
+            var expression = "(?:---\\r?\\n)(?<frontmatter>[\\s\\S]*?)(?:---\\r?\\n)";
             var result = Regex.Match(markdown, expression).Groups.GetValueOrDefault("frontmatter")?.Value;
 
             var model = new T();
 
-            if (result != null)
+            if (!string.IsNullOrEmpty(result))
             {
                 model = YamlDeserializer.Deserialize<T>(result);
             }
