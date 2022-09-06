@@ -8,9 +8,9 @@
   auth_endpoint: "auth"
 publish_mode: editorial_workflow
 media_folder: "wwwroot/images"
-site_url: https://tiagofonseca.dev/
-display_url: https://tiagofonseca.dev/
-logo_url: https://tiagofonseca.dev/images/logo_icon.png
+site_url: https://www.tiagofonseca.dev/
+display_url: https://www.tiagofonseca.dev/
+logo_url: https://www.tiagofonseca.dev/images/logo_icon.png
 locale: 'en'
 slug:
   encoding: "ascii"
@@ -22,7 +22,7 @@ collections:
     folder: "wwwroot/posts" # The path to the folder where the documents are stored
     create: true # Allow users to create new documents in this collection
     slug: "{{fields.slug}}"
-    preview_path: https://tiagofonseca.dev/post/{{fields.slug}}
+    preview_path: https://www.tiagofonseca.dev/post/{{fields.slug}}
     fields: # The fields for each document, usually in front matter
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Date", name: "date", widget: "datetime" }
@@ -42,4 +42,5 @@ collections:
           ]
       }
       - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Description", name: "description", widget: "string" }
       - { label: "Body", name: "body", widget: "markdown" }
