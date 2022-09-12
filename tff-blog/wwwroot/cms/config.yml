@@ -1,13 +1,13 @@
 ﻿backend:
   name: "github"
   repo: "Tff27/tff-blog"
-  branch: "main"
+  branch: "master"
   api_root: "https://api.github.com"
   site_domain: "cms.netlify.com"
   base_url: "https://api.netlify.com"
   auth_endpoint: "auth"
 publish_mode: editorial_workflow
-media_folder: "wwwroot/images"
+media_folder: "tff-blog/wwwroot/images"
 site_url: https://www.tiagofonseca.dev/
 display_url: https://www.tiagofonseca.dev/
 logo_url: https://www.tiagofonseca.dev/images/logo_icon.png
@@ -19,7 +19,7 @@ slug:
 collections:
   - name: "blog" # Used in routes, e.g., /admin/collections/blog
     label: "Blog" # Used in the UI
-    folder: "wwwroot/posts" # The path to the folder where the documents are stored
+    folder: "tff-blog/wwwroot/posts" # The path to the folder where the documents are stored
     create: true # Allow users to create new documents in this collection
     slug: "{{fields.slug}}"
     preview_path: https://www.tiagofonseca.dev/post/{{fields.slug}}
