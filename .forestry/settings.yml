@@ -5,14 +5,14 @@ admin_path: ''
 webhook_url: 
 sections:
 - type: directory
-  path: tff-blog/wwwroot/pages
-  label: Pages
+  path: tff-blog/wwwroot/posts
+  label: Blog Posts
   create: all
   match: "**/*"
   new_doc_ext: md
 - type: directory
-  path: tff-blog/wwwroot/posts
-  label: Blog Posts
+  path: tff-blog/wwwroot/pages
+  label: Pages
   create: all
   match: "**/*"
   new_doc_ext: md
