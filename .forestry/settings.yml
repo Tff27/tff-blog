@@ -17,7 +17,7 @@ sections:
   match: "**/*"
   new_doc_ext: md
 upload_dir: tff-blog/wwwroot/images
-public_path: tff-blog/wwwroot/images
+public_path: images
 front_matter_path: ''
 use_front_matter_path: false
 file_template: ":filename:"
