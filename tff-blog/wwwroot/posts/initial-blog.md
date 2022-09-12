@@ -1,7 +1,7 @@
 ---
 title: Why this blog came to be
 date: 2022-09-12T20:10:01.188Z
-image: /wwwroot/images/initial-blog.jpg
+image: /images/initial-blog.jpg
 tags:
   - "0"
 slug: initial-blog
