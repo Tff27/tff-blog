@@ -1,0 +1,27 @@
+---
+label: Blog
+hide_body: false
+fields:
+- type: text
+  name: title
+  label: title
+- type: datetime
+  name: date
+  label: date
+- type: file
+  name: image
+  label: image
+- type: text
+  name: slug
+  label: slug
+- type: list
+  name: tags
+  label: tags
+  config:
+    use_select: true
+    source:
+      type: simple
+    min: 0
+- type: textarea
+  name: description
+  label: description
