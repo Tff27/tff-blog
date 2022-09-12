@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - '.forestry'
+      - 'tff-blog/wwwroot/posts'
+      - 'tff-blog/wwwroot/images'
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
