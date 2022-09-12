@@ -9,15 +9,15 @@ sections:
   label: Pages
   create: all
   match: "**/*"
-  new_doc_ext: ".md"
+  new_doc_ext: md
 - type: directory
   path: tff-blog/wwwroot/posts
   label: Blog Posts
   create: all
   match: "**/*"
-  new_doc_ext: ".md"
-upload_dir: uploads
-public_path: "/uploads"
+  new_doc_ext: md
+upload_dir: tff-blog/wwwroot/images
+public_path: tff-blog/wwwroot/images
 front_matter_path: ''
 use_front_matter_path: false
 file_template: ":filename:"
