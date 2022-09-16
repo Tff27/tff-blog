@@ -25,6 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\azure-static-web-apps-black-tree-01f647703.yml = .github\workflows\azure-static-web-apps-black-tree-01f647703.yml
 		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
+		.github\workflows\tagversion.yml = .github\workflows\tagversion.yml
 	EndProjectSection
 EndProject
 Global
