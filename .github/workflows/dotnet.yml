@@ -4,13 +4,13 @@ on:
   push:
     branches: [ master ]
     paths-ignore:
-      - '.forestry'
+      - '.forestry/*'
       - 'tff-blog/wwwroot/posts'
       - 'tff-blog/wwwroot/images'
   pull_request:
     branches: [ master ]
     paths-ignore:
-      - '.forestry'
+      - '.forestry/*'
       - 'tff-blog/wwwroot/posts'
       - 'tff-blog/wwwroot/images'
 
