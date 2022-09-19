@@ -1,4 +1,4 @@
-name: Bump version
+name: Bump version and Create Release
 on:
   push:
     branches:
@@ -16,9 +16,35 @@ jobs:
         fetch-depth: '0'
     - name: Bump version and push tag
       uses: anothrNick/github-tag-action@1.40.0
+      id: bump_version
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         DEFAULT_BUMP: patch
         WITH_V: true
         RELEASE_BRANCHES: master
         INITIAL_VERSION: 1.0.0
+    - name: Check version
+      id: check_version
+      run: echo ::set-output name=newrelease::${{ steps.bump_version.outputs.tag != steps.bump_version.outputs.new_tag }}
+    - name: Get pull request
+      id: get_pr
+      uses: 8BitJonny/gh-get-current-pr@1.0.1
+      if: ${{ steps.check_version.outputs.newrelease == 'true' }}
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        filterOutClosed: false
+    - name: Create Github release
+      id: create_release
+      uses: actions/create-release@v1
+      if: ${{ steps.check_version.outputs.newrelease == 'true' }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.bump_version.outputs.new_tag }}
+        release_name: v${{ steps.bump_version.outputs.new_tag }}
+        body: |
+            Release created from ${{ fromJSON(steps.get_pr.outputs.pr).html_url }}
+
+            ${{ fromJSON(steps.get_pr.outputs.pr).body }}
+        draft: false
+        prerelease: false
