@@ -10,6 +10,8 @@ sections:
   create: all
   match: "**/*"
   new_doc_ext: md
+  templates:
+  - blog
 - type: directory
   path: tff-blog/wwwroot/pages
   label: Pages
