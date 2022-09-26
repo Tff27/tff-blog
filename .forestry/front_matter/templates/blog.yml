@@ -38,3 +38,5 @@ fields:
   type: boolean
   label: Draft
   default: true
+pages:
+- tff-blog/wwwroot/posts/automate-generation-of-a-c-sdk-from-openapi-specification-on-ci-cd-pipeline.md
