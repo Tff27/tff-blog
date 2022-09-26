@@ -27,6 +27,26 @@ This was not the first time that I tried to automate SDK generation, past experi
 
 This new approach relies on the OpenApi specification, the specification that was already being implemented on every single API at the time.
 
+## Let's start with the **API project**:
+
+* Controller
+* Csproj
+* Tools and spec generation
+
+#### Option 1
+
+#### Option 2 - Use Visual Studio connected services 
+
+## Next, let's have a look to the SDK project:
+
+* NSwag.ApiDescription.Client
+* Csproj
+
+## Last, let's use our new SDK in a client application
+
+* Reference SDK
+* Call endpoints
+
 ## Conclusion
 
 It's possible to automate the SDK generation as part of a CI/CD pipeline. There are some caveats that you should consider before going down this path:
@@ -43,3 +63,7 @@ From an engineering perspective you will be:
 * Remove the burden of developing an SDK
 * Your SDK will always be up to date with the latest code changes
 * The SDK generation can be part of a CI/CD pipeline
+
+The demo code can be found here:
+
+[Tff27/Api-Client-Autogeneration: API Client Autogeneration (github.com)](https://github.com/Tff27/Api-Client-Autogeneration)
