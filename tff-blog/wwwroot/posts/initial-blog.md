@@ -1,12 +1,13 @@
 ---
 title: Why this blog came to be
-date: 2022-09-12T20:10:01.188Z
-image: /images/initial-blog.jpg
+date: 2022-09-12T20:10:01.188+00:00
+image: images/initial-blog-v2.jpg
 tags:
-  - "0"
+- '0'
 slug: initial-blog
-description: For years I have consumed content from the community now it's time
-  to give back and learn along the way.
+description: For years I have consumed content from the community now it's time to
+  give back and learn along the way.
+
 ---
 # Why this blog came to be
 
