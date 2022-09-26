@@ -25,7 +25,7 @@ namespace Tff.Blog.Shared.Converters
             }
 
             Regex regex = new(expression);
-            model.Text = (regex.Replace(markdown, string.Empty)).Trim();
+            model.Text = regex.Replace(markdown, string.Empty).Trim();
 
             return model;
         }

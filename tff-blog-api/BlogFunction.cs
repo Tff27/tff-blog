@@ -71,16 +71,29 @@ namespace Tff.Blog.Api
                     postList.Add(MarkdownToModelConverter.CreateModelFromMarkdown<PostModel>(Encoding.Default.GetString(await github.Repository.Content.GetRawContent(repoOwner, repoName, $"{repoPostsPath}/{postName}.md"))));
                 }
 
-                if (sortOrder != null)
-                {
-                    if (!(string.Equals(sortOrder, "Ascending", StringComparison.InvariantCultureIgnoreCase)
-                        || string.Equals(sortOrder, "Descending", StringComparison.InvariantCultureIgnoreCase)))
-                    {
-                        log.LogWarning($"The sort order \"{ sortOrder}\" is invalid, please use Ascending/Descending.");
-                        return new BadRequestObjectResult($"The sort order \"{sortOrder}\" is invalid, please use Ascending/Descending.");
-                    }
 
-                    SortMetadata(ref postList, sortField, sortOrder);
+                if (!Settings.GetShowDrafts())
+                {
+                    postList.RemoveAll(post => post.Draft);
+                }
+
+                if (postList.Count > 1)
+                {
+                    if (sortOrder != null)
+                    {
+                        if (!(string.Equals(sortOrder, "Ascending", StringComparison.InvariantCultureIgnoreCase)
+                            || string.Equals(sortOrder, "Descending", StringComparison.InvariantCultureIgnoreCase)))
+                        {
+                            log.LogWarning($"The sort order \"{sortOrder}\" is invalid, please use Ascending/Descending.");
+                            return new BadRequestObjectResult($"The sort order \"{sortOrder}\" is invalid, please use Ascending/Descending.");
+                        }
+
+                        postList.SortMetadata(sortField, sortOrder);
+                    }
+                    else
+                    {
+                        postList.SortMetadata("Date", "Descending");
+                    }
                 }
 
                 var responseMessage = JsonSerializer.Serialize(postList, JsonSettings.Options);
@@ -100,7 +113,7 @@ namespace Tff.Blog.Api
             }
         }
 
-        private static void SortMetadata(ref List<PostModel> postList, string SortField, string SortOrder)
+        private static void SortMetadata(this List<PostModel> postList, string SortField, string SortOrder)
         {
             try
             {

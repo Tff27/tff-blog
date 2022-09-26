@@ -19,6 +19,11 @@ namespace Tff.Blog.Api.Configuration
             return GetEnvironmentVariable("GitToken");
         }
 
+        public static bool GetShowDrafts()
+        {
+            return Convert.ToBoolean(GetEnvironmentVariable("ShowDrafts"));
+        }
+
         private static string GetEnvironmentVariable(string name)
         {
             return Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);

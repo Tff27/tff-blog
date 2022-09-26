@@ -20,5 +20,7 @@ namespace Tff.Blog.Shared.Models
         public IEnumerable<TagEnum> Tags { get; set; }
 
         public string Slug { get; set; }
+
+        public bool Draft { get; set; }
     }
 }
