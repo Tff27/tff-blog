@@ -39,4 +39,4 @@ fields:
   label: Draft
   default: true
 pages:
-- tff-blog/wwwroot/posts/automate-generation-of-a-c-sdk-from-openapi-specification-on-ci-cd-pipeline.md
+- tff-blog/wwwroot/posts/auto-generate-c-sharp-sdk.md
