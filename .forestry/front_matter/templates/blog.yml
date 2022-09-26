@@ -34,3 +34,7 @@ fields:
 - type: textarea
   name: description
   label: description
+- name: draft
+  type: boolean
+  label: Draft
+  default: true
