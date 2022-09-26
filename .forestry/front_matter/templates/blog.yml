@@ -3,6 +3,9 @@ label: Blog
 hide_body: false
 fields:
 - type: text
+  name: slug
+  label: slug
+- type: text
   name: title
   label: title
 - type: datetime
@@ -11,9 +14,6 @@ fields:
 - type: file
   name: image
   label: image
-- type: text
-  name: slug
-  label: slug
 - type: list
   name: tags
   label: tags
