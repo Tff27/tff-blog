@@ -2,7 +2,7 @@
 draft: true
 title: Automate generation of a C# Client from OpenApi specification on CI/CD pipeline
 date: 2022-09-27T19:00:00.000+00:00
-image: images/gears.jpg
+image: "/images/pipeline.jpg"
 slug: auto-generate-c-sharp-client
 tags:
 - '3'
