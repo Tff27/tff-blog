@@ -13,9 +13,9 @@ description: How to automate a C# SDK generation as part of a CI/CD pipeline usi
 ---
 ### Summary
 
-The goal of automating repetitive work as much as possible as a developer is always present. The primary focus of any person within a company should be creating value, by creating value I mean delivering the work that has a more significant impact on the organization.
+The goal of automating repetitive work as much as possible as a developer is always present. A primary focus of any person within a company should be creating value. By creating value I mean delivering work that has a more significant impact on the organization.
 
-In my experience, I came across the need to build API clients on multiple occasions, often for APIs that were delivered previously by the team. These API clients on many occasions will be only used by solutions within a team or the company and without any bespoke requirement.
+In my experience, I came across the need to build API clients on multiple occasions, often for APIs that before the team delivered. These API clients, on many occasions, will be only used by solutions within a team or the company and without any bespoke requirement.
 
 The idea to automate this piece of software came naturally, as I saw that leveraging the API specification was an alternative to getting an API client always up to date and that is generated as part of a CI/CD pipeline.
 
@@ -29,7 +29,7 @@ This new approach relies on the OpenApi specification, the specification that wa
 
 ## The **API project**:
 
-On the API project we want to produce a well-described API. The better described the API is the better the generated code will be.
+On the API project, we want to produce a well-described API. The better described the API is the better the generated code will be.
 
 Let's start by having a look in one controlled method:
 
@@ -47,13 +47,13 @@ Let's start by having a look in one controlled method:
 
 The above code when used to generate an API client will consider:
 
-* Http Method
+* HTTP Method
 * The Authorize requirement
 * All the possible response codes and return types
 
-Remember that for each and every method you should consider adding as much details as possible. 
+Remember that for each method you should consider adding as many details as possible. 
 
-Since we want to make this part of a CI/CD pipeline we will generate and save our OpenApi specification, for that we are going to use the [Swashbuckle.AspNetCore.Cli](https://www.nuget.org/packages/Swashbuckle.AspNetCore.Cli " Swashbuckle.AspNetCore.Cli") dotnet tool. To do this go to the API project location and instal the tool using the following command:
+Since we want to make this part of a CI/CD pipeline we will generate and save our OpenApi specification, for that we are going to use the [Swashbuckle.AspNetCore.Cli](https://www.nuget.org/packages/Swashbuckle.AspNetCore.Cli " Swashbuckle.AspNetCore.Cli") dotnet tool. To do this go to the API project location and install the tool using the following command:
 
     dotnet tool install swashbuckle.aspnetcore.cli
 
@@ -72,7 +72,7 @@ A "dotnet-tools.json" file should have been created on your project. The file sh
       }
     }
 
-At the point of writing this article the "6.4.0" is the latest version.
+At the point of writing this article, "6.4.0" is the latest version.
 
 Now let's use the tool to generate the OpenApi specification file, the following code should be added to the .csproj file
 
@@ -80,7 +80,7 @@ Now let's use the tool to generate the OpenApi specification file, the following
     	<Exec Condition="$(Configuration)==Debug" Command="dotnet swagger tofile --output swagger.json $(OutputPath)$(AssemblyName).dll v1" />
     </Target>
 
-What this will do is generate and save the specification file after every build, you can specify the output location. I recommend have this on a easy to access location since this is the file that we will be using to generate the API client. 
+What this will do is generate and save the specification file after every build, you can specify the output location. I recommend have this on an easy to access location since this is the file that we will be using to generate the API client. 
 
 ## The SDK project:
 
@@ -91,7 +91,7 @@ The SDK project will contain the generated code. We will need to have a couple o
       <PackageReference Include="NSwag.ApiDescription.Client" Version="13.17.0" />
     </ItemGroup>
 
-[NSwag](NSwag.org "NSwag") will be the tool that will handle the generation. We will need to add too our .csproj file the configurations settings for our client, such as:
+[NSwag](NSwag.org "NSwag") will be the tool that will handle the generation. We will need to add to our .csproj file the configurations settings for our client, such as:
 
 * OpenApi specification location (this can be a file path or url)
 * Namespace
@@ -135,7 +135,7 @@ Set the configurations accordingly
 
 ## Last, let's use our new API client in a client application
 
-In order to use our client we first need to reference the client (or install if it was packed as a nuget) in our client application. Perform an API call should be fairly simple now:
+In order to use our client, we first need to reference the client (or install it if it was packed as a nuget) in our client application. Perform an API call should be simple now:
 
     // Created a new http client
     var httpClient = new HttpClient();
