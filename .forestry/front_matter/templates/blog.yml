@@ -39,4 +39,4 @@ fields:
   label: Draft
   default: true
 pages:
-- tff-blog/wwwroot/posts/auto-generate-c-sharp-sdk.md
+- tff-blog/wwwroot/posts/auto-generate-c-sharp-client.md
