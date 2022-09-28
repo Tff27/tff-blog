@@ -129,7 +129,7 @@ Pick the OpenAPI option
 
 Set the configurations accordingly
 
-![](/images/connected-services-open-api-configs.png)
+![OpenAPI settings](/images/connected-services-open-api-configs.png "OpenAPI settings")
 
 **Note that you can also generate a client in Typescript** 
 
