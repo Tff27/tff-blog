@@ -1,0 +1,29 @@
+﻿@page "/cookie-policy"
+@using Tff.Blog.Shared.Converters
+@inject IHttpClientFactory ClientFactory
+@inject NavigationManager UriHelper
+
+@if (cookiePolicyModel != null)
+{
+    <Markdown MarkdownContent="@cookiePolicyModel.Text" />
+}
+
+@code {
+    private CookiePolicyModel cookiePolicyModel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var client = ClientFactory.CreateClient("Client");
+            var cookiePolicyRequest = await client.GetAsync($"pages/cookie-policy.md");
+            var cookiePolicyResult = cookiePolicyRequest.IsSuccessStatusCode ? await cookiePolicyRequest.Content.ReadAsStringAsync() : null;
+
+            cookiePolicyModel = MarkdownToModelConverter.CreateModelFromMarkdown<CookiePolicyModel>(cookiePolicyResult);
+        }
+        catch (Exception)
+        {
+            UriHelper.NavigateTo("404", replace: true);
+        }
+    }
+}
