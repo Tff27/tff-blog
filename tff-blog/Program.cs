@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Ganss.XSS;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Tff.Blog.Client;
+using Ganss.Xss;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
