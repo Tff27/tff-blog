@@ -40,3 +40,4 @@ fields:
   default: true
 pages:
 - tff-blog/wwwroot/posts/auto-generate-c-sharp-client.md
+- tff-blog/wwwroot/posts/create-an-object-dynamically-from-yaml-frontmatter-in-c.md
