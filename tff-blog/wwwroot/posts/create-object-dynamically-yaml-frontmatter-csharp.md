@@ -2,7 +2,7 @@
 draft: true
 slug: create-object-dynamically-yaml-frontmatter-csharp
 title: Create an object dynamically from YAML frontmatter in C#
-date: 2022-10-23T23:00:00Z
+date: 2022-10-23T23:00:00.000+00:00
 image: ''
 tags:
 - '0'
