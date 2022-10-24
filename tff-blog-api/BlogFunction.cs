@@ -10,9 +10,6 @@ using Octokit;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Linq;
-using System.Text.RegularExpressions;
-using YamlDotNet.Serialization.NamingConventions;
-using YamlDotNet.Serialization;
 using System.Text;
 using Tff.Blog.Shared.Models;
 using Tff.Blog.Api.Configuration;
@@ -88,11 +85,11 @@ namespace Tff.Blog.Api
                             return new BadRequestObjectResult($"The sort order \"{sortOrder}\" is invalid, please use Ascending/Descending.");
                         }
 
-                        postList.SortMetadata(sortField, sortOrder);
+                        postList = SortPostList(postList, sortField, sortOrder);
                     }
                     else
                     {
-                        postList.SortMetadata("Date", "Descending");
+                        postList = SortPostList(postList, "Date", "Descending");
                     }
                 }
 
@@ -113,18 +110,20 @@ namespace Tff.Blog.Api
             }
         }
 
-        private static void SortMetadata(this List<PostModel> postList, string SortField, string SortOrder)
+        private static List<PostModel> SortPostList(List<PostModel> postList, string SortField, string SortOrder)
         {
             try
             {
                 if (string.Equals(SortOrder, "Ascending", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    postList = postList.OrderBy(post => post.GetType().GetProperty(SortField)).ToList();
+                    return postList.OrderBy(post => post.GetType().GetProperty(SortField)?.GetValue(post)).ToList();
                 }
                 else if (string.Equals(SortOrder, "Descending", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    postList = postList.OrderByDescending(post => post.GetType().GetProperty(SortField)).ToList();
+                    return postList.OrderByDescending(post => post.GetType().GetProperty(SortField)?.GetValue(post)).ToList();
                 }
+
+                return postList;
             }
             catch (KeyNotFoundException)
             {
