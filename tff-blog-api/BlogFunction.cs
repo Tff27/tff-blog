@@ -85,11 +85,11 @@ namespace Tff.Blog.Api
                             return new BadRequestObjectResult($"The sort order \"{sortOrder}\" is invalid, please use Ascending/Descending.");
                         }
 
-                        SortMetadata(ref postList, sortField, sortOrder);
+                        postList = SortPostList(postList, sortField, sortOrder);
                     }
                     else
                     {
-                        SortMetadata(ref postList, "Date", "Descending");
+                        postList = SortPostList(postList, "Date", "Descending");
                     }
                 }
 
@@ -110,18 +110,20 @@ namespace Tff.Blog.Api
             }
         }
 
-        private static void SortMetadata(ref List<PostModel> postList, string SortField, string SortOrder)
+        private static List<PostModel> SortPostList(List<PostModel> postList, string SortField, string SortOrder)
         {
             try
             {
                 if (string.Equals(SortOrder, "Ascending", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    postList = postList.OrderBy(post => post.GetType().GetProperty(SortField)?.GetValue(post)).ToList();
+                    return postList.OrderBy(post => post.GetType().GetProperty(SortField)?.GetValue(post)).ToList();
                 }
                 else if (string.Equals(SortOrder, "Descending", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    postList = postList.OrderByDescending(post => post.GetType().GetProperty(SortField)?.GetValue(post)).ToList();
+                    return postList.OrderByDescending(post => post.GetType().GetProperty(SortField)?.GetValue(post)).ToList();
                 }
+
+                return postList;
             }
             catch (KeyNotFoundException)
             {
