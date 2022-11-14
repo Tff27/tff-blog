@@ -40,4 +40,4 @@ fields:
   default: true
 pages:
 - tff-blog/wwwroot/posts/auto-generate-c-sharp-client.md
-- tff-blog/wwwroot/posts/create-object-dynamically-yaml-frontmatter-csharp.md
+- tff-blog/wwwroot/posts/create-object-dynamically-expandoobject-csharp.md
