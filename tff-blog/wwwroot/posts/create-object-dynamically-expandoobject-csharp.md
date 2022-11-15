@@ -1,8 +1,8 @@
 ---
-draft: true
+draft: false
 slug: create-object-dynamically-expandoobject-csharp
 title: Create an object dynamically using ExpandoObject in C#
-date: 2022-10-24T23:00:00Z
+date: 2022-11-15T18:51:00Z
 image: "/images/brickwall.png"
 tags:
 - '0'
@@ -10,8 +10,6 @@ description: The ExpandoObject is a dynamic type that allows you to create objec
   at runtime and then add/remove properties, methods and events to it.
 
 ---
-# Create an object dynamically using ExpandoObject in C#
-
 ## Summary
 
 Sometimes you don't know what to expect from the data structure when you are consuming data from third parties.
@@ -24,7 +22,7 @@ In this article, I will walk you through understanding ExpandoObject type and in
 
 ## Understand the ExpandoObject Class
 
-The ExpandoObject class is an implementation of the dynamic object as such ExpandoObject enables you to add and delete members of its instances at a run time and also to set/get values of these members.
+The ExpandoObject class is an implementation of the dynamic object as such ExpandoObject enables you to add and delete members of its instances at run time and set/get values of these members.
 
 ExpandoObject class also implements the IDictionary<String, Object> interface so is possible to enumerate the instance's members, this gives us the chance to take advantage of this interface when adding or removing members.
 
@@ -53,7 +51,7 @@ If you need even more flexibility, you can add ExpandoObjects members to your pr
 
     ((IDictionary<String, Object>)myDynamicObject).Remove("MyTextMember");
 
-### How to add/remove members on a ExpandoObject
+### How to add/remove methods on a ExpandoObject
 
     myDynamicObject.Counter = 0;
     myDynamicObject.Increment = (Action)(() => { myDynamicObject.Counter++; });
@@ -63,6 +61,6 @@ If you need even more flexibility, you can add ExpandoObjects members to your pr
 
 The ExpandoObject type allows you to create objects easily at runtime and then add/remove properties to them whenever you need them.
 
-Since it can take delegates as members, this allows you to attach methods and events to these dynamic types as well.
+Since it can take delegates as members, allows you to attach methods and events to these dynamic types as well.
 
 It can be useful when dealing with data that you have no control over to set up a type without worrying to create specific models.
