@@ -1,6 +1,5 @@
-﻿namespace Tff.Blog.Shared.Models
+﻿namespace Tff.Blog.Shared.Models;
+
+public class CookiePolicyModel : MarkdownModel
 {
-    public class CookiePolicyModel : MarkdownModel
-    {
-    }
 }
