@@ -4,7 +4,7 @@ on:
     branches:
       - master
     paths-ignore:
-      - '.forestry/*'
+      - '.forestry/**'
       - 'tff-blog/wwwroot/posts'
       - 'tff-blog/wwwroot/images'
 jobs:
