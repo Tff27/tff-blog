@@ -1,14 +1,13 @@
 ﻿using System.Text.Json;
 
-namespace Tff.Blog.Api.Configuration
+namespace Tff.Blog.Api.Configuration;
+
+public class JsonSettings
 {
-    public class JsonSettings
+    public static readonly JsonSerializerOptions Options = new()
     {
-        public static readonly JsonSerializerOptions Options = new()
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            PropertyNameCaseInsensitive = true,
-            WriteIndented = true,
-        };
-    }
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        PropertyNameCaseInsensitive = true,
+        WriteIndented = true,
+    };
 }

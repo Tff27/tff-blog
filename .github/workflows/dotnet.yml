@@ -4,13 +4,13 @@ on:
   push:
     branches: [ master ]
     paths-ignore:
-      - '.forestry/*'
+      - '.forestry/**'
       - 'tff-blog/wwwroot/posts'
       - 'tff-blog/wwwroot/images'
   pull_request:
     branches: [ master ]
     paths-ignore:
-      - '.forestry/*'
+      - '.forestry/**'
       - 'tff-blog/wwwroot/posts'
       - 'tff-blog/wwwroot/images'
 
@@ -24,7 +24,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 7.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Build

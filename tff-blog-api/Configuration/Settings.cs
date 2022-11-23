@@ -1,32 +1,31 @@
 ﻿using System;
 
-namespace Tff.Blog.Api.Configuration
+namespace Tff.Blog.Api.Configuration;
+
+public static class Settings
 {
-    public static class Settings
+    public static string GetRepoName() 
     {
-        public static string GetRepoName() 
-        {
-            return GetEnvironmentVariable("RepoName");
-        }
+        return GetEnvironmentVariable("RepoName");
+    }
 
-        public static string GetRepoPostsPath()
-        {
-            return GetEnvironmentVariable("RepoPostsPath");
-        }
+    public static string GetRepoPostsPath()
+    {
+        return GetEnvironmentVariable("RepoPostsPath");
+    }
 
-        public static string GetGitToken()
-        {
-            return GetEnvironmentVariable("GitToken");
-        }
+    public static string GetGitToken()
+    {
+        return GetEnvironmentVariable("GitToken");
+    }
 
-        public static bool GetShowDrafts()
-        {
-            return Convert.ToBoolean(GetEnvironmentVariable("ShowDrafts"));
-        }
+    public static bool GetShowDrafts()
+    {
+        return Convert.ToBoolean(GetEnvironmentVariable("ShowDrafts"));
+    }
 
-        private static string GetEnvironmentVariable(string name)
-        {
-            return Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
-        }
+    private static string GetEnvironmentVariable(string name)
+    {
+        return Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
     }
 }

@@ -1,10 +1,9 @@
-﻿namespace Tff.Blog.Shared.Models
+﻿namespace Tff.Blog.Shared.Models;
+
+public abstract class MarkdownModel
 {
-    public abstract class MarkdownModel
-    {
-        /// <summary>
-        /// Text in markdown body
-        /// </summary>
-        public string Text { get; set; }
-    }
+    /// <summary>
+    /// Text in markdown body
+    /// </summary>
+    public string Text { get; set; }
 }

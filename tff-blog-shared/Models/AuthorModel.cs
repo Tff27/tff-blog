@@ -1,9 +1,8 @@
-﻿namespace Tff.Blog.Shared.Models
-{
-    public class AuthorModel : MarkdownModel
-    {
-        public string Photo { get; set; }
+﻿namespace Tff.Blog.Shared.Models;
 
-        public string Name { get; set; }
-    }
+public class AuthorModel : MarkdownModel
+{
+    public string Photo { get; set; }
+
+    public string Name { get; set; }
 }

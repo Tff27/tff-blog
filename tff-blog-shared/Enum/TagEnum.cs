@@ -1,13 +1,12 @@
-﻿namespace Tff.Blog.Shared.Enum
+﻿namespace Tff.Blog.Shared.Enum;
+
+public enum TagEnum
 {
-    public enum TagEnum
-    {
-        dotNet,
-        Azure,
-        JavaScript,
-        CICD,
-        DevOps,
-        BotFramework,
-        Leadership
-    }
+    dotNet,
+    Azure,
+    JavaScript,
+    CICD,
+    DevOps,
+    BotFramework,
+    Leadership
 }
