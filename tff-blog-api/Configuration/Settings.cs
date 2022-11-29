@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 
 namespace Tff.Blog.Api.Configuration;
 
@@ -26,6 +27,15 @@ public static class Settings
 
     private static string GetEnvironmentVariable(string name)
     {
-        return Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
+        var envVar = Environment.GetEnvironmentVariable(name);
+
+        if (envVar == null)
+        {
+            var x = JsonSerializer.Serialize(Environment.GetEnvironmentVariables());
+
+            throw new Exception($"Variable not found {name} available: {x}");
+        }
+
+        return envVar;
     }
 }
