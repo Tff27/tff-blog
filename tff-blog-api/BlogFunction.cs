@@ -116,7 +116,7 @@ public class BlogFunction
         {
             _logger.LogError(ErrorMessage, ex.Message);
 
-            return await CreateResponseAsync(req, HttpStatusCode.BadRequest);
+            return await CreateResponseAsync(req, HttpStatusCode.BadRequest, ex.Message);
         }
     }
 
