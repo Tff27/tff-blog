@@ -16,7 +16,7 @@ jobs:
       with:
         fetch-depth: '0'
     - name: Bump version and push tag
-      uses: anothrNick/github-tag-action@1.40.0
+      uses: anothrNick/github-tag-action@1.52.0
       id: bump_version
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -26,18 +26,20 @@ jobs:
         INITIAL_VERSION: 1.0.0
     - name: Check version
       id: check_version
-      run: echo ::set-output name=newrelease::${{ steps.bump_version.outputs.tag != steps.bump_version.outputs.new_tag }}
+      run: |
+        echo tag ${{ steps.bump_version.outputs.tag}}
+        echo new tag ${{ steps.bump_version.outputs.new_tag}}
     - name: Get pull request
       id: get_pr
       uses: 8BitJonny/gh-get-current-pr@1.0.1
-      if: ${{ steps.check_version.outputs.newrelease == 'true' }}
+      if: ${{ steps.bump_version.outputs.tag != steps.bump_version.outputs.new_tag }}
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         filterOutClosed: false
     - name: Create Github release
       id: create_release
       uses: actions/create-release@v1
-      if: ${{ steps.check_version.outputs.newrelease == 'true' }}
+      if: ${{ steps.bump_version.outputs.tag != steps.bump_version.outputs.new_tag }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
