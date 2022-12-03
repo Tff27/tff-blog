@@ -1,8 +1,11 @@
-﻿<img class=@IconCssClass src="@IconImage" />
+﻿<img class=@IconCssClass src="@IconImage" alt="@AltIconImageText" />
 
 @code {
     [Parameter]
     public string IconImage { get; set; }
+
+    [Parameter]
+    public string AltIconImageText { get; set; }
 
     [Parameter]
     public bool InvertColor { get; set; }

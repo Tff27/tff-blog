@@ -5,8 +5,9 @@ on:
       - master
     paths-ignore:
       - '.forestry/**'
-      - 'tff-blog/wwwroot/posts'
-      - 'tff-blog/wwwroot/images'
+      - '**.md'
+      - 'tff-blog/wwwroot/posts/**'
+      - 'tff-blog/wwwroot/images/**'
 jobs:
   build:
     runs-on: ubuntu-latest

@@ -5,20 +5,39 @@ on:
     branches:
       - master
     paths-ignore:
-      - '.forestry/*'
-      - 'tff-blog/wwwroot/posts'
-      - 'tff-blog/wwwroot/images'
+      - '.forestry/**'
+      - '**.md'
+      - 'tff-blog/wwwroot/posts/**'
+      - 'tff-blog/wwwroot/images/**'
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
       - master
     paths-ignore:
-      - '.forestry/*'
-      - 'tff-blog/wwwroot/posts'
-      - 'tff-blog/wwwroot/images'
+      - '.forestry/**'
+      - '**.md'
+      - 'tff-blog/wwwroot/posts/**'
+      - 'tff-blog/wwwroot/images/**'
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 7.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+
   build_and_deploy_job:
+    needs: [build]
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job

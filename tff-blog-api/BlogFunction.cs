@@ -14,6 +14,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using System.Net;
 using Azure.Core.Serialization;
+using System.Threading;
 
 namespace Tff.Blog.Api;
 
@@ -33,10 +34,12 @@ public class BlogFunction
 
     [Function("BlogPosts")]
     public async Task<HttpResponseData> RunAsync(
-        [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequestData req)
+        [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequestData req, CancellationToken cancellationToken)
     {
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var repoName = Settings.GetRepoName();
             var repoPostsPath = Settings.GetRepoPostsPath();
 
