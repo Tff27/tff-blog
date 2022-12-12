@@ -1,6 +1,6 @@
 ---
 draft: true
-slug: observability
+slug: understanding-what-observability-is
 title: Understanding what Observability is
 date: 2022-12-20T19:00:00Z
 image: ''
