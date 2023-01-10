@@ -2,11 +2,14 @@
 draft: true
 slug: understanding-what-observability-is
 title: Understanding what Observability is
-date: 2022-12-20T19:00:00Z
-image: ''
+date: 2022-12-20T19:00:00.000+00:00
+image: "/images/three_pillars.png"
 tags:
 - '4'
-description: ''
+description: "Observability is the ability to understand the internal state of a system
+  based on its external outputs. \nIt is an important concept that allows engineers
+  to monitor and diagnose the performance and behaviour of their systems, and to identify
+  and fix issues before they become major problems."
 
 ---
 Observability is a term that is commonly used in the field of software engineering and refers to the ability to understand the internal state of a system based on its external outputs. It is an important concept that allows engineers to monitor and diagnose the performance and behavior of their systems, and to identify and fix issues before they become major problems.
@@ -25,4 +28,6 @@ Metrics are numerical measurements of the performance and behavior of a system. 
 
 Tracing refers to the process of tracking the flow of a request through a distributed system. This can include information about the different components, services, and networks that the request touches, as well as the time it takes for the request to be processed. Tracing allows engineers to see the full picture of how a request is handled, from end to end, and to identify bottlenecks and other performance issues.
 
-Together, these three pillars of observability provide a comprehensive view of a system and enable engineers to understand and improve its behavior. By implementing observability, engineers can monitor and diagnose issues in real-time, and take proactive steps to prevent and fix problems before they impact users.
+## Conclusion
+
+Together, these three pillars of observability provide a comprehensive view of a system and enable engineers to understand and improve its behavior. By implementing observability, engineers can monitor and diagnose issues as soon as possible, and take proactive steps to prevent and fix problems before they impact users.
