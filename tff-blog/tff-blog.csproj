@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HtmlSanitizer" Version="8.0.601" />
+    <PackageReference Include="HtmlSanitizer" Version="8.0.645" />
     <PackageReference Include="Markdig" Version="0.30.4" />
     <PackageReference Include="MarkdigExtensions.ImageAsFigure" Version="1.0.0" />
     <PackageReference Include="MarkdigExtensions.SyntaxHighlighting" Version="1.0.3" />
