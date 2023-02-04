@@ -25,7 +25,7 @@ In this blog post, you will learn how to quickly and easily implement logging, m
 
 By the end of this post, you'll know how to:
 
-* Capture rich log data and centralize it for easy analysis using the built in ILogger interface
+* Capture rich log data and centralize it for easy analysis using the built-in ILogger interface
 * Implement custom metrics to monitor the performance of your applications 
 * Use Distributed Tracing to get a complete view of how requests flow through your application and identify the root cause of performance issues
 
