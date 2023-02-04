@@ -30,7 +30,7 @@ fields:
     - '4'
     - '5'
     - '6'
-  description: dotNet=0;<br>Azure=1;<br>JavaScript=2;<br>CICD=3;<br>DevOps=4;<br>BotFramework=5;<br>Leadership=6;
+  description: dotNet=0; <br>Azure=1;<br>JavaScript=2;<br>CICD=3;<br>DevOps=4;<br>BotFramework=5;<br>Leadership=6;<br>Observability=7;<br>Logging=8;<br>Metrics=9;<br>DistributedTracing=10;
 - type: textarea
   name: description
   label: description
