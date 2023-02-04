@@ -183,3 +183,7 @@ Logging, metrics, and distributed tracing are crucial components of observabilit
 Together, these three pillars of observability provide a comprehensive view of a system and enable engineers to understand and improve its behavior. By implementing these techniques, you can quickly and easily gain full visibility into the health and performance of your applications, which can help you resolve issues more quickly, improve performance, and enhance the overall stability and reliability of your applications.
 
 Whether you're a seasoned developer or just getting started, this guide provides all the information you need to take your application's observability to the next level. So, don't wait any longer, start unlocking the power of observability in .NET 7 today!
+
+**The code samples can be found here:**
+
+[Tff27/ObservabilityDemo (github.com)](https://github.com/Tff27/ObservabilityDemo)
