@@ -8,5 +8,9 @@ public enum TagEnum
     CICD,
     DevOps,
     BotFramework,
-    Leadership
+    Leadership,
+    Observability,
+    Logging,
+    Metrics,
+    DistributedTracing
 }
