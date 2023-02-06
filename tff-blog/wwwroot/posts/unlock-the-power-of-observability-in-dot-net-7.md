@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 slug: unlock-the-power-of-observability-in-dot-net-7
 title: 'Unlock the Power of Observability in .NET 7: A Step-by-Step Guide to Implementing
   Logging, Metrics, and Distributed Tracing in No Time'
