@@ -30,7 +30,11 @@ fields:
     - '4'
     - '5'
     - '6'
-  description: dotNet=0;<br>Azure=1;<br>JavaScript=2;<br>CICD=3;<br>DevOps=4;<br>BotFramework=5;<br>Leadership=6;
+    - '7'
+    - '8'
+    - '9'
+    - '10'
+  description: dotNet=0; <br>Azure=1;<br>JavaScript=2;<br>CICD=3;<br>DevOps=4;<br>BotFramework=5;<br>Leadership=6;<br>Observability=7;<br>Logging=8;<br>Metrics=9;<br>DistributedTracing=10;
 - type: textarea
   name: description
   label: description
@@ -41,4 +45,4 @@ fields:
 pages:
 - tff-blog/wwwroot/posts/auto-generate-c-sharp-client.md
 - tff-blog/wwwroot/posts/create-object-dynamically-expandoobject-csharp.md
-- tff-blog/wwwroot/posts/understanding-what-observability-is.md
+- tff-blog/wwwroot/posts/unlock-the-power-of-observability-in-dot-net-7.md

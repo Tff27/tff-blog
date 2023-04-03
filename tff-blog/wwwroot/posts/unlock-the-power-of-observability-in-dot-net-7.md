@@ -1,21 +1,33 @@
 ---
-draft: true
-slug: understanding-what-observability-is
-title: Understanding what Observability is
+draft: false
+slug: unlock-the-power-of-observability-in-dot-net-7
+title: 'Unlock the Power of Observability in .NET 7: A Step-by-Step Guide to Implementing
+  Logging, Metrics, and Distributed Tracing in No Time'
 date: 2022-12-20T19:00:00.000+00:00
 image: "/images/three_pillars.png"
 tags:
 - '0'
-- '4'
-description: "Observability is the ability to understand the internal state of a system
-  based on its external outputs. \nIt is an important concept that allows engineers
-  to monitor and diagnose the performance and behaviour of their systems, and to identify
-  and fix issues before they become major problems."
+- '7'
+- '8'
+- '9'
+- '10'
+description: Are you tired of constantly putting out fires in your .NET 7 applications
+  without having a clear understanding of what caused them in the first place? With
+  the right tools and techniques in place, you can unlock the power of observability
+  and gain full visibility into the health and performance of your applications.
 
 ---
 Observability is a term that is commonly used in the field of software engineering and refers to the ability to understand the internal state of a system based on its external outputs. It is an important concept that allows engineers to monitor and diagnose the performance and behavior of their systems, and to identify and fix issues before they become major problems.
 
 Observability is typically achieved through the use of three main pillars: metrics, logging, and tracing. These pillars work together to provide a comprehensive view of the system and to enable engineers to understand and improve its behavior.
+
+In this blog post, you will learn how to quickly and easily implement logging, metrics, and distributed tracing in .NET 7 to improve the stability and reliability of your applications. 
+
+By the end of this post, you'll know how to:
+
+* Capture rich log data and centralize it for easy analysis using the built-in ILogger interface
+* Implement custom metrics to monitor the performance of your applications 
+* Use Distributed Tracing to get a complete view of how requests flow through your application and identify the root cause of performance issues
 
 ## Logging
 
@@ -136,7 +148,7 @@ Tracing refers to the process of tracking the flow of a request through a distri
         return weatherForecasts;
     }
 
-[OpenTelemetry](https://opentelemetry.io/ "OpenTelemetry") **NuGet packages that are required are still in pre-release!** 
+[OpenTelemetry](https://opentelemetry.io/ "OpenTelemetry") **NuGet packages that are required are still in pre-release!**
 
     OpenTelemetry
     OpenTelemetry.Exporter.Console
@@ -166,4 +178,12 @@ Add the following to your Program.cs:
 
 ## Conclusion
 
-Together, these three pillars of observability provide a comprehensive view of a system and enable engineers to understand and improve its behavior. By implementing observability, engineers can monitor and diagnose issues as soon as possible, and take proactive steps to prevent and fix problems before they impact users.
+Logging, metrics, and distributed tracing are crucial components of observability that every .NET 7 developer should be familiar with. 
+
+Together, these three pillars of observability provide a comprehensive view of a system and enable engineers to understand and improve its behavior. By implementing these techniques, you can quickly and easily gain full visibility into the health and performance of your applications, which can help you resolve issues more quickly, improve performance, and enhance the overall stability and reliability of your applications.
+
+Whether you're a seasoned developer or just getting started, this guide provides all the information you need to take your application's observability to the next level. So, don't wait any longer, start unlocking the power of observability in .NET 7 today!
+
+**The code samples can be found here:**
+
+[Tff27/ObservabilityDemo (github.com)](https://github.com/Tff27/ObservabilityDemo)
