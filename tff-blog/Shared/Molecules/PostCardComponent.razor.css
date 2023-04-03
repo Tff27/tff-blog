@@ -21,7 +21,7 @@ img {
 
 .info-container {
     display: flex;
-    flex-direction: row;
+    flex-flow: wrap;
     align-items: center;
 }
 
@@ -30,5 +30,6 @@ img {
     background: var(--secondary-color);
     color: var(--tertiary-color);
     margin-left: 0.4rem;
+    margin-bottom: 0.4rem;
     padding: 0.15rem;
 }
