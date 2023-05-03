@@ -8,6 +8,31 @@
 }
 else
 {
+    <PageTitle>@postdetails.Title</PageTitle>
+
+    <HeadContent>
+        <meta name="description" content="@postdetails.Title" />
+        <link rel="canonical" href="@UriHelper.Uri.ToString()" />
+
+        <meta property="og:url" content="@UriHelper.Uri.ToString()">
+        <meta property="og:title" content="@postdetails.Title">
+        <meta property="og:image" content=@($"{UriHelper.BaseUri}{postdetails.Image}")>
+        <meta property="og:image:alt" content="@postdetails.Title">
+        <meta property="og:description" content="@postdetails.Title">
+        <meta property="og:type" content="website">
+        <meta property="og:site_name" content="Tiago Fonseca - Blog">
+        <meta property="og:locale" content="en_US">
+
+        <meta name="twitter:creator" content="@@tff_27">
+        <meta name="twitter:url" content="@UriHelper.Uri.ToString()">
+        <meta name="twitter:title" content="@postdetails.Title">
+        <meta name="twitter:description" content="@postdetails.Title">
+        <meta name="twitter:image" content=@($"{UriHelper.BaseUri}{postdetails.Image}")>
+        <meta name="twitter:image:alt" content="@postdetails.Title">
+        <meta name="twitter:card" content="summary">
+    </HeadContent>
+
+
     <article>
         <img src=@postdetails.Image alt=@postdetails.Title>
         <div class="container">
