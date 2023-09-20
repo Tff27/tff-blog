@@ -16,3 +16,5 @@ updates:
       others:
         patterns:
         - "*"
+        exclude-patterns:
+        - "Microsoft*"
