@@ -12,8 +12,8 @@
     <PackageReference Include="Markdig" Version="0.31.0" />
     <PackageReference Include="MarkdigExtensions.ImageAsFigure" Version="1.0.0" />
     <PackageReference Include="MarkdigExtensions.SyntaxHighlighting" Version="1.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.8" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.11" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
     <PackageReference Include="System.Net.Http.Json" Version="7.0.1" />
     <PackageReference Include="YamlDotNet" Version="13.1.1" />
