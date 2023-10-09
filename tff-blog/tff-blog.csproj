@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HtmlSanitizer" Version="8.0.718" />
+    <PackageReference Include="HtmlSanitizer" Version="8.0.723" />
     <PackageReference Include="Markdig" Version="0.33.0" />
     <PackageReference Include="MarkdigExtensions.ImageAsFigure" Version="1.0.0" />
     <PackageReference Include="MarkdigExtensions.SyntaxHighlighting" Version="1.0.3" />
@@ -16,7 +16,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.11" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
     <PackageReference Include="System.Net.Http.Json" Version="7.0.1" />
-    <PackageReference Include="YamlDotNet" Version="13.4.0" />
+    <PackageReference Include="YamlDotNet" Version="13.5.2" />
   </ItemGroup>
 
   <ItemGroup>
