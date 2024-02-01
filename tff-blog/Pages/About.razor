@@ -9,7 +9,7 @@
 }
 
 @code {
-    private AboutModel aboutPage;
+    private PageModel aboutPage;
 
     protected override async Task OnInitializedAsync()
     {
@@ -19,7 +19,7 @@
             var aboutRequest = await client.GetAsync($"pages/about.md");
             var aboutResult = aboutRequest.IsSuccessStatusCode ? await aboutRequest.Content.ReadAsStringAsync() : null;
 
-            aboutPage = MarkdownToModelConverter.CreateModelFromMarkdown<AboutModel>(aboutResult);
+            aboutPage = MarkdownToModelConverter.CreateModelFromMarkdown<PageModel>(aboutResult);
         }
         catch (Exception)
         {

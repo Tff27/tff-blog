@@ -15,6 +15,7 @@ using Microsoft.Azure.Functions.Worker.Http;
 using System.Net;
 using Azure.Core.Serialization;
 using System.Threading;
+using Tff.Blog.Api.Services;
 
 namespace Tff.Blog.Api;
 
@@ -49,13 +50,29 @@ public class BlogFunction
             string sortField = queryString["sortField"];
             string sortOrder = queryString["sortOrder"];
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync(cancellationToken);
             dynamic parsedBody = string.IsNullOrEmpty(requestBody) ? null : JsonSerializer.Deserialize<dynamic>(requestBody, JsonSettings.Options);
             postName ??= parsedBody?.postName;
             sortField ??= parsedBody?.sortField;
             sortOrder ??= parsedBody?.sortOrder;
 
             _logger.LogInformation($"Retrieve info for {postName ?? "all posts"}");
+
+            var useHashnode = Settings.GetUseHashnodeCmsApi();
+
+            if (useHashnode)
+            {
+                if (string.IsNullOrEmpty(postName))
+                {
+                    var posts = await CmsService.GetPostsAsync(Settings.GetHashnodePublicationId());
+
+                    return await CreateResponseAsync(req, HttpStatusCode.OK, posts);
+                }
+
+                var post = await CmsService.GetSinglePostsAsync(Settings.GetHashnodePublicationId(), postName);
+
+                return await CreateResponseAsync(req, HttpStatusCode.OK, post);
+            }
 
             var github = new GitHubClient(new ProductHeaderValue(appName));
             var tokenAuth = new Credentials(Settings.GetGitToken());

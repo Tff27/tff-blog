@@ -22,4 +22,6 @@ public class PostModel : MarkdownModel
     public string Slug { get; set; }
 
     public bool Draft { get; set; }
+
+    public int ReadTimeInMinutes { get; set; }
 }
