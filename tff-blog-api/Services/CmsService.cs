@@ -24,6 +24,8 @@ internal class CmsService
         var query = $$"""
             query {
               publication(id: "{{publicationId}}") {
+                id
+                isHeadless
                 posts(first: 20) {
                   pageInfo {
                     hasNextPage
@@ -31,6 +33,7 @@ internal class CmsService
                   }
                   edges {
                     node {
+                      id
                       slug
                       title
                       publishedAt
@@ -67,7 +70,10 @@ internal class CmsService
         var query = $$"""
             query {
               publication(id: "{{publicationId}}") {
+                id
+                isHeadless
                 post(slug: "{{postSlug}}") {
+                    id
                     slug
                     tags {
                       name
@@ -83,7 +89,6 @@ internal class CmsService
                       markdown
                     }
                     readTimeInMinutes
-                  }
                 }
               }
             }
@@ -111,7 +116,10 @@ internal class CmsService
         var query = $$"""
             query {
               publication(id: "{{publicationId}}") {
+                id
+                isHeadless
                 staticPage(slug: "{{pageSlug}}") {
+                  id
                   slug
                   content {
                     markdown

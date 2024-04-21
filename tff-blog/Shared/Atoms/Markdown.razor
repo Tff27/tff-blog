@@ -46,12 +46,12 @@
         if (!string.IsNullOrWhiteSpace(markdown))
         {
             var html = Markdig.Markdown.ToHtml(value, new MarkdownPipelineBuilder()
-            .UseYamlFrontMatter()
-            .UseEmojiAndSmiley()
-            .UseAdvancedExtensions()
-            .UseSyntaxHighlighting()
-            .UseImageAsFigure(onlyWithTitle: true)
-            .Build());
+               .UseYamlFrontMatter()
+               .UseEmojiAndSmiley()
+               .UseAdvancedExtensions()
+               .UseSyntaxHighlighting()
+               .UseImageAsFigure()
+               .Build());
             var sanitizedHtml = HtmlSanitizer.Sanitize(html);
 
             return new MarkupString(sanitizedHtml);

@@ -41,9 +41,6 @@ public class BlogFunction
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var repoName = Settings.GetRepoName();
-            var repoPostsPath = Settings.GetRepoPostsPath();
-
             var queryString = System.Web.HttpUtility.ParseQueryString(req.Url.Query);
 
             string postName = queryString["postName"];
@@ -73,6 +70,9 @@ public class BlogFunction
 
                 return await CreateResponseAsync(req, HttpStatusCode.OK, post);
             }
+
+            var repoName = Settings.GetRepoName();
+            var repoPostsPath = Settings.GetRepoPostsPath();
 
             var github = new GitHubClient(new ProductHeaderValue(appName));
             var tokenAuth = new Credentials(Settings.GetGitToken());
