@@ -1,5 +1,5 @@
 ﻿namespace Tff.Blog.Shared.Models;
 
-public class AboutModel : MarkdownModel
+public class PageModel : MarkdownModel
 {
 }

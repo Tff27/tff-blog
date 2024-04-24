@@ -28,4 +28,14 @@ public static class Settings
     {
         return Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
     }
+
+    public static bool GetUseHashnodeCmsApi()
+    {
+        return Convert.ToBoolean(GetEnvironmentVariable("UseHashnodeCmsApi"));
+    }
+
+    public static string GetHashnodePublicationId()
+    {
+        return GetEnvironmentVariable("HashnodePublicationId");
+    }
 }
