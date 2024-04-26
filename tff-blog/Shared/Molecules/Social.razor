@@ -1,0 +1,16 @@
+﻿<div class="social">
+    <NavLink href="https://github.com/Tff27" target="_blank">
+        <Icon IconImage="icons/github.svg" InvertColor="@InvertColor" AltIconImageText="Github icon" />
+    </NavLink>
+    <NavLink href="https://www.linkedin.com/in/tiagofonseca27/" target="_blank">
+        <Icon IconImage="icons/linkedin.svg" InvertColor="@InvertColor" AltIconImageText="LinkedIn icon" />
+    </NavLink>
+    <NavLink href="https://twitter.com/tff_27" target="_blank">
+        <Icon IconImage="icons/x.svg" InvertColor="@InvertColor" AltIconImageText="Twitter/X icon" />
+    </NavLink>
+</div>
+
+@code {
+    [Parameter]
+    public bool InvertColor { get; set; }
+}

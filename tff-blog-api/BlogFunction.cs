@@ -2,14 +2,11 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Octokit;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Linq;
-using System.Text;
 using Tff.Blog.Shared.Models;
 using Tff.Blog.Api.Configuration;
-using Tff.Blog.Shared.Converters;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using System.Net;
@@ -24,9 +21,6 @@ public class BlogFunction
     private const string SucessMessage = "Success retrieving info for {0}";
     private const string ErrorMessage = "Error fetching info: {0}";
     private readonly ILogger<BlogFunction> _logger;
-
-    private static readonly string appName = "tff-blog";
-    private static readonly string repoOwner = "tff27";
 
     public BlogFunction(ILogger<BlogFunction> logger)
     {
@@ -55,55 +49,10 @@ public class BlogFunction
 
             _logger.LogInformation($"Retrieve info for {postName ?? "all posts"}");
 
-            var useHashnode = Settings.GetUseHashnodeCmsApi();
-
-            if (useHashnode)
-            {
-                if (string.IsNullOrEmpty(postName))
-                {
-                    var posts = await CmsService.GetPostsAsync(Settings.GetHashnodePublicationId());
-
-                    return await CreateResponseAsync(req, HttpStatusCode.OK, posts);
-                }
-
-                var post = await CmsService.GetSinglePostsAsync(Settings.GetHashnodePublicationId(), postName);
-
-                return await CreateResponseAsync(req, HttpStatusCode.OK, post);
-            }
-
-            var repoName = Settings.GetRepoName();
-            var repoPostsPath = Settings.GetRepoPostsPath();
-
-            var github = new GitHubClient(new ProductHeaderValue(appName));
-            var tokenAuth = new Credentials(Settings.GetGitToken());
-            github.Credentials = tokenAuth;
-
-            var docs = await github
-                .Repository
-                .Content
-                .GetAllContents(repoOwner, repoName, repoPostsPath);
-
-            var postList = new List<PostModel>();
-
             if (string.IsNullOrEmpty(postName))
             {
-                foreach (var post in docs)
-                {
-                    postList.Add(MarkdownToModelConverter.CreateModelFromMarkdown<PostModel>(Encoding.Default.GetString(await github.Repository.Content.GetRawContent(repoOwner, repoName, post.Path))));
-                }
-            }
-            else
-            {
-                postList.Add(MarkdownToModelConverter.CreateModelFromMarkdown<PostModel>(Encoding.Default.GetString(await github.Repository.Content.GetRawContent(repoOwner, repoName, $"{repoPostsPath}/{postName}.md"))));
-            }
+                var posts = await CmsService.GetPostsAsync(Settings.GetHashnodePublicationId());
 
-            if (!Settings.GetShowDrafts())
-            {
-                postList.RemoveAll(post => post.Draft);
-            }
-
-            if (postList.Count > 1)
-            {
                 if (sortOrder != null)
                 {
                     if (!(string.Equals(sortOrder, "Ascending", StringComparison.InvariantCultureIgnoreCase)
@@ -114,17 +63,23 @@ public class BlogFunction
                         return await CreateResponseAsync(req, HttpStatusCode.BadRequest, $"The sort order \"{sortOrder}\" is invalid, please use Ascending/Descending.");
                     }
 
-                    postList = SortPostList(postList, sortField, sortOrder);
+                    posts = SortPostList(posts, sortField, sortOrder);
                 }
                 else
                 {
-                    postList = SortPostList(postList, "Date", "Descending");
+                    posts = SortPostList(posts, "Date", "Descending");
                 }
+
+                _logger.LogInformation(SucessMessage, "all posts");
+
+                return await CreateResponseAsync(req, HttpStatusCode.OK, posts);
             }
 
-            _logger.LogInformation(SucessMessage, postName ?? "all posts");
+            var post = await CmsService.GetSinglePostsAsync(Settings.GetHashnodePublicationId(), postName);
 
-            return await CreateResponseAsync(req, HttpStatusCode.OK, postList);
+            _logger.LogInformation(SucessMessage, postName);
+            return await CreateResponseAsync(req, HttpStatusCode.OK, post);
+
         }
         catch (ArgumentException argumentException)
         {
