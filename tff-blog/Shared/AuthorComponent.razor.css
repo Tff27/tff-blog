@@ -16,13 +16,6 @@
     font-weight: bold;
 }
 
-.author-contacts {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    margin: 15px;
-}
 
 @media only screen and (max-width: 768px) {
 }

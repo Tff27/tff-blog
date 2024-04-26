@@ -8,6 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Shared\Molecules\Social.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Shared\Molecules\Social.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="HtmlSanitizer" Version="8.0.865" />
     <PackageReference Include="Markdig" Version="0.37.0" />
     <PackageReference Include="MarkdigExtensions.ImageAsFigure" Version="1.0.0" />
@@ -23,7 +31,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\" />
-    <Folder Include="wwwroot\posts\" />
   </ItemGroup>
 
   <ItemGroup>
