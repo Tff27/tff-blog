@@ -7,6 +7,7 @@ on:
     paths-ignore:
       - '**.md'
       - 'tff-blog/wwwroot/images/**'
+      - '.github/*'
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
@@ -14,6 +15,7 @@ on:
     paths-ignore:
       - '**.md'
       - 'tff-blog/wwwroot/images/**'
+      - '.github/*'
 
 jobs:
   build:
