@@ -6,6 +6,7 @@ on:
     paths-ignore:
       - '**.md'
       - 'tff-blog/wwwroot/images/**'
+      - '.github/*'
 jobs:
   semantic-release:
     runs-on: ubuntu-latest
@@ -22,6 +23,6 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         tag: ${{ steps.tag_version.outputs.new_tag }}
-        name: Release v${{ steps.tag_version.outputs.new_tag }}
+        name: ${{ steps.tag_version.outputs.new_tag }}
         body: ${{ steps.tag_version.outputs.changelog }}
     
