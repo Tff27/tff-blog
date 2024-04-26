@@ -5,18 +5,14 @@ on:
     branches:
       - master
     paths-ignore:
-      - '.forestry/**'
       - '**.md'
-      - 'tff-blog/wwwroot/posts/**'
       - 'tff-blog/wwwroot/images/**'
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
       - master
     paths-ignore:
-      - '.forestry/**'
       - '**.md'
-      - 'tff-blog/wwwroot/posts/**'
       - 'tff-blog/wwwroot/images/**'
 
 jobs:
