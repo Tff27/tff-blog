@@ -1,13 +1,14 @@
-﻿<div class="footer">
-    <Social InvertColor=true />
+﻿<div class="footer-container">
+    <div class="footer-row">
+        <span>
+            This website uses cookies to ensure you get the best experience
+            <NavLink class="nav-link" href="cookie-policy">
+                <span class="nav-item-text">cookie policy</span>
+            </NavLink>
+        </span>
+        <Social InvertColor=true />
+    </div>
     <p class="disclaimer">© @DateTime.UtcNow.Year Tiago Fonseca. All Rights Reserved.</p>
-    <span>This blog is available on <a href="https://github.com/Tff27/tff-blog">GitHub</a></span>
-    <span>
-        This website uses cookies to ensure you get the best experience
-        <NavLink class="nav-link" href="cookie-policy">
-            <span class="nav-item-text">cookie policy</span>
-        </NavLink>
-    </span>
 </div>
 
 @code {

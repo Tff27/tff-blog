@@ -148,4 +148,23 @@ code {
     display: block;
     word-wrap: break-word;
     border-radius: 5px;
+    unicode-bidi: isolate;
+    white-space: pre;
+    margin: 1em 0px;
+}
+
+pre {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    page-break-inside: avoid;
+    font-family: monospace;
+    max-width: 100%;
+    overflow: auto;
+    padding: 1em 1.5em;
+    display: block;
+    word-wrap: break-word;
+    border-radius: 5px;
+    unicode-bidi: isolate;
+    white-space: pre;
+    margin: 1em 0px;
 }
