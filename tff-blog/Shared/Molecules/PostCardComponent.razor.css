@@ -16,7 +16,7 @@
 img {
     width: 100%;
     max-height: 20vh;
-    object-fit: fill;
+    object-fit: cover;
 }
 
 .info-container {
