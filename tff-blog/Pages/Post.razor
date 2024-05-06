@@ -16,7 +16,7 @@ else
 
         <meta property="og:url" content="@UriHelper.Uri.ToString()">
         <meta property="og:title" content="@postdetails.Title">
-        <meta property="og:image" content=@($"{UriHelper.BaseUri}{postdetails.Image}")>
+        <meta property="og:image" content="@postdetails.Image">
         <meta property="og:image:alt" content="@postdetails.Title">
         <meta property="og:description" content="@postdetails.Title">
         <meta property="og:type" content="website">
@@ -27,7 +27,7 @@ else
         <meta name="twitter:url" content="@UriHelper.Uri.ToString()">
         <meta name="twitter:title" content="@postdetails.Title">
         <meta name="twitter:description" content="@postdetails.Title">
-        <meta name="twitter:image" content=@($"{UriHelper.BaseUri}{postdetails.Image}")>
+        <meta name="twitter:image" content="@postdetails.Image">
         <meta name="twitter:image:alt" content="@postdetails.Title">
         <meta name="twitter:card" content="summary">
     </HeadContent>
