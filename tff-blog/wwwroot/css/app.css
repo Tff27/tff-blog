@@ -8,7 +8,8 @@
 
 html {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    line-height: 1.15;
+    font-size: 1.25rem;
+    line-height: 1.5;
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
     color: var(--secondary-color);

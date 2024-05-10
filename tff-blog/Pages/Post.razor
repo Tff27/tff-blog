@@ -4,6 +4,10 @@
 
 @if (postdetails == null)
 {
+    <HeadContent>
+        <meta property="og:image" content=@($"{UriHelper.BaseUri}/images/logo_icon.png")>
+    </HeadContent>
+
     <p><em>Loading...</em></p>
 }
 else
@@ -19,7 +23,7 @@ else
         <meta property="og:image" content="@postdetails.Image">
         <meta property="og:image:alt" content="@postdetails.Title">
         <meta property="og:description" content="@postdetails.Title">
-        <meta property="og:type" content="website">
+        <meta property="og:type" content="article">
         <meta property="og:site_name" content="Tiago Fonseca - Blog">
         <meta property="og:locale" content="en_US">
 

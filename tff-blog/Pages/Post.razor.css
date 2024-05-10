@@ -20,7 +20,8 @@ img {
 }
 
 .tag {
-    border-radius: 8%;
+    border-radius: 10px;
+    border-color: var(--primary-color);
     background: var(--secondary-color);
     color: var(--tertiary-color);
     margin-left: 0.4rem;
