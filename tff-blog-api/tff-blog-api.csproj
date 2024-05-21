@@ -12,7 +12,7 @@
   <ItemGroup>
     <PackageReference Include="GraphQL.Client" Version="6.0.5" />
     <PackageReference Include="GraphQL.Client.Serializer.SystemTextJson" Version="6.0.5" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.2.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.17.2" OutputItemType="Analyzer" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.22.0" />
     <PackageReference Include="YamlDotNet" Version="15.1.4" />
