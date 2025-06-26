@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<ItemGroup>
+	<PropertyGroup>
 		<AssemblyName>Tff.Blog.Shared</AssemblyName>
 		<RootNamespace>Tff.Blog.Shared</RootNamespace>
-	</ItemGroup>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="YamlDotNet" Version="16.3.0" />
