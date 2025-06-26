@@ -17,7 +17,7 @@ else
 }
 
 @code {
-    private AuthorModel author;
+    public required AuthorModel author;
 
     protected override async Task OnInitializedAsync()
     {
@@ -27,7 +27,14 @@ else
             var authorRequest = await client.GetAsync($"pages/author.md");
             var authorResult = authorRequest.IsSuccessStatusCode ? await authorRequest.Content.ReadAsStringAsync() : null;
 
-            author = MarkdownToModelConverter.CreateModelFromMarkdown<AuthorModel>(authorResult);
+            if (!string.IsNullOrEmpty(authorResult))
+            {
+                author = MarkdownToModelConverter.CreateModelFromMarkdown<AuthorModel>(authorResult);
+            }
+            else
+            {
+                throw new Exception("Author content is empty or not found.");
+            }
         }
         catch (Exception)
         {

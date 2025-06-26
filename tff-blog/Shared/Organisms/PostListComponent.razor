@@ -1,4 +1,5 @@
-﻿@inject IHttpClientFactory ClientFactory
+﻿@using Tff.Blog.Client.ViewModels
+@inject IHttpClientFactory ClientFactory
 
 <div class="post-container">
     @foreach (var post in PostList.Posts)
@@ -8,7 +9,7 @@
 </div>
 
 @code {
-    public PostListViewModel PostList { get; set; }
+    public required PostListViewModel PostList { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -16,13 +17,17 @@
         {
             var client = ClientFactory.CreateClient("WebAPI");
 
-            this.PostList = new PostListViewModel();
-
-            this.PostList.Posts = await client.GetFromJsonAsync<IEnumerable<PostModel>>(string.Empty);
+            this.PostList = new PostListViewModel()
+            {
+                Posts = await client.GetFromJsonAsync<IEnumerable<PostModel>>(string.Empty) ?? []
+            };
         }
         catch (Exception)
         {
-            this.PostList = new PostListViewModel();
+            this.PostList = new PostListViewModel()
+            {
+                Posts = []
+            };
         }
     }
 }

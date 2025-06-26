@@ -1,14 +1,8 @@
-﻿using System.Collections.Generic;
-using Tff.Blog.Shared.Models;
+﻿using Tff.Blog.Shared.Models;
 
-namespace Tff.Blog.ViewModels;
+namespace Tff.Blog.Client.ViewModels;
 
 public class PostListViewModel
 {
-    public PostListViewModel()
-    {
-        Posts = new List<PostModel>();
-    }
-
-    public IEnumerable<PostModel> Posts { get; set; }
+    public required IEnumerable<PostModel> Posts { get; set; } = [];
 }
