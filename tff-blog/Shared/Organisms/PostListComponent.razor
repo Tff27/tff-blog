@@ -2,14 +2,17 @@
 @inject IHttpClientFactory ClientFactory
 
 <div class="post-container">
-    @foreach (var post in PostList.Posts)
+    @if (PostList != null)
     {
-        <PostCardComponent Post="@post" />
+        @foreach (var post in PostList.Posts)
+        {
+            <PostCardComponent Post="@post" />
+        }
     }
 </div>
 
 @code {
-    public required PostListViewModel PostList { get; set; }
+    public PostListViewModel? PostList { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
