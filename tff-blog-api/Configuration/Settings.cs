@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Tff.Blog.Api.Configuration;
+﻿namespace Tff.Blog.Api.Configuration;
 
 public static class Settings
 {

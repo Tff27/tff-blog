@@ -9,7 +9,7 @@
 }
 
 @code {
-    private PageModel aboutPage;
+    private PageModel? aboutPage;
 
     protected override async Task OnInitializedAsync()
     {
@@ -19,7 +19,14 @@
             var aboutRequest = await client.GetAsync($"pages/about.md");
             var aboutResult = aboutRequest.IsSuccessStatusCode ? await aboutRequest.Content.ReadAsStringAsync() : null;
 
-            aboutPage = MarkdownToModelConverter.CreateModelFromMarkdown<PageModel>(aboutResult);
+            if (!string.IsNullOrEmpty(aboutResult))
+            {
+                aboutPage = MarkdownToModelConverter.CreateModelFromMarkdown<PageModel>(aboutResult);
+            }
+            else
+            {
+                throw new Exception("About page content is empty or not found.");
+            }
         }
         catch (Exception)
         {

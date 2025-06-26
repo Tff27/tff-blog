@@ -9,7 +9,7 @@
 }
 
 @code {
-    private CookiePolicyModel cookiePolicyModel;
+    private CookiePolicyModel? cookiePolicyModel;
 
     protected override async Task OnInitializedAsync()
     {
@@ -19,7 +19,14 @@
             var cookiePolicyRequest = await client.GetAsync($"pages/cookie-policy.md");
             var cookiePolicyResult = cookiePolicyRequest.IsSuccessStatusCode ? await cookiePolicyRequest.Content.ReadAsStringAsync() : null;
 
-            cookiePolicyModel = MarkdownToModelConverter.CreateModelFromMarkdown<CookiePolicyModel>(cookiePolicyResult);
+            if (!string.IsNullOrEmpty(cookiePolicyResult))
+            {
+                cookiePolicyModel = MarkdownToModelConverter.CreateModelFromMarkdown<CookiePolicyModel>(cookiePolicyResult);
+            }
+            else
+            {
+                throw new Exception("Cookie policy page content is empty or not found.");
+            }
         }
         catch (Exception)
         {
