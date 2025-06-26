@@ -2,7 +2,8 @@
   "profiles": {
     "tff-blog-api": {
       "commandName": "Project",
-      "commandLineArgs": "--csharp --cors *"
+      "commandLineArgs": "--port 7071 --cors *",
+      "launchBrowser": false
     }
   }
 }

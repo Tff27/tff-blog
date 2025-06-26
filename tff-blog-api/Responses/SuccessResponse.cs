@@ -1,9 +1,6 @@
 ﻿using Azure.Core.Serialization;
 using Microsoft.Azure.Functions.Worker.Http;
-using System.Collections.Generic;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using Tff.Blog.Api.Configuration;
 using Tff.Blog.Shared.Models;
 

@@ -1,15 +1,8 @@
-using Azure.Core.Serialization;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using Tff.Blog.Api.Configuration;
 using Tff.Blog.Api.Responses;
 using Tff.Blog.Api.Services;

@@ -2,16 +2,12 @@
 	<PropertyGroup>
 		<TargetFramework>net9.0</TargetFramework>
 		<AzureFunctionsVersion>v4</AzureFunctionsVersion>
-		<Nullable>warnings</Nullable>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<OutputType>Exe</OutputType>
-		<FunctionsEnableWorkerIndexing>False</FunctionsEnableWorkerIndexing>
 		<AssemblyName>Tff.Blog.Api</AssemblyName>
 		<RootNamespace>Tff.Blog.Api</RootNamespace>
-		<AnalysisLevel>latest</AnalysisLevel>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<!--<Nullable>enable</Nullable>-->
+		<Nullable>warnings</Nullable>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -22,18 +18,19 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 		<PackageReference Include="GraphQL.Client" Version="6.1.0" />
 		<PackageReference Include="GraphQL.Client.Serializer.SystemTextJson" Version="6.1.0" />
-		<PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.3.0" />
-		<PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="2.0.5" OutputItemType="Analyzer" />
 		<PackageReference Include="Microsoft.Azure.Functions.Worker" Version="2.0.0" />
+		<PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http.AspNetCore" Version="2.0.2" />
+		<PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="2.0.5" />
 		<PackageReference Include="YamlDotNet" Version="16.3.0" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<ProjectReference Include="..\tff-blog-shared\tff-blog-shared.csproj" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<None Update="host.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

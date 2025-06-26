@@ -1,16 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.Hosting;
 
-namespace Tff.Blog.Api;
+var builder = FunctionsApplication.CreateBuilder(args);
 
-class Program
-{
-    static async Task Main()
-    {
-        var host = new HostBuilder()
-            .ConfigureFunctionsWorkerDefaults()
-            .Build();
+builder.ConfigureFunctionsWebApplication();
 
-        await host.RunAsync();
-    }
-}
+builder.Build().Run();

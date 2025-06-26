@@ -26,24 +26,19 @@
 </style>
 
 @code {
-    private string markdown;
-
     private MarkupString markupInHtml;
 
     [Parameter]
-    public string MarkdownContent
+    public required string MarkdownContent { get; set; }
+
+    protected override void OnParametersSet()
     {
-        get => markdown;
-        set
-        {
-            markdown = value;
-            markupInHtml = ConvertStringToMarkupString(markdown);
-        }
+        markupInHtml = ConvertStringToMarkupString(MarkdownContent);
     }
 
     private MarkupString ConvertStringToMarkupString(string value)
     {
-        if (!string.IsNullOrWhiteSpace(markdown))
+        if (!string.IsNullOrWhiteSpace(value))
         {
             var html = Markdig.Markdown.ToHtml(value, new MarkdownPipelineBuilder()
                .UseYamlFrontMatter()

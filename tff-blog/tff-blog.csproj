@@ -7,7 +7,7 @@
 		<RootNamespace>Tff.Blog.Client</RootNamespace>
 		<AnalysisLevel>latest</AnalysisLevel>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<!--<TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 

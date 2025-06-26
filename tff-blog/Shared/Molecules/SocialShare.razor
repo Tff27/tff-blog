@@ -20,14 +20,14 @@
 
 @code {
     [Parameter]
-    public string UrlToShare { get; set; }
+    public required string UrlToShare { get; set; }
     [Parameter]
-    public string TextToShare { get; set; }
+    public required string TextToShare { get; set; }
 
-    private string EncodedText;
-    private string MailBody;
+    public required string EncodedText;
+    public required string MailBody;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         EncodedText = System.Net.WebUtility.UrlEncode(TextToShare);
         MailBody = $"{@TextToShare}%0D%0A{@UrlToShare}";

@@ -1,12 +1,7 @@
 ﻿using GraphQL;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.SystemTextJson;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Tff.Blog.Api.Configuration;
 using Tff.Blog.Shared.Mappers;
 using Tff.Blog.Shared.Models;

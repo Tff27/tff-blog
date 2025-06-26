@@ -1,7 +1,5 @@
 ﻿using Microsoft.Azure.Functions.Worker.Http;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Tff.Blog.Api.Responses
 {
