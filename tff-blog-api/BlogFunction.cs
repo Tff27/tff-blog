@@ -1,18 +1,19 @@
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Text.Json;
-using System.Linq;
-using Tff.Blog.Shared.Models;
-using Tff.Blog.Api.Configuration;
+using Azure.Core.Serialization;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net;
-using Azure.Core.Serialization;
+using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
+using Tff.Blog.Api.Configuration;
+using Tff.Blog.Api.Responses;
 using Tff.Blog.Api.Services;
+using Tff.Blog.Shared.Models;
 
 namespace Tff.Blog.Api;
 
@@ -60,7 +61,7 @@ public class BlogFunction
                     {
                         _logger.LogWarning($"The sort order \"{sortOrder}\" is invalid, please use Ascending/Descending.");
 
-                        return await CreateResponseAsync(req, HttpStatusCode.BadRequest, $"The sort order \"{sortOrder}\" is invalid, please use Ascending/Descending.");
+                        return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.BadRequest, cancellationToken, $"The sort order \"{sortOrder}\" is invalid, please use Ascending/Descending.");
                     }
 
                     posts = SortPostList(posts, sortField, sortOrder);
@@ -72,26 +73,26 @@ public class BlogFunction
 
                 _logger.LogInformation(SucessMessage, "all posts");
 
-                return await CreateResponseAsync(req, HttpStatusCode.OK, posts);
+                return await SuccessResponse.CreateResponseAsync(req, HttpStatusCode.OK, posts, cancellationToken);
             }
 
             var post = await CmsService.GetSinglePostsAsync(Settings.GetHashnodePublicationId(), postName);
 
             _logger.LogInformation(SucessMessage, postName);
-            return await CreateResponseAsync(req, HttpStatusCode.OK, post);
 
+            return await SuccessResponse.CreateResponseAsync(req, HttpStatusCode.OK, post, cancellationToken);
         }
         catch (ArgumentException argumentException)
         {
             _logger.LogError(ErrorMessage, argumentException.Message);
 
-            return await CreateResponseAsync(req, HttpStatusCode.BadRequest, argumentException.Message);
+            return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.BadRequest, cancellationToken, argumentException.Message);
         }
         catch (Exception ex)
         {
             _logger.LogError(ErrorMessage, ex.Message);
 
-            return await CreateResponseAsync(req, HttpStatusCode.BadRequest);
+            return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.BadRequest, cancellationToken);
         }
     }
 
@@ -114,21 +115,5 @@ public class BlogFunction
         {
             throw new ArgumentException(message: $"The sort field \"{SortField}\" doesn't exists on the current object.");
         }
-    }
-
-    private static async Task<HttpResponseData> CreateResponseAsync(HttpRequestData req, HttpStatusCode httpStatusCode, List<PostModel> responseMessage)
-    {
-        var response = req.CreateResponse(httpStatusCode);
-        await response.WriteAsJsonAsync(responseMessage, serializer: new JsonObjectSerializer(JsonSettings.Options), httpStatusCode);
-
-        return response;
-    }
-
-    private static async Task<HttpResponseData> CreateResponseAsync(HttpRequestData req, HttpStatusCode httpStatusCode, string responseMessage = "An unexpected error occurred")
-    {
-        var response = req.CreateResponse(httpStatusCode);
-        await response.WriteAsJsonAsync(responseMessage, httpStatusCode);
-
-        return response;
     }
 }
