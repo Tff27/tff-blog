@@ -1,8 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
 		<AssemblyName>Tff.Blog.Shared</AssemblyName>
 		<RootNamespace>Tff.Blog.Shared</RootNamespace>
+		<AnalysisLevel>latest</AnalysisLevel>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<!--<TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<NuGetAuditMode>all</NuGetAuditMode>
+		<NuGetAuditLevel>low</NuGetAuditLevel>
+		<NoWarn>FS2003;FS0044;RS0016;RS0037;NU1803;CS7035</NoWarn>
+		<WarningsAsErrors>NU1901;NU1902;NU1903;NU1904</WarningsAsErrors>
 	</PropertyGroup>
 
 	<ItemGroup>
