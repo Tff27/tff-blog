@@ -23,9 +23,9 @@
 		<PackageReference Include="Markdig" Version="0.41.3" />
 		<PackageReference Include="MarkdigExtensions.ImageAsFigure" Version="1.0.0" />
 		<PackageReference Include="MarkdigExtensions.SyntaxHighlighting" Version="1.0.3" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.7" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.7" PrivateAssets="all" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.7" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.8" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.8" />
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
 		<PackageReference Include="System.Net.Http.Json" Version="9.0.7" />
 		<PackageReference Include="System.Private.Uri" Version="4.3.2" />
@@ -38,6 +38,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+  	<PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="9.0.8" />
+  	<PackageReference Include="Microsoft.NET.Sdk.WebAssembly.Pack" Version="9.0.8" />
 		<ProjectReference Include="..\tff-blog-shared\tff-blog-shared.csproj" />
 	</ItemGroup>
 
