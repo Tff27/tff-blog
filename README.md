@@ -3,7 +3,7 @@
 ![Deploy](https://github.com/Tff27/tff-blog/actions/workflows/azure-static-web-apps-black-tree-01f647703.yml/badge.svg)
 
 TFF Blog is my personal blog. 
-Built with .NET 9 and Blazor WebAssembly.
+Built with .NET 10 and Blazor WebAssembly.
 
 ## Main Goals
 * Share knowledge about technology with you.
