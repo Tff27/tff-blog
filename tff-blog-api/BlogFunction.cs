@@ -75,17 +75,21 @@ public class BlogFunction
 
             return await SuccessResponse.CreateResponseAsync(req, HttpStatusCode.OK, post, cancellationToken);
         }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
         catch (ArgumentException argumentException)
         {
-            _logger.LogError(ErrorMessage, argumentException.Message);
+            _logger.LogError(argumentException, ErrorMessage, argumentException.Message);
 
             return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.BadRequest, cancellationToken, argumentException.Message);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ErrorMessage, ex.Message);
+            _logger.LogError(ex, ErrorMessage, ex.Message);
 
-            return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.BadRequest, cancellationToken);
+            return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.InternalServerError, cancellationToken);
         }
     }
 
