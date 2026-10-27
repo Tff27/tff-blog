@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Text.Json;
 using Tff.Blog.Api.Configuration;
+using Tff.Blog.Api.Requests;
 using Tff.Blog.Api.Responses;
 using Tff.Blog.Api.Services;
 using Tff.Blog.Shared.Models;
@@ -17,8 +18,6 @@ public class BlogFunction
     private readonly ILogger<BlogFunction> _logger;
     private readonly ICmsService _cmsService;
     private readonly CmsSettings _settings;
-
-    private sealed record BlogRequest(string PostName, string SortField, string SortOrder);
 
     public BlogFunction(ILogger<BlogFunction> logger, ICmsService cmsService, CmsSettings settings)
     {
