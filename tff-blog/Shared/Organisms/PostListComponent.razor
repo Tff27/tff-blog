@@ -1,8 +1,12 @@
 ﻿@using Tff.Blog.Client.ViewModels
-@inject IHttpClientFactory ClientFactory
+@inject IBlogContentService ContentService
 
 <div class="post-container">
-    @if (PostList != null)
+    @if (errorMessage is not null)
+    {
+        <ContentError ErrorMessage="@errorMessage" OnRetry="LoadPostsAsync" />
+    }
+    else if (PostList is not null)
     {
         @foreach (var post in PostList.Posts)
         {
@@ -14,23 +18,26 @@
 @code {
     public PostListViewModel? PostList { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            var client = ClientFactory.CreateClient("WebAPI");
+    private string? errorMessage;
 
-            this.PostList = new PostListViewModel()
+    protected override Task OnInitializedAsync() => LoadPostsAsync();
+
+    private async Task LoadPostsAsync()
+    {
+        errorMessage = null;
+
+        var result = await ContentService.GetPostsAsync();
+
+        if (result.IsSuccess)
+        {
+            PostList = new PostListViewModel
             {
-                Posts = await client.GetFromJsonAsync<IEnumerable<PostModel>>(string.Empty) ?? []
+                Posts = result.Content ?? [],
             };
         }
-        catch (Exception)
+        else
         {
-            this.PostList = new PostListViewModel()
-            {
-                Posts = []
-            };
+            errorMessage = result.ErrorMessage;
         }
     }
 }

@@ -23,6 +23,8 @@ Personal blog: Blazor WebAssembly client + Azure Functions API, both on .NET 10.
 - Two named `HttpClient`s in `tff-blog/Program.cs`:
   - `"Client"` — app base address; used for `wwwroot/pages/*.md`.
   - `"WebAPI"` — base address from `ApiUrl` in `tff-blog/wwwroot/appsettings.json` (`api/BlogPosts`). Dev override is in `appsettings.Development.json` (`http://localhost:7071/api/BlogPosts`).
+- Client pages and components do not use `IHttpClientFactory` directly. `tff-blog/Services/BlogContentService.cs` (`IBlogContentService`) owns post/page loading, slug encoding, logging, and maps expected HTTP/JSON/markdown failures to `BlogContentResult<T>` (`IsSuccess`, `IsNotFound`, `ErrorMessage`) instead of throwing. Caller cancellation is rethrown.
+- Expected failures degrade one region only: `ContentError` shows a retryable message, a missing post/page navigates to `404`, and `AuthorComponent` hides itself. `MainLayout` wraps `<main>` and `<aside>` in per-region `ErrorBoundary` as a last resort; there is no global boundary replacing `@Body`.
 - Changing the API route requires updating both `appsettings.json` and `appsettings.Development.json`.
 - `"WebAPI"` is only registered when `ApiUrl` is non-empty. If it is missing, failures appear later at request time.
 - Single API entrypoint: function `BlogPosts` in `tff-blog-api/BlogFunction.cs`, `AuthorizationLevel.Function`, route `api/BlogPosts`. It accepts `postName`, `sortField`, `sortOrder` from query string or JSON body. Invalid `sortOrder` or `sortField` returns `400` before any CMS call.
@@ -57,7 +59,7 @@ Personal blog: Blazor WebAssembly client + Azure Functions API, both on .NET 10.
 - No `.editorconfig`, `Directory.Build.props`, or central package management. Keep the duplicated property blocks per `.csproj` consistent.
 - Markdown rendering is Markdig → HtmlSanitizer → `MarkupString` in `tff-blog/Shared/Atoms/Markdown.razor`. The sanitizer allows `class` in addition to its defaults (`tff-blog/Program.cs`). Do not bypass sanitization; extend the allowlist instead.
 - SPA routing is handled by `tff-blog/staticwebapp.config.json` (`navigationFallback` → `index.html`); client routes only need a Blazor `@page` directive.
-- Client pages commonly wrap all exceptions into `NavigateTo("404")` or an empty list without logging. Don't assume that pattern is a good model.
+- Client content loading goes through `IBlogContentService`; do not reintroduce `try/catch → NavigateTo("404")` or swallow failures into empty lists. `404` is only for genuinely missing content.
 
 ## Release convention
 

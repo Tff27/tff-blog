@@ -1,0 +1,15 @@
+﻿<div class="content-error" role="alert">
+    <p>@ErrorMessage</p>
+    @if (OnRetry.HasDelegate)
+    {
+        <button type="button" class="retry-button" @onclick="OnRetry">Try again</button>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public required string ErrorMessage { get; set; }
+
+    [Parameter]
+    public EventCallback OnRetry { get; set; }
+}

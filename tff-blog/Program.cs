@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Tff.Blog.Client;
+using Tff.Blog.Client.Services;
 using Ganss.Xss;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -20,6 +21,8 @@ if (!string.IsNullOrEmpty(apiUrl))
 {
     builder.Services.AddHttpClient("WebAPI", sp => sp.BaseAddress = new Uri(apiUrl));
 }
+
+builder.Services.AddScoped<IBlogContentService, BlogContentService>();
 
 builder.Services.AddScoped<IHtmlSanitizer, HtmlSanitizer>(x =>
 {

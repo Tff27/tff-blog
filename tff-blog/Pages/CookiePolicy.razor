@@ -1,36 +1,40 @@
 ﻿@page "/cookie-policy"
-@using Tff.Blog.Shared.Converters
-@inject IHttpClientFactory ClientFactory
+@inject IBlogContentService ContentService
 @inject NavigationManager UriHelper
 
-@if (cookiePolicyModel != null)
+@if (errorMessage is not null)
+{
+    <ContentError ErrorMessage="@errorMessage" OnRetry="LoadCookiePolicyAsync" />
+}
+else if (cookiePolicyModel is not null)
 {
     <Markdown MarkdownContent="@cookiePolicyModel.Text" />
 }
 
 @code {
     private CookiePolicyModel? cookiePolicyModel;
+    private string? errorMessage;
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync() => LoadCookiePolicyAsync();
+
+    private async Task LoadCookiePolicyAsync()
     {
-        try
-        {
-            var client = ClientFactory.CreateClient("Client");
-            var cookiePolicyRequest = await client.GetAsync($"pages/cookie-policy.md");
-            var cookiePolicyResult = cookiePolicyRequest.IsSuccessStatusCode ? await cookiePolicyRequest.Content.ReadAsStringAsync() : null;
+        errorMessage = null;
 
-            if (!string.IsNullOrEmpty(cookiePolicyResult))
-            {
-                cookiePolicyModel = MarkdownToModelConverter.CreateModelFromMarkdown<CookiePolicyModel>(cookiePolicyResult);
-            }
-            else
-            {
-                throw new Exception("Cookie policy page content is empty or not found.");
-            }
-        }
-        catch (Exception)
+        var result = await ContentService.GetMarkdownPageAsync<CookiePolicyModel>("cookie-policy");
+
+        if (result.IsNotFound)
         {
             UriHelper.NavigateTo("404", replace: true);
+            return;
         }
+
+        if (!result.IsSuccess)
+        {
+            errorMessage = result.ErrorMessage;
+            return;
+        }
+
+        cookiePolicyModel = result.Content;
     }
 }

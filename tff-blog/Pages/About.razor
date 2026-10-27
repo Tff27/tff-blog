@@ -1,36 +1,40 @@
 ﻿@page "/about"
-@using Tff.Blog.Shared.Converters
-@inject IHttpClientFactory ClientFactory
+@inject IBlogContentService ContentService
 @inject NavigationManager UriHelper
 
-@if (aboutPage != null)
+@if (errorMessage is not null)
+{
+    <ContentError ErrorMessage="@errorMessage" OnRetry="LoadAboutAsync" />
+}
+else if (aboutPage is not null)
 {
     <Markdown MarkdownContent="@aboutPage.Text" />
 }
 
 @code {
     private PageModel? aboutPage;
+    private string? errorMessage;
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync() => LoadAboutAsync();
+
+    private async Task LoadAboutAsync()
     {
-        try
-        {
-            var client = ClientFactory.CreateClient("Client");
-            var aboutRequest = await client.GetAsync($"pages/about.md");
-            var aboutResult = aboutRequest.IsSuccessStatusCode ? await aboutRequest.Content.ReadAsStringAsync() : null;
+        errorMessage = null;
 
-            if (!string.IsNullOrEmpty(aboutResult))
-            {
-                aboutPage = MarkdownToModelConverter.CreateModelFromMarkdown<PageModel>(aboutResult);
-            }
-            else
-            {
-                throw new Exception("About page content is empty or not found.");
-            }
-        }
-        catch (Exception)
+        var result = await ContentService.GetMarkdownPageAsync<PageModel>("about");
+
+        if (result.IsNotFound)
         {
             UriHelper.NavigateTo("404", replace: true);
+            return;
         }
+
+        if (!result.IsSuccess)
+        {
+            errorMessage = result.ErrorMessage;
+            return;
+        }
+
+        aboutPage = result.Content;
     }
 }

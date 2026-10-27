@@ -6,10 +6,22 @@
     </header>
 
     <main>
-        @Body
+        <ErrorBoundary>
+            <ChildContent>
+                @Body
+            </ChildContent>
+            <ErrorContent>
+                <ErrorComponent ErrorCodeText="500" ErrorText="Something went wrong while loading this page. Please try again later." />
+            </ErrorContent>
+        </ErrorBoundary>
     </main>
     <aside>
-        <AuthorComponent />
+        <ErrorBoundary>
+            <ChildContent>
+                <AuthorComponent />
+            </ChildContent>
+            <ErrorContent></ErrorContent>
+        </ErrorBoundary>
     </aside>
 
     <footer>
