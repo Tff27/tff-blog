@@ -115,6 +115,46 @@ public class BlogContentServiceTests : IDisposable
     }
 
     [Fact]
+    public async Task GetPostsAsync_WhenApiClientIsNotRegistered_ReturnsErrorMessage()
+    {
+        var httpClientFactory = Substitute.For<IHttpClientFactory>();
+        httpClientFactory.CreateClient(Arg.Any<string>())
+            .Returns(_ => throw new InvalidOperationException("The client is not registered."));
+        var service = new BlogContentService(httpClientFactory, NullLogger<BlogContentService>.Instance);
+
+        var result = await service.GetPostsAsync();
+
+        result.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be(BlogContentService.UnavailableMessage);
+    }
+
+    [Fact]
+    public async Task GetPostsAsync_WhenRequestTimesOut_ReturnsErrorMessage()
+    {
+        _server
+            .Given(Request.Create().WithPath("/").UsingGet())
+            .RespondWith(Response.Create()
+                .WithStatusCode(HttpStatusCode.OK)
+                .WithHeader("Content-Type", "application/json")
+                .WithBody(PostsJson)
+                .WithDelay(TimeSpan.FromSeconds(5)));
+
+        using var httpClient = new HttpClient
+        {
+            BaseAddress = new Uri($"{_server.Url}/"),
+            Timeout = TimeSpan.FromMilliseconds(100),
+        };
+        var httpClientFactory = Substitute.For<IHttpClientFactory>();
+        httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
+        var service = new BlogContentService(httpClientFactory, NullLogger<BlogContentService>.Instance);
+
+        var result = await service.GetPostsAsync();
+
+        result.IsSuccess.Should().BeFalse();
+        result.ErrorMessage.Should().Be(BlogContentService.UnavailableMessage);
+    }
+
+    [Fact]
     public async Task GetPostsAsync_WhenResponseIsMalformed_ReturnsErrorMessage()
     {
         StubJson("/", "{ not valid json");

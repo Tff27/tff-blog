@@ -135,7 +135,13 @@ public sealed class BlogContentService : IBlogContentService
         {
             throw;
         }
-        catch (Exception exception) when (exception is HttpRequestException or JsonException or NotSupportedException)
+        catch (OperationCanceledException exception)
+        {
+            _logger.LogError(exception, "Timed out while trying to {Operation} from {Url}", operation, relativeUrl);
+
+            return BlogContentResult<T>.Failure(UnavailableMessage);
+        }
+        catch (Exception exception) when (exception is HttpRequestException or JsonException or NotSupportedException or InvalidOperationException)
         {
             _logger.LogError(exception, "Failed to {Operation} from {Url}", operation, relativeUrl);
 
@@ -180,7 +186,13 @@ public sealed class BlogContentService : IBlogContentService
         {
             throw;
         }
-        catch (Exception exception) when (exception is HttpRequestException or NotSupportedException)
+        catch (OperationCanceledException exception)
+        {
+            _logger.LogError(exception, "Timed out while trying to {Operation} from {Url}", operation, relativeUrl);
+
+            return BlogContentResult<string>.Failure(UnavailableMessage);
+        }
+        catch (Exception exception) when (exception is HttpRequestException or NotSupportedException or InvalidOperationException)
         {
             _logger.LogError(exception, "Failed to {Operation} from {Url}", operation, relativeUrl);
 
