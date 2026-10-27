@@ -27,7 +27,7 @@ Personal blog: Blazor WebAssembly client + Azure Functions API, both on .NET 10.
 - `"WebAPI"` is only registered when `ApiUrl` is non-empty. If it is missing, failures appear later at request time.
 - Single API entrypoint: function `BlogPosts` in `tff-blog-api/BlogFunction.cs`, `AuthorizationLevel.Function`, route `api/BlogPosts`. It accepts `postName`, `sortField`, `sortOrder` from query string or JSON body. Invalid `sortOrder` or `sortField` returns `400` before any CMS call.
 - `BlogFunction` depends on `ICmsService` and `CmsSettings` (registered in `tff-blog-api/Program.cs`). `CmsService` (`tff-blog-api/Services/CmsService.cs`) is an instance service using an injected `HttpClient`, and interpolates values into GraphQL query strings. Treat refactors here carefully.
-- Sorting lives in `tff-blog-api/Services/PostSorter.cs`; the sortable-field whitelist is case-insensitive and does not include `Tags`.
+- Sorting lives in `tff-blog-api/Services/PostSorter.cs`; the sortable-field whitelist is case-insensitive and includes `Date`, `Title`, `Slug`, `Description`, `ReadTimeInMinutes`, and `Draft` (not `Tags`, `Image`, or `Text`).
 
 ## Config and secrets
 

@@ -97,5 +97,5 @@ Always dispose the server, `HttpClient`, and `CmsService` in the test class. Kee
 - `BlogFunction` validates `sortOrder` and `sortField` before calling `ICmsService`.
 - Invalid input returns `400` and makes no CMS call.
 - Unknown `sortField` values (for example `Tags`) return `400`.
-- Supported fields are defined by the case-insensitive whitelist in `tff-blog-api/Services/PostSorter.cs`: `Date`, `Title`, `Slug`, `Description`, `Image`, `Text`, `ReadTimeInMinutes`, `Draft`.
+- Supported fields are defined by the case-insensitive whitelist in `tff-blog-api/Services/PostSorter.cs`: `Date`, `Title`, `Slug`, `Description`, `ReadTimeInMinutes`, `Draft`.
 - `CmsService` takes an injected `HttpClient` and `CmsSettings`, so integration tests point it at WireMock instead of Hashnode.

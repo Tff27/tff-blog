@@ -32,8 +32,6 @@ public class PostSorterTests
     [InlineData("title")]
     [InlineData("SLUG")]
     [InlineData("Description")]
-    [InlineData("Image")]
-    [InlineData("Text")]
     [InlineData("ReadTimeInMinutes")]
     [InlineData("Draft")]
     public void IsValidSortField_ReturnsTrue_ForWhitelistedFields(string sortField)
@@ -45,6 +43,8 @@ public class PostSorterTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("Tags")]
+    [InlineData("Image")]
+    [InlineData("Text")]
     [InlineData("Unknown")]
     public void IsValidSortField_ReturnsFalse_ForUnknownFields(string? sortField)
     {

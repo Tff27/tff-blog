@@ -10,8 +10,6 @@ internal static class PostSorter
         ["Title"] = post => post.Title,
         ["Slug"] = post => post.Slug,
         ["Description"] = post => post.Description,
-        ["Image"] = post => post.Image,
-        ["Text"] = post => post.Text,
         ["ReadTimeInMinutes"] = post => post.ReadTimeInMinutes,
         ["Draft"] = post => post.Draft,
     };
