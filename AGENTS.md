@@ -13,9 +13,9 @@ Personal blog: Blazor WebAssembly client + Azure Functions API, both on .NET 10.
 ## Commands
 
 - Build everything: `dotnet build tff-blog.sln`
+- Run all tests: `dotnet test tff-blog.sln --no-build` (run `dotnet build` first)
 - Run client: `dotnet run --project tff-blog` (http://localhost:5000, https://localhost:5001)
 - Run API: `dotnet run --project tff-blog-api` (port 7071; launch profile adds `--cors *`)
-- There are **no test projects**. `dotnet test` exits 0 with zero tests — it is not verification.
 - CI (`.github/workflows/azure-static-web-apps-black-tree-01f647703.yml`) runs on pushes/PRs to `master` and deploys via Azure Static Web Apps (`app_location: tff-blog`, `api_location: tff-blog-api`, `output_location: wwwroot`).
 
 ## Client ↔ API wiring
@@ -25,15 +25,29 @@ Personal blog: Blazor WebAssembly client + Azure Functions API, both on .NET 10.
   - `"WebAPI"` — base address from `ApiUrl` in `tff-blog/wwwroot/appsettings.json` (`api/BlogPosts`). Dev override is in `appsettings.Development.json` (`http://localhost:7071/api/BlogPosts`).
 - Changing the API route requires updating both `appsettings.json` and `appsettings.Development.json`.
 - `"WebAPI"` is only registered when `ApiUrl` is non-empty. If it is missing, failures appear later at request time.
-- Single API entrypoint: function `BlogPosts` in `tff-blog-api/BlogFunction.cs`, `AuthorizationLevel.Function`, route `api/BlogPosts`. It accepts `postName`, `sortField`, `sortOrder` from query string or JSON body.
-- `CmsService` (`tff-blog-api/Services/CmsService.cs`) is static, not DI-registered, creates `new HttpClient()` per call, and interpolates values into GraphQL query strings. Treat refactors here carefully.
+- Single API entrypoint: function `BlogPosts` in `tff-blog-api/BlogFunction.cs`, `AuthorizationLevel.Function`, route `api/BlogPosts`. It accepts `postName`, `sortField`, `sortOrder` from query string or JSON body. Invalid `sortOrder` or `sortField` returns `400` before any CMS call.
+- `BlogFunction` depends on `ICmsService` and `CmsSettings` (registered in `tff-blog-api/Program.cs`). `CmsService` (`tff-blog-api/Services/CmsService.cs`) is an instance service using an injected `HttpClient`, and interpolates values into GraphQL query strings. Treat refactors here carefully.
+- Sorting lives in `tff-blog-api/Services/PostSorter.cs`; the sortable-field whitelist is case-insensitive and does not include `Tags`.
 
 ## Config and secrets
 
-- The API reads environment variables directly via `tff-blog-api/Configuration/Settings.cs` (`ShowDrafts`, `HashnodePublicationId`), not `IConfiguration` or the Options pattern.
+- The API reads environment variables directly via `tff-blog-api/Configuration/Settings.cs` (`ShowDrafts`, `HashnodePublicationId`, `HashnodeGraphQlEndpoint`), not `IConfiguration` or the Options pattern. `HashnodeGraphQlEndpoint` defaults to `https://gql.hashnode.com`.
 - Local API settings live in `tff-blog-api/local.settings.json`. It is gitignored and untracked; it may contain a plaintext token in comments. Never commit, print, or copy its contents.
 - Client secrets belong in User Secrets (`UserSecretsId` is configured). `appsettings.Development.json` is tracked and only contains the local API URL.
 - Production needs no CORS config: Static Web Apps proxies `/api` same-origin. Local dev relies on `--cors *` from the launch profile.
+
+## Testing
+
+- Tests live in `tests/` and are part of `tff-blog.sln`:
+  - `tff-blog.Unit.Tests` — bUnit component tests for the client.
+  - `tff-blog-api.Unit.Tests` — `PostSorter` and `BlogFunction` tests.
+  - `tff-blog-shared.Unit.Tests` — mapper and converter tests.
+  - `tff-blog.Integration.Tests` — `CmsService` against WireMock.Net.
+- Stack: xUnit, **AwesomeAssertions** (`.Should()` instead of `Assert.*`), **NSubstitute** for mocks/substitutes, **bUnit** for components, **WireMock.Net** for HTTP-level tests.
+- Unit tests must never call the real network; stub HTTP with WireMock and external services with NSubstitute.
+- Verification: `dotnet build tff-blog.sln` then `dotnet test tff-blog.sln --no-build`. Focused runs: `dotnet test tests/<project> --no-build`.
+- `BlogFunction` tests use in-memory `HttpRequestData`/`HttpResponseData` doubles in `tests/tff-blog-api.Unit.Tests/Infrastructure/`; keep the worker serializer registered there when adding response-body assertions.
+- See `tests/README.md` for conventions and examples.
 
 ## Build and code gotchas
 

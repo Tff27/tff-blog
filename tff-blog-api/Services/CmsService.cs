@@ -10,11 +10,19 @@ using Tff.Blog.Shared.Models.Posts;
 
 namespace Tff.Blog.Api.Services;
 
-internal class CmsService
+public sealed class CmsService : ICmsService, IDisposable
 {
-    private static readonly string graphQLEndpoint = "https://gql.hashnode.com";
+    private readonly GraphQLHttpClient _graphQlClient;
 
-    public static async Task<List<PostModel>> GetPostsAsync(string publicationId)
+    public CmsService(HttpClient httpClient, CmsSettings settings)
+    {
+        _graphQlClient = new GraphQLHttpClient(
+            new GraphQLHttpClientOptions { EndPoint = new Uri(settings.GraphQlEndpoint) },
+            new SystemTextJsonSerializer(),
+            httpClient);
+    }
+
+    public async Task<List<PostModel>> GetPostsAsync(string publicationId, CancellationToken cancellationToken = default)
     {
         var query = $$"""
             query {
@@ -51,7 +59,7 @@ internal class CmsService
             }
             """;
 
-        var response = await GetFromHashnodeAsync(query);
+        var response = await GetFromHashnodeAsync(query, cancellationToken);
 
         HashnodePostListApiResponse apiResponse = JsonSerializer.Deserialize<HashnodePostListApiResponse>(response.Data, JsonSettings.Options);
 
@@ -60,7 +68,7 @@ internal class CmsService
         return blogPosts;
     }
 
-    public static async Task<List<PostModel>> GetSinglePostsAsync(string publicationId, string postSlug)
+    public async Task<List<PostModel>> GetSinglePostsAsync(string publicationId, string postSlug, CancellationToken cancellationToken = default)
     {
         var query = $$"""
             query {
@@ -89,7 +97,7 @@ internal class CmsService
             }
             """;
 
-        var response = await GetFromHashnodeAsync(query);
+        var response = await GetFromHashnodeAsync(query, cancellationToken);
 
         HashnodeSinglePostApiResponse apiResponse = JsonSerializer.Deserialize<HashnodeSinglePostApiResponse>(response.Data, JsonSettings.Options);
 
@@ -106,7 +114,7 @@ internal class CmsService
         };
     }
 
-    public static async Task<PageModel> GetPageAsync(string publicationId, string pageSlug)
+    public async Task<PageModel> GetPageAsync(string publicationId, string pageSlug, CancellationToken cancellationToken = default)
     {
         var query = $$"""
             query {
@@ -124,23 +132,25 @@ internal class CmsService
             }
             """;
 
-        var response = await GetFromHashnodeAsync(query);
+        var response = await GetFromHashnodeAsync(query, cancellationToken);
 
         HashnodePageApiResponse apiResponse = JsonSerializer.Deserialize<HashnodePageApiResponse>(response.Data, JsonSettings.Options);
 
         return PageModelMapper.MapToPageModel(apiResponse.Publication.StaticPage);
     }
 
-    private static async Task<GraphQLResponse<dynamic>> GetFromHashnodeAsync(string query)
+    public void Dispose()
     {
-        var httpClient = new HttpClient();
-        var graphQLClient = new GraphQLHttpClient(new GraphQLHttpClientOptions { EndPoint = new Uri(graphQLEndpoint) }, new SystemTextJsonSerializer(), httpClient);
+        _graphQlClient.Dispose();
+    }
 
+    private async Task<GraphQLResponse<dynamic>> GetFromHashnodeAsync(string query, CancellationToken cancellationToken)
+    {
         var graphQLRequest = new GraphQLRequest
         {
             Query = query
         };
 
-        return await graphQLClient.SendQueryAsync<dynamic>(graphQLRequest);
+        return await _graphQlClient.SendQueryAsync<dynamic>(graphQLRequest, cancellationToken);
     }
 }

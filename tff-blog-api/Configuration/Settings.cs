@@ -16,4 +16,9 @@ public static class Settings
     {
         return GetEnvironmentVariable("HashnodePublicationId");
     }
+
+    public static string GetHashnodeGraphQlEndpoint()
+    {
+        return GetEnvironmentVariable("HashnodeGraphQlEndpoint") ?? "https://gql.hashnode.com";
+    }
 }

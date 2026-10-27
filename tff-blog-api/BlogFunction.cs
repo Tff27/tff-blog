@@ -12,13 +12,19 @@ namespace Tff.Blog.Api;
 
 public class BlogFunction
 {
-    private const string SucessMessage = "Success retrieving info for {0}";
-    private const string ErrorMessage = "Error fetching info: {0}";
+    private const string SuccessMessage = "Success retrieving info for {Info}";
+    private const string ErrorMessage = "Error fetching info: {Message}";
     private readonly ILogger<BlogFunction> _logger;
+    private readonly ICmsService _cmsService;
+    private readonly CmsSettings _settings;
 
-    public BlogFunction(ILogger<BlogFunction> logger)
+    private sealed record BlogRequest(string PostName, string SortField, string SortOrder);
+
+    public BlogFunction(ILogger<BlogFunction> logger, ICmsService cmsService, CmsSettings settings)
     {
         _logger = logger;
+        _cmsService = cmsService;
+        _settings = settings;
     }
 
     [Function("BlogPosts")]
@@ -36,42 +42,45 @@ public class BlogFunction
             string sortOrder = queryString["sortOrder"];
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync(cancellationToken);
-            dynamic parsedBody = string.IsNullOrEmpty(requestBody) ? null : JsonSerializer.Deserialize<dynamic>(requestBody, JsonSettings.Options);
-            postName ??= parsedBody?.postName;
-            sortField ??= parsedBody?.sortField;
-            sortOrder ??= parsedBody?.sortOrder;
+            var parsedBody = string.IsNullOrEmpty(requestBody)
+                ? null
+                : JsonSerializer.Deserialize<BlogRequest>(requestBody, JsonSettings.Options);
+            postName ??= parsedBody?.PostName;
+            sortField ??= parsedBody?.SortField;
+            sortOrder ??= parsedBody?.SortOrder;
 
-            _logger.LogInformation($"Retrieve info for {postName ?? "all posts"}");
+            _logger.LogInformation("Retrieve info for {PostName}", postName ?? "all posts");
 
             if (string.IsNullOrEmpty(postName))
             {
-                var posts = await CmsService.GetPostsAsync(Settings.GetHashnodePublicationId());
-
-                if (sortOrder != null)
+                if (!PostSorter.IsValidSortOrder(sortOrder))
                 {
-                    if (!(string.Equals(sortOrder, "Ascending", StringComparison.InvariantCultureIgnoreCase)
-                        || string.Equals(sortOrder, "Descending", StringComparison.InvariantCultureIgnoreCase)))
-                    {
-                        _logger.LogWarning($"The sort order \"{sortOrder}\" is invalid, please use Ascending/Descending.");
+                    _logger.LogWarning("The sort order \"{SortOrder}\" is invalid, please use Ascending/Descending.", sortOrder);
 
-                        return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.BadRequest, cancellationToken, $"The sort order \"{sortOrder}\" is invalid, please use Ascending/Descending.");
-                    }
-
-                    posts = SortPostList(posts, sortField, sortOrder);
-                }
-                else
-                {
-                    posts = SortPostList(posts, "Date", "Descending");
+                    return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.BadRequest, cancellationToken, $"The sort order \"{sortOrder}\" is invalid, please use Ascending/Descending.");
                 }
 
-                _logger.LogInformation(SucessMessage, "all posts");
+                if (!string.IsNullOrEmpty(sortField) && !PostSorter.IsValidSortField(sortField))
+                {
+                    _logger.LogWarning("The sort field \"{SortField}\" is invalid.", sortField);
+
+                    return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.BadRequest, cancellationToken, $"The sort field \"{sortField}\" is invalid.");
+                }
+
+                var posts = await _cmsService.GetPostsAsync(_settings.PublicationId, cancellationToken);
+
+                posts = string.IsNullOrEmpty(sortOrder)
+                    ? PostSorter.Sort(posts, "Date", "Descending")
+                    : PostSorter.Sort(posts, sortField, sortOrder);
+
+                _logger.LogInformation(SuccessMessage, "all posts");
 
                 return await SuccessResponse.CreateResponseAsync(req, HttpStatusCode.OK, posts, cancellationToken);
             }
 
-            var post = await CmsService.GetSinglePostsAsync(Settings.GetHashnodePublicationId(), postName);
+            var post = await _cmsService.GetSinglePostsAsync(_settings.PublicationId, postName, cancellationToken);
 
-            _logger.LogInformation(SucessMessage, postName);
+            _logger.LogInformation(SuccessMessage, postName);
 
             return await SuccessResponse.CreateResponseAsync(req, HttpStatusCode.OK, post, cancellationToken);
         }
@@ -90,27 +99,6 @@ public class BlogFunction
             _logger.LogError(ex, ErrorMessage, ex.Message);
 
             return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.InternalServerError, cancellationToken);
-        }
-    }
-
-    private static List<PostModel> SortPostList(List<PostModel> postList, string SortField, string SortOrder)
-    {
-        try
-        {
-            if (string.Equals(SortOrder, "Ascending", StringComparison.InvariantCultureIgnoreCase))
-            {
-                return postList.OrderBy(post => post.GetType().GetProperty(SortField)?.GetValue(post)).ToList();
-            }
-            else if (string.Equals(SortOrder, "Descending", StringComparison.InvariantCultureIgnoreCase))
-            {
-                return postList.OrderByDescending(post => post.GetType().GetProperty(SortField)?.GetValue(post)).ToList();
-            }
-
-            return postList;
-        }
-        catch (KeyNotFoundException)
-        {
-            throw new ArgumentException(message: $"The sort field \"{SortField}\" doesn't exists on the current object.");
         }
     }
 }
