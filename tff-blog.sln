@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32804.467
@@ -30,6 +30,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\tagversion.yml = .github\workflows\tagversion.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05-4346-4AA6-1389-037BE0695223}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tff-blog.Unit.Tests", "tests\tff-blog.Unit.Tests\tff-blog.Unit.Tests.csproj", "{D76F5F62-29BC-4E37-9402-B79F6639DE87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tff-blog-api.Unit.Tests", "tests\tff-blog-api.Unit.Tests\tff-blog-api.Unit.Tests.csproj", "{B0889A01-2E53-447F-ACA3-997E30AA9393}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tff-blog-shared.Unit.Tests", "tests\tff-blog-shared.Unit.Tests\tff-blog-shared.Unit.Tests.csproj", "{24ACF4BD-0A06-4C61-9B5E-513D670D4445}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tff-blog.Integration.Tests", "tests\tff-blog.Integration.Tests\tff-blog.Integration.Tests.csproj", "{2BD2B16A-28C3-4CA1-B7B0-B5019B5A16BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +58,22 @@ Global
 		{51CAF0AB-3181-4DA4-A9A8-C0100223D74E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51CAF0AB-3181-4DA4-A9A8-C0100223D74E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51CAF0AB-3181-4DA4-A9A8-C0100223D74E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D76F5F62-29BC-4E37-9402-B79F6639DE87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D76F5F62-29BC-4E37-9402-B79F6639DE87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D76F5F62-29BC-4E37-9402-B79F6639DE87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D76F5F62-29BC-4E37-9402-B79F6639DE87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0889A01-2E53-447F-ACA3-997E30AA9393}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0889A01-2E53-447F-ACA3-997E30AA9393}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0889A01-2E53-447F-ACA3-997E30AA9393}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0889A01-2E53-447F-ACA3-997E30AA9393}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24ACF4BD-0A06-4C61-9B5E-513D670D4445}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24ACF4BD-0A06-4C61-9B5E-513D670D4445}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24ACF4BD-0A06-4C61-9B5E-513D670D4445}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24ACF4BD-0A06-4C61-9B5E-513D670D4445}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BD2B16A-28C3-4CA1-B7B0-B5019B5A16BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BD2B16A-28C3-4CA1-B7B0-B5019B5A16BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BD2B16A-28C3-4CA1-B7B0-B5019B5A16BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BD2B16A-28C3-4CA1-B7B0-B5019B5A16BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +81,10 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F6CAC183-FC0B-4B26-B72E-B14E82F05B72} = {C106A434-E1BB-4180-93C6-ABAF4F2EF712}
 		{49697542-F4C0-435B-9AB1-F15FD1EA43D2} = {F6CAC183-FC0B-4B26-B72E-B14E82F05B72}
+		{D76F5F62-29BC-4E37-9402-B79F6639DE87} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{B0889A01-2E53-447F-ACA3-997E30AA9393} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{24ACF4BD-0A06-4C61-9B5E-513D670D4445} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{2BD2B16A-28C3-4CA1-B7B0-B5019B5A16BF} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AEDB7C94-BD7B-4E77-8D26-D64B6AB30488}
