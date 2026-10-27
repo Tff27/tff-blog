@@ -1,44 +1,25 @@
-﻿@using Tff.Blog.Shared.Converters
-@inject IHttpClientFactory ClientFactory
-@inject NavigationManager UriHelper
+﻿@inject IBlogContentService ContentService
 
-@if (author == null)
-{
-    //TODO add skeleton loader
-}
-else
+@if (author is not null)
 {
     <div class="authorbar">
-        <img class="photo" src="@this.author.Photo" alt="Author photo" />
-        <p class="name">@this.author.Name</p>
+        <img class="photo" src="@author.Photo" alt="Author photo" />
+        <p class="name">@author.Name</p>
         <Social />
-        <Markdown MarkdownContent=@this.author.Text />
+        <Markdown MarkdownContent=@author.Text />
     </div>
 }
 
 @code {
-    public required AuthorModel author;
+    public AuthorModel? author;
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            var client = ClientFactory.CreateClient("Client");
-            var authorRequest = await client.GetAsync($"pages/author.md");
-            var authorResult = authorRequest.IsSuccessStatusCode ? await authorRequest.Content.ReadAsStringAsync() : null;
+        var result = await ContentService.GetMarkdownPageAsync<AuthorModel>("author");
 
-            if (!string.IsNullOrEmpty(authorResult))
-            {
-                author = MarkdownToModelConverter.CreateModelFromMarkdown<AuthorModel>(authorResult);
-            }
-            else
-            {
-                throw new Exception("Author content is empty or not found.");
-            }
-        }
-        catch (Exception)
+        if (result.IsSuccess)
         {
-            UriHelper.NavigateTo("404", replace: true);
+            author = result.Content;
         }
     }
 }

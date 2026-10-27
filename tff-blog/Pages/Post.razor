@@ -1,8 +1,12 @@
 ﻿@page "/post/{slug}"
-@inject IHttpClientFactory ClientFactory
+@inject IBlogContentService ContentService
 @inject NavigationManager UriHelper
 
-@if (postdetails == null)
+@if (errorMessage is not null)
+{
+    <ContentError ErrorMessage="@errorMessage" OnRetry="LoadPostAsync" />
+}
+else if (postdetails == null)
 {
     <HeadContent>
         <meta property="og:image" content=@($"{UriHelper.BaseUri}/images/logo_icon.png")>
@@ -61,25 +65,28 @@ else
 
     public PostModel? postdetails;
 
-    protected override async Task OnInitializedAsync()
+    private string? errorMessage;
+
+    protected override Task OnInitializedAsync() => LoadPostAsync();
+
+    private async Task LoadPostAsync()
     {
-        try
-        {
-            var client = ClientFactory.CreateClient("WebAPI");
+        errorMessage = null;
 
-            var postDetailsResult = await client.GetFromJsonAsync<IEnumerable<PostModel>>($"?postName={slug}");
+        var result = await ContentService.GetPostAsync(slug);
 
-            if (postDetailsResult == null || !postDetailsResult.Any())
-            {
-                UriHelper.NavigateTo("404", replace: true);
-                return;
-            }
-
-            postdetails = postDetailsResult.FirstOrDefault();
-        }
-        catch (Exception)
+        if (result.IsNotFound)
         {
             UriHelper.NavigateTo("404", replace: true);
+            return;
         }
+
+        if (!result.IsSuccess)
+        {
+            errorMessage = result.ErrorMessage;
+            return;
+        }
+
+        postdetails = result.Content;
     }
 }
