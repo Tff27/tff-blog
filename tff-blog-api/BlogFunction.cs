@@ -16,14 +16,12 @@ public class BlogFunction
     private const string SuccessMessage = "Success retrieving info for {Info}";
     private const string ErrorMessage = "Error fetching info: {Message}";
     private readonly ILogger<BlogFunction> _logger;
-    private readonly ICmsService _cmsService;
-    private readonly CmsSettings _settings;
+    private readonly IContentProvider _contentProvider;
 
-    public BlogFunction(ILogger<BlogFunction> logger, ICmsService cmsService, CmsSettings settings)
+    public BlogFunction(ILogger<BlogFunction> logger, IContentProvider contentProvider)
     {
         _logger = logger;
-        _cmsService = cmsService;
-        _settings = settings;
+        _contentProvider = contentProvider;
     }
 
     [Function("BlogPosts")]
@@ -66,7 +64,7 @@ public class BlogFunction
                     return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.BadRequest, cancellationToken, $"The sort field \"{sortField}\" is invalid.");
                 }
 
-                var posts = await _cmsService.GetPostsAsync(_settings.PublicationId, cancellationToken);
+                var posts = await _contentProvider.GetPostsAsync(cancellationToken);
 
                 posts = string.IsNullOrEmpty(sortOrder)
                     ? PostSorter.Sort(posts, "Date", "Descending")
@@ -77,11 +75,12 @@ public class BlogFunction
                 return await SuccessResponse.CreateResponseAsync(req, HttpStatusCode.OK, posts, cancellationToken);
             }
 
-            var post = await _cmsService.GetSinglePostsAsync(_settings.PublicationId, postName, cancellationToken);
+            var post = await _contentProvider.GetPostAsync(postName, cancellationToken);
+            var matchingPosts = post is null ? new List<PostModel>() : new List<PostModel> { post };
 
             _logger.LogInformation(SuccessMessage, postName);
 
-            return await SuccessResponse.CreateResponseAsync(req, HttpStatusCode.OK, post, cancellationToken);
+            return await SuccessResponse.CreateResponseAsync(req, HttpStatusCode.OK, matchingPosts, cancellationToken);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
