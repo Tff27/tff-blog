@@ -100,6 +100,22 @@ public class StoryblokContentProviderTests : IDisposable
     }
 
     [Fact]
+    public async Task GetPostsAsync_WhenPreviewIsRequested_UsesTheDraftVersionAndPreviewToken()
+    {
+        var sut = new StoryblokContentProvider(
+            _httpClient,
+            new StoryblokSettings(_server.Url!, PublicToken, PreviewToken, ShowDrafts: false));
+        StubStories(CreateStoriesResponse());
+
+        await sut.GetPostsAsync(preview: true);
+
+        var url = _server.LogEntries.Single().RequestMessage!.Url;
+
+        url.Should().Contain("version=draft");
+        url.Should().Contain($"token={PreviewToken}");
+    }
+
+    [Fact]
     public async Task GetPostsAsync_WhenTheTokenIsMissing_ThrowsInvalidOperationException()
     {
         var sut = new StoryblokContentProvider(

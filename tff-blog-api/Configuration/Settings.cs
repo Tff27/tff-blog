@@ -33,6 +33,11 @@ public static class Settings
             : 0;
     }
 
+    public static string GetPreviewSecret()
+    {
+        return GetEnvironmentVariable("PreviewSecret") ?? string.Empty;
+    }
+
     private static string? GetEnvironmentVariable(string name)
     {
         return Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);

@@ -118,6 +118,21 @@ public class CachedContentProviderTests : IDisposable
     }
 
     [Fact]
+    public async Task GetPostsAsync_WhenPreviewIsRequested_BypassesTheCache()
+    {
+        _inner.GetPostsAsync(Arg.Any<CancellationToken>(), Arg.Any<bool>())
+            .Returns(_ => Task.FromResult(new List<PostModel>()));
+        var sut = CreateProvider(DefaultTtl);
+
+        await sut.GetPostsAsync();
+        await sut.GetPostsAsync(cancellationToken: default, preview: true);
+        await sut.GetPostsAsync();
+
+        await _inner.Received(1).GetPostsAsync(Arg.Any<CancellationToken>(), false);
+        await _inner.Received(1).GetPostsAsync(Arg.Any<CancellationToken>(), true);
+    }
+
+    [Fact]
     public async Task GetPostsAsync_WhenTheTtlExpires_FetchesAgain()
     {
         _inner.GetPostsAsync(Arg.Any<CancellationToken>()).Returns(_ => Task.FromResult(new List<PostModel>()));

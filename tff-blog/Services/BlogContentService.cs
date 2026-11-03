@@ -1,6 +1,8 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Web;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using Tff.Blog.Shared.Converters;
 using Tff.Blog.Shared.Models;
@@ -15,18 +17,23 @@ public sealed class BlogContentService : IBlogContentService
 
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<BlogContentService> _logger;
+    private readonly NavigationManager _navigationManager;
 
-    public BlogContentService(IHttpClientFactory httpClientFactory, ILogger<BlogContentService> logger)
+    public BlogContentService(
+        IHttpClientFactory httpClientFactory,
+        ILogger<BlogContentService> logger,
+        NavigationManager navigationManager)
     {
         _httpClientFactory = httpClientFactory;
         _logger = logger;
+        _navigationManager = navigationManager;
     }
 
     public async Task<BlogContentResult<IReadOnlyList<PostModel>>> GetPostsAsync(CancellationToken cancellationToken = default)
     {
         var result = await GetJsonAsync<List<PostModel>>(
             ApiClientName,
-            string.Empty,
+            WithPreview(string.Empty),
             "load blog posts",
             cancellationToken);
 
@@ -46,7 +53,7 @@ public sealed class BlogContentService : IBlogContentService
 
         var result = await GetJsonAsync<List<PostModel>>(
             ApiClientName,
-            $"?postName={Uri.EscapeDataString(slug)}",
+            WithPreview($"?postName={Uri.EscapeDataString(slug)}"),
             $"load post '{slug}'",
             cancellationToken);
 
@@ -95,6 +102,27 @@ public sealed class BlogContentService : IBlogContentService
 
             return BlogContentResult<T>.Failure(UnavailableMessage);
         }
+    }
+
+    private string WithPreview(string relativeUrl)
+    {
+        var previewSecret = GetPreviewSecret();
+
+        if (string.IsNullOrWhiteSpace(previewSecret))
+        {
+            return relativeUrl;
+        }
+
+        var separator = relativeUrl.Contains('?') ? '&' : '?';
+
+        return $"{relativeUrl}{separator}preview={Uri.EscapeDataString(previewSecret)}";
+    }
+
+    private string? GetPreviewSecret()
+    {
+        var query = new Uri(_navigationManager.Uri).Query;
+
+        return HttpUtility.ParseQueryString(query)["preview"];
     }
 
     private async Task<BlogContentResult<T>> GetJsonAsync<T>(

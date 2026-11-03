@@ -13,13 +13,15 @@ namespace Tff.Blog.Api.Unit.Tests;
 
 public class BlogFunctionTests
 {
+    private const string PreviewSecret = "preview-secret";
+
     private readonly IContentProvider _contentProvider = Substitute.For<IContentProvider>();
     private readonly ILogger<BlogFunction> _logger = Substitute.For<ILogger<BlogFunction>>();
     private readonly BlogFunction _sut;
 
     public BlogFunctionTests()
     {
-        _sut = new BlogFunction(_logger, _contentProvider);
+        _sut = new BlogFunction(_logger, _contentProvider, new PreviewSettings(PreviewSecret));
     }
 
     [Fact]
@@ -154,6 +156,64 @@ public class BlogFunctionTests
 
         await act.Should().ThrowAsync<OperationCanceledException>();
         await _contentProvider.DidNotReceive().GetPostsAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task RunAsync_WithValidPreviewSecret_RequestsDraftContent()
+    {
+        _contentProvider.GetPostsAsync(Arg.Any<CancellationToken>(), true)
+            .Returns(Task.FromResult(new List<PostModel>()));
+
+        var response = await _sut.RunAsync(CreateRequest($"?preview={PreviewSecret}"), CancellationToken.None);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var testResponse = response.Should().BeOfType<TestHttpResponseData>().Subject;
+        testResponse.Headers.TryGetValues("Cache-Control", out var values).Should().BeTrue();
+        values.Should().ContainSingle().Which.Should().Be("no-store");
+        await _contentProvider.Received(1).GetPostsAsync(Arg.Any<CancellationToken>(), true);
+    }
+
+    [Fact]
+    public async Task RunAsync_WithoutPreviewSecret_RequestsPublishedContent()
+    {
+        _contentProvider.GetPostsAsync(Arg.Any<CancellationToken>(), false)
+            .Returns(Task.FromResult(new List<PostModel>()));
+
+        var response = await _sut.RunAsync(CreateRequest(), CancellationToken.None);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        await _contentProvider.Received(1).GetPostsAsync(Arg.Any<CancellationToken>(), false);
+    }
+
+    [Fact]
+    public async Task RunAsync_WithInvalidPreviewSecret_ReturnsUnauthorizedWithoutCallingCms()
+    {
+        var response = await _sut.RunAsync(CreateRequest("?preview=wrong"), CancellationToken.None);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        await _contentProvider.DidNotReceive().GetPostsAsync(Arg.Any<CancellationToken>(), Arg.Any<bool>());
+    }
+
+    [Fact]
+    public async Task RunAsync_WhenPreviewIsNotConfigured_ReturnsUnauthorized()
+    {
+        var sut = new BlogFunction(_logger, _contentProvider, new PreviewSettings(string.Empty));
+
+        var response = await sut.RunAsync(CreateRequest("?preview=anything"), CancellationToken.None);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task RunAsync_WithPreviewSecretAndPostName_RequestsTheDraftPost()
+    {
+        _contentProvider.GetPostAsync("my-post", Arg.Any<CancellationToken>(), true)
+            .Returns(Task.FromResult<PostModel?>(CreatePosts()[0]));
+
+        var response = await _sut.RunAsync(CreateRequest($"?postName=my-post&preview={PreviewSecret}"), CancellationToken.None);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        await _contentProvider.Received(1).GetPostAsync("my-post", Arg.Any<CancellationToken>(), true);
     }
 
     private static TestHttpRequestData CreateRequest(string query = "")

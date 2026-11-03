@@ -15,6 +15,7 @@ builder.Services.AddSingleton(new StoryblokSettings(
     Settings.GetStoryblokPublicToken(),
     Settings.GetStoryblokPreviewToken(),
     Settings.GetShowDrafts()));
+builder.Services.AddSingleton(new PreviewSettings(Settings.GetPreviewSecret()));
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient<StoryblokContentProvider>();
 builder.Services.AddTransient<IContentProvider>(services => new CachedContentProvider(

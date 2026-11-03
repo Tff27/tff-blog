@@ -1,5 +1,6 @@
 using System.Net;
 using AwesomeAssertions;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using Tff.Blog.Client.Services;
@@ -29,6 +30,7 @@ public class BlogContentServiceTests : IDisposable
 
     private readonly WireMockServer _server;
     private readonly HttpClient _httpClient;
+    private readonly TestNavigationManager _navigationManager = new("https://example.com/");
     private readonly BlogContentService _sut;
 
     public BlogContentServiceTests()
@@ -39,7 +41,7 @@ public class BlogContentServiceTests : IDisposable
         var httpClientFactory = Substitute.For<IHttpClientFactory>();
         httpClientFactory.CreateClient(Arg.Any<string>()).Returns(_httpClient);
 
-        _sut = new BlogContentService(httpClientFactory, NullLogger<BlogContentService>.Instance);
+        _sut = new BlogContentService(httpClientFactory, NullLogger<BlogContentService>.Instance, _navigationManager);
     }
 
     [Fact]
@@ -84,12 +86,46 @@ public class BlogContentServiceTests : IDisposable
         var httpClientFactory = Substitute.For<IHttpClientFactory>();
         httpClientFactory.CreateClient(Arg.Any<string>())
             .Returns(new HttpClient(handler) { BaseAddress = new Uri("http://localhost/") });
-        var service = new BlogContentService(httpClientFactory, NullLogger<BlogContentService>.Instance);
+        var service = new BlogContentService(httpClientFactory, NullLogger<BlogContentService>.Instance, _navigationManager);
 
         await service.GetPostAsync("hello world");
 
         requestUri.Should().NotBeNull();
         requestUri!.Query.Should().Be("?postName=hello%20world");
+    }
+
+    [Fact]
+    public async Task GetPostsAsync_WithPreviewSecret_ForwardsItToTheApi()
+    {
+        var navigationManager = new TestNavigationManager("https://example.com/?preview=s3cret");
+        Uri? requestUri = null;
+        var handler = new CapturingHandler(uri => requestUri = uri);
+        var httpClientFactory = Substitute.For<IHttpClientFactory>();
+        httpClientFactory.CreateClient(Arg.Any<string>())
+            .Returns(new HttpClient(handler) { BaseAddress = new Uri("http://localhost/") });
+        var service = new BlogContentService(httpClientFactory, NullLogger<BlogContentService>.Instance, navigationManager);
+
+        await service.GetPostsAsync();
+
+        requestUri.Should().NotBeNull();
+        requestUri!.Query.Should().Be("?preview=s3cret");
+    }
+
+    [Fact]
+    public async Task GetPostAsync_WithPreviewSecret_ForwardsItAlongsideTheSlug()
+    {
+        var navigationManager = new TestNavigationManager("https://example.com/?preview=s3cret");
+        Uri? requestUri = null;
+        var handler = new CapturingHandler(uri => requestUri = uri);
+        var httpClientFactory = Substitute.For<IHttpClientFactory>();
+        httpClientFactory.CreateClient(Arg.Any<string>())
+            .Returns(new HttpClient(handler) { BaseAddress = new Uri("http://localhost/") });
+        var service = new BlogContentService(httpClientFactory, NullLogger<BlogContentService>.Instance, navigationManager);
+
+        await service.GetPostAsync("hello world");
+
+        requestUri.Should().NotBeNull();
+        requestUri!.Query.Should().Be("?postName=hello%20world&preview=s3cret");
     }
 
     [Fact]
@@ -120,7 +156,7 @@ public class BlogContentServiceTests : IDisposable
         var httpClientFactory = Substitute.For<IHttpClientFactory>();
         httpClientFactory.CreateClient(Arg.Any<string>())
             .Returns(_ => throw new InvalidOperationException("The client is not registered."));
-        var service = new BlogContentService(httpClientFactory, NullLogger<BlogContentService>.Instance);
+        var service = new BlogContentService(httpClientFactory, NullLogger<BlogContentService>.Instance, _navigationManager);
 
         var result = await service.GetPostsAsync();
 
@@ -146,7 +182,7 @@ public class BlogContentServiceTests : IDisposable
         };
         var httpClientFactory = Substitute.For<IHttpClientFactory>();
         httpClientFactory.CreateClient(Arg.Any<string>()).Returns(httpClient);
-        var service = new BlogContentService(httpClientFactory, NullLogger<BlogContentService>.Instance);
+        var service = new BlogContentService(httpClientFactory, NullLogger<BlogContentService>.Instance, _navigationManager);
 
         var result = await service.GetPostsAsync();
 
@@ -236,6 +272,18 @@ public class BlogContentServiceTests : IDisposable
             {
                 Content = new StringContent("[]", System.Text.Encoding.UTF8, "application/json"),
             });
+        }
+    }
+
+    private sealed class TestNavigationManager : NavigationManager
+    {
+        internal TestNavigationManager(string uri)
+        {
+            Initialize(uri, uri);
+        }
+
+        protected override void NavigateToCore(string uri, NavigationOptions options)
+        {
         }
     }
 }

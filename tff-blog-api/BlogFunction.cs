@@ -1,7 +1,10 @@
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+using System.Collections.Specialized;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using Tff.Blog.Api.Configuration;
 using Tff.Blog.Api.Requests;
@@ -17,11 +20,13 @@ public class BlogFunction
     private const string ErrorMessage = "Error fetching info: {Message}";
     private readonly ILogger<BlogFunction> _logger;
     private readonly IContentProvider _contentProvider;
+    private readonly PreviewSettings _previewSettings;
 
-    public BlogFunction(ILogger<BlogFunction> logger, IContentProvider contentProvider)
+    public BlogFunction(ILogger<BlogFunction> logger, IContentProvider contentProvider, PreviewSettings previewSettings)
     {
         _logger = logger;
         _contentProvider = contentProvider;
+        _previewSettings = previewSettings;
     }
 
     [Function("BlogPosts")]
@@ -46,6 +51,13 @@ public class BlogFunction
             sortField ??= parsedBody?.SortField;
             sortOrder ??= parsedBody?.SortOrder;
 
+            if (!TryResolvePreview(queryString, out var isPreview))
+            {
+                _logger.LogWarning("Rejected a request with an invalid preview secret.");
+
+                return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.Unauthorized, cancellationToken, "The preview secret is invalid.");
+            }
+
             _logger.LogInformation("Retrieve info for {PostName}", postName ?? "all posts");
 
             if (string.IsNullOrEmpty(postName))
@@ -64,7 +76,7 @@ public class BlogFunction
                     return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.BadRequest, cancellationToken, $"The sort field \"{sortField}\" is invalid.");
                 }
 
-                var posts = await _contentProvider.GetPostsAsync(cancellationToken);
+                var posts = await _contentProvider.GetPostsAsync(cancellationToken, isPreview);
 
                 posts = string.IsNullOrEmpty(sortOrder)
                     ? PostSorter.Sort(posts, "Date", "Descending")
@@ -72,15 +84,15 @@ public class BlogFunction
 
                 _logger.LogInformation(SuccessMessage, "all posts");
 
-                return await SuccessResponse.CreateResponseAsync(req, HttpStatusCode.OK, posts, cancellationToken);
+                return await CreateSuccessResponseAsync(req, HttpStatusCode.OK, posts, cancellationToken, isPreview);
             }
 
-            var post = await _contentProvider.GetPostAsync(postName, cancellationToken);
+            var post = await _contentProvider.GetPostAsync(postName, cancellationToken, isPreview);
             var matchingPosts = post is null ? new List<PostModel>() : new List<PostModel> { post };
 
             _logger.LogInformation(SuccessMessage, postName);
 
-            return await SuccessResponse.CreateResponseAsync(req, HttpStatusCode.OK, matchingPosts, cancellationToken);
+            return await CreateSuccessResponseAsync(req, HttpStatusCode.OK, matchingPosts, cancellationToken, isPreview);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
@@ -98,5 +110,51 @@ public class BlogFunction
 
             return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.InternalServerError, cancellationToken);
         }
+    }
+
+    private bool TryResolvePreview(NameValueCollection queryString, out bool isPreview)
+    {
+        isPreview = false;
+        var presentedSecret = queryString["preview"];
+
+        if (string.IsNullOrEmpty(presentedSecret))
+        {
+            return true;
+        }
+
+        var expectedSecret = _previewSettings.Secret;
+
+        if (string.IsNullOrEmpty(expectedSecret) || !FixedTimeEquals(presentedSecret, expectedSecret))
+        {
+            return false;
+        }
+
+        isPreview = true;
+
+        return true;
+    }
+
+    private static bool FixedTimeEquals(string presented, string expected)
+    {
+        return CryptographicOperations.FixedTimeEquals(
+            Encoding.UTF8.GetBytes(presented),
+            Encoding.UTF8.GetBytes(expected));
+    }
+
+    private static async Task<HttpResponseData> CreateSuccessResponseAsync(
+        HttpRequestData req,
+        HttpStatusCode statusCode,
+        List<PostModel> posts,
+        CancellationToken cancellationToken,
+        bool isPreview)
+    {
+        var response = await SuccessResponse.CreateResponseAsync(req, statusCode, posts, cancellationToken);
+
+        if (isPreview)
+        {
+            response.Headers.Add("Cache-Control", "no-store");
+        }
+
+        return response;
     }
 }

@@ -36,38 +36,38 @@ public sealed class StoryblokContentProvider : IContentProvider
         _logger = logger ?? NullLogger<StoryblokContentProvider>.Instance;
     }
 
-    public async Task<List<PostModel>> GetPostsAsync(CancellationToken cancellationToken = default)
+    public async Task<List<PostModel>> GetPostsAsync(CancellationToken cancellationToken = default, bool preview = false)
     {
-        var stories = await GetStoriesAsync("post", cancellationToken);
+        var stories = await GetStoriesAsync("post", cancellationToken, preview);
 
         return stories.Select(StoryblokMapper.MapToPostModel).ToList();
     }
 
-    public async Task<PostModel?> GetPostAsync(string slug, CancellationToken cancellationToken = default)
+    public async Task<PostModel?> GetPostAsync(string slug, CancellationToken cancellationToken = default, bool preview = false)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(slug);
 
-        var story = await GetStoryAsync($"posts/{slug}", cancellationToken);
+        var story = await GetStoryAsync($"posts/{slug}", cancellationToken, preview);
 
         return story is null ? null : StoryblokMapper.MapToPostModel(story);
     }
 
-    public async Task<PageModel?> GetPageAsync(string slug, CancellationToken cancellationToken = default)
+    public async Task<PageModel?> GetPageAsync(string slug, CancellationToken cancellationToken = default, bool preview = false)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(slug);
 
-        var story = await GetStoryAsync($"pages/{slug}", cancellationToken);
+        var story = await GetStoryAsync($"pages/{slug}", cancellationToken, preview);
 
         return story is null ? null : StoryblokMapper.MapToPageModel(story);
     }
 
-    private async Task<List<StoryblokStory>> GetStoriesAsync(string contentType, CancellationToken cancellationToken)
+    private async Task<List<StoryblokStory>> GetStoriesAsync(string contentType, CancellationToken cancellationToken, bool preview)
     {
         var stories = new List<StoryblokStory>();
 
         for (var page = 1; page <= MaxPages; page++)
         {
-            var requestUri = BuildStoriesUri(contentType, page);
+            var requestUri = BuildStoriesUri(contentType, page, preview);
             var response = await _httpClient.GetAsync(requestUri, cancellationToken);
 
             if (response.StatusCode == HttpStatusCode.NotFound)
@@ -100,9 +100,9 @@ public sealed class StoryblokContentProvider : IContentProvider
         return stories;
     }
 
-    private async Task<StoryblokStory?> GetStoryAsync(string fullSlug, CancellationToken cancellationToken)
+    private async Task<StoryblokStory?> GetStoryAsync(string fullSlug, CancellationToken cancellationToken, bool preview)
     {
-        var response = await _httpClient.GetAsync(BuildStoryUri(fullSlug), cancellationToken);
+        var response = await _httpClient.GetAsync(BuildStoryUri(fullSlug, preview), cancellationToken);
 
         if (response.StatusCode == HttpStatusCode.NotFound)
         {
@@ -116,35 +116,38 @@ public sealed class StoryblokContentProvider : IContentProvider
         return payload?.Story;
     }
 
-    private string BuildStoriesUri(string contentType, int page)
+    private string BuildStoriesUri(string contentType, int page, bool preview)
     {
         return $"{Endpoint}/v2/cdn/stories" +
-               $"?token={Uri.EscapeDataString(GetToken())}" +
+               $"?token={Uri.EscapeDataString(GetToken(preview))}" +
                $"&content_type={Uri.EscapeDataString(contentType)}" +
-               $"&version={GetVersion()}" +
+               $"&version={GetVersion(preview)}" +
                $"&per_page={PageSize}" +
                $"&page={page}";
     }
 
-    private string BuildStoryUri(string fullSlug)
+    private string BuildStoryUri(string fullSlug, bool preview)
     {
         var escapedSlug = string.Join('/', fullSlug.Split('/').Select(Uri.EscapeDataString));
 
         return $"{Endpoint}/v2/cdn/stories/{escapedSlug}" +
-               $"?token={Uri.EscapeDataString(GetToken())}" +
-               $"&version={GetVersion()}";
+               $"?token={Uri.EscapeDataString(GetToken(preview))}" +
+               $"&version={GetVersion(preview)}";
     }
 
     private string Endpoint => _settings.Endpoint.TrimEnd('/');
 
-    private string GetToken()
+    private bool UseDraftContent(bool preview) => _settings.ShowDrafts || preview;
+
+    private string GetToken(bool preview)
     {
-        var token = _settings.ShowDrafts ? _settings.PreviewToken : _settings.PublicToken;
+        var useDrafts = UseDraftContent(preview);
+        var token = useDrafts ? _settings.PreviewToken : _settings.PublicToken;
 
         if (string.IsNullOrWhiteSpace(token))
         {
             throw new InvalidOperationException(
-                _settings.ShowDrafts
+                useDrafts
                     ? "The Storyblok preview token is not configured."
                     : "The Storyblok public token is not configured.");
         }
@@ -152,5 +155,5 @@ public sealed class StoryblokContentProvider : IContentProvider
         return token;
     }
 
-    private string GetVersion() => _settings.ShowDrafts ? "draft" : "published";
+    private string GetVersion(bool preview) => UseDraftContent(preview) ? "draft" : "published";
 }
