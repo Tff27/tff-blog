@@ -5,7 +5,7 @@ All tests live under `tests/` and are part of `tff-blog.sln`.
 | Project | Scope | Key packages |
 | --- | --- | --- |
 | `tests/tff-blog.Unit.Tests` | Blazor components and `BlogContentService` (`tff-blog`) | bUnit, NSubstitute, WireMock.Net, AwesomeAssertions |
-| `tests/tff-blog-api.Unit.Tests` | `BlogFunction`, `PostSorter` (`tff-blog-api`) | NSubstitute, AwesomeAssertions |
+| `tests/tff-blog-api.Unit.Tests` | `BlogFunction`, `PostSorter`, `StoryblokMapper`, `CachedContentProvider` (`tff-blog-api`) | NSubstitute, AwesomeAssertions |
 | `tests/tff-blog-shared.Unit.Tests` | converters (`tff-blog-shared`) | AwesomeAssertions |
 | `tests/tff-blog.Integration.Tests` | `StoryblokContentProvider` over HTTP (`tff-blog-api`) | WireMock.Net, AwesomeAssertions |
 

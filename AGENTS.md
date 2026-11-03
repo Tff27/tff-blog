@@ -28,14 +28,16 @@ Personal blog: Blazor WebAssembly client + Azure Functions API, both on .NET 10.
 - Changing the API route requires updating both `appsettings.json` and `appsettings.Development.json`.
 - `"WebAPI"` is only registered when `ApiUrl` is non-empty. If it is missing, failures appear later at request time.
 - Single API entrypoint: function `BlogPosts` in `tff-blog-api/BlogFunction.cs`, `AuthorizationLevel.Function`, route `api/BlogPosts`. It accepts `postName`, `sortField`, `sortOrder` from query string or JSON body. Invalid `sortOrder` or `sortField` returns `400` before any CMS call.
-- `BlogFunction` depends on `IContentProvider` (`tff-blog-api/Services/IContentProvider.cs`). The registered implementation is `StoryblokContentProvider` (`tff-blog-api/Cms/Storyblok/StoryblokContentProvider.cs`), a typed `HttpClient` client using `StoryblokSettings`; DI lives in `tff-blog-api/Program.cs`. Mapping from Storyblok stories to `PostModel`/`PageModel` is in `StoryblokMapper`.
+- `BlogFunction` depends on `IContentProvider` (`tff-blog-api/Services/IContentProvider.cs`). The registered implementation is `CachedContentProvider` (`tff-blog-api/Services/CachedContentProvider.cs`), an `IMemoryCache` decorator over `StoryblokContentProvider` (`tff-blog-api/Cms/Storyblok/StoryblokContentProvider.cs`), a typed `HttpClient` client using `StoryblokSettings`; DI lives in `tff-blog-api/Program.cs`. Mapping from Storyblok stories to `PostModel`/`PageModel` is in `StoryblokMapper`.
+- Caching is keyed by content (`content:posts`, `content:posts:{slug}`, `content:pages:{slug}`) with an absolute TTL. Missing posts/pages and failed requests are not cached. A TTL of `0` or less bypasses the cache entirely.
 - Storyblok content model: a `post` content type with `title`, `body` (Markdown), `description`, `cover`, custom `date`, optional `read_time`; categories come from the story `tag_list`; posts live under the `posts/` folder. `Draft` is derived from `published_at` being null, and missing `read_time` is computed at 200 wpm.
 - Sorting lives in `tff-blog-api/Services/PostSorter.cs`; the sortable-field whitelist is case-insensitive and includes `Date`, `Title`, `Slug`, `Description`, `ReadTimeInMinutes`, and `Draft` (not `Tags`, `Image`, or `Text`).
 
 ## Config and secrets
 
-- The API reads environment variables directly via `tff-blog-api/Configuration/Settings.cs` (`ShowDrafts`, `StoryblokEndpoint`, `StoryblokPublicToken`, `StoryblokPreviewToken`), not `IConfiguration` or the Options pattern. `StoryblokEndpoint` defaults to `https://api.storyblok.com`.
+- The API reads environment variables directly via `tff-blog-api/Configuration/Settings.cs` (`ShowDrafts`, `StoryblokEndpoint`, `StoryblokPublicToken`, `StoryblokPreviewToken`, `CacheTtlMinutes`), not `IConfiguration` or the Options pattern. `StoryblokEndpoint` defaults to `https://api.storyblok.com`.
 - `ShowDrafts=true` selects the preview token and `version=draft`; production must keep it `false` so only published stories are served. Add `StoryblokPublicToken` and `StoryblokPreviewToken` to `local.settings.json` for local runs.
+- `CacheTtlMinutes` defaults to `0`, which disables caching (intended for local development). Set a positive value in Azure, for example `10`. An invalid or negative value also disables caching.
 - Local API settings live in `tff-blog-api/local.settings.json`. It is gitignored and untracked; it may contain a plaintext token in comments. Never commit, print, or copy its contents.
 - Client secrets belong in User Secrets (`UserSecretsId` is configured). `appsettings.Development.json` is tracked and only contains the local API URL.
 - Production needs no CORS config: Static Web Apps proxies `/api` same-origin. Local dev relies on `--cors *` from the launch profile.
@@ -44,7 +46,7 @@ Personal blog: Blazor WebAssembly client + Azure Functions API, both on .NET 10.
 
 - Tests live in `tests/` and are part of `tff-blog.sln`:
   - `tff-blog.Unit.Tests` — bUnit component tests for the client.
-  - `tff-blog-api.Unit.Tests` — `PostSorter` and `BlogFunction` tests.
+  - `tff-blog-api.Unit.Tests` — `PostSorter`, `BlogFunction`, `StoryblokMapper`, and `CachedContentProvider` tests.
   - `tff-blog-shared.Unit.Tests` — converter tests.
   - `tff-blog.Integration.Tests` — `StoryblokContentProvider` against WireMock.Net.
 - Stack: xUnit, **AwesomeAssertions** (`.Should()` instead of `Assert.*`), **NSubstitute** for mocks/substitutes, **bUnit** for components, **WireMock.Net** for HTTP-level tests.
