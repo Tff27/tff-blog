@@ -84,7 +84,7 @@ public class BlogFunction
 
                 _logger.LogInformation(SuccessMessage, "all posts");
 
-                return await CreateSuccessResponseAsync(req, HttpStatusCode.OK, posts, isPreview, cancellationToken);
+                return await SuccessResponse.CreateResponseAsync(req, HttpStatusCode.OK, posts, isPreview, cancellationToken);
             }
 
             var post = await _contentProvider.GetPostAsync(postName, isPreview, cancellationToken);
@@ -92,7 +92,7 @@ public class BlogFunction
 
             _logger.LogInformation(SuccessMessage, postName);
 
-            return await CreateSuccessResponseAsync(req, HttpStatusCode.OK, matchingPosts, isPreview, cancellationToken);
+            return await SuccessResponse.CreateResponseAsync(req, HttpStatusCode.OK, matchingPosts, isPreview, cancellationToken);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
@@ -139,22 +139,5 @@ public class BlogFunction
         return CryptographicOperations.FixedTimeEquals(
             Encoding.UTF8.GetBytes(presented),
             Encoding.UTF8.GetBytes(expected));
-    }
-
-    private static async Task<HttpResponseData> CreateSuccessResponseAsync(
-        HttpRequestData req,
-        HttpStatusCode statusCode,
-        List<PostModel> posts,
-        bool isPreview,
-        CancellationToken cancellationToken)
-    {
-        var response = await SuccessResponse.CreateResponseAsync(req, statusCode, posts, cancellationToken);
-
-        if (isPreview)
-        {
-            response.Headers.Add("Cache-Control", "no-store");
-        }
-
-        return response;
     }
 }
