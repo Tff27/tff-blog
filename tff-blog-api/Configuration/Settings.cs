@@ -1,24 +1,33 @@
-﻿namespace Tff.Blog.Api.Configuration;
+﻿#nullable enable annotations
+
+namespace Tff.Blog.Api.Configuration;
 
 public static class Settings
 {
+    private const string DefaultStoryblokEndpoint = "https://api.storyblok.com";
+
     public static bool GetShowDrafts()
     {
         return Convert.ToBoolean(GetEnvironmentVariable("ShowDrafts"));
     }
 
-    private static string GetEnvironmentVariable(string name)
+    public static string GetStoryblokEndpoint()
+    {
+        return GetEnvironmentVariable("StoryblokEndpoint") ?? DefaultStoryblokEndpoint;
+    }
+
+    public static string GetStoryblokPublicToken()
+    {
+        return GetEnvironmentVariable("StoryblokPublicToken") ?? string.Empty;
+    }
+
+    public static string GetStoryblokPreviewToken()
+    {
+        return GetEnvironmentVariable("StoryblokPreviewToken") ?? string.Empty;
+    }
+
+    private static string? GetEnvironmentVariable(string name)
     {
         return Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
-    }
-
-    public static string GetHashnodePublicationId()
-    {
-        return GetEnvironmentVariable("HashnodePublicationId");
-    }
-
-    public static string GetHashnodeGraphQlEndpoint()
-    {
-        return GetEnvironmentVariable("HashnodeGraphQlEndpoint") ?? "https://gql.hashnode.com";
     }
 }

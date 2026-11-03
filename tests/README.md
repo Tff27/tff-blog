@@ -6,8 +6,8 @@ All tests live under `tests/` and are part of `tff-blog.sln`.
 | --- | --- | --- |
 | `tests/tff-blog.Unit.Tests` | Blazor components and `BlogContentService` (`tff-blog`) | bUnit, NSubstitute, WireMock.Net, AwesomeAssertions |
 | `tests/tff-blog-api.Unit.Tests` | `BlogFunction`, `PostSorter` (`tff-blog-api`) | NSubstitute, AwesomeAssertions |
-| `tests/tff-blog-shared.Unit.Tests` | mappers and converters (`tff-blog-shared`) | AwesomeAssertions |
-| `tests/tff-blog.Integration.Tests` | `CmsService` over HTTP (`tff-blog-api`) | WireMock.Net, AwesomeAssertions |
+| `tests/tff-blog-shared.Unit.Tests` | converters (`tff-blog-shared`) | AwesomeAssertions |
+| `tests/tff-blog.Integration.Tests` | `StoryblokContentProvider` over HTTP (`tff-blog-api`) | WireMock.Net, AwesomeAssertions |
 
 Assembly and root namespaces follow the solution: `Tff.Blog.Client.Unit.Tests`, `Tff.Blog.Api.Unit.Tests`, `Tff.Blog.Shared.Unit.Tests`, `Tff.Blog.Integration.Tests`.
 
@@ -27,8 +27,8 @@ CI runs `dotnet test --no-build` after building the solution, so every project a
 
 - xUnit for discovery and assertions orchestration.
 - **AwesomeAssertions** for all assertions: use `.Should()` instead of `Assert.*`.
-- **NSubstitute** for mocks and substitutes, including `ILogger<T>` and `ICmsService`.
-- **WireMock.Net** for anything that goes through `HttpClient`; unit tests must never reach the real network or Hashnode.
+- **NSubstitute** for mocks and substitutes, including `ILogger<T>` and `IContentProvider`.
+- **WireMock.Net** for anything that goes through `HttpClient`; unit tests must never reach the real network or Storyblok.
 - **bUnit** for client components. Test classes derive from `BunitContext`.
 - File names are `<TypeUnderTest>Tests.cs`, in a folder mirroring the production namespaces.
 - Test projects use `<Nullable>enable</Nullable>` and `TreatWarningsAsErrors=true`; use `null!` only when a test intentionally exercises a null argument.
@@ -39,14 +39,14 @@ CI runs `dotnet test --no-build` after building the solution, so every project a
 ### NSubstitute + AwesomeAssertions
 
 ```csharp
-var cmsService = Substitute.For<ICmsService>();
-cmsService.GetPostsAsync("publication-id", Arg.Any<CancellationToken>())
+var contentProvider = Substitute.For<IContentProvider>();
+contentProvider.GetPostsAsync(Arg.Any<CancellationToken>())
     .Returns(Task.FromResult(posts));
 
 var response = await sut.RunAsync(request, CancellationToken.None);
 
 response.StatusCode.Should().Be(HttpStatusCode.OK);
-await cmsService.Received(1).GetPostsAsync("publication-id", Arg.Any<CancellationToken>());
+await contentProvider.Received(1).GetPostsAsync(Arg.Any<CancellationToken>());
 ```
 
 `BlogFunction` takes `HttpRequestData`/`HttpResponseData`, which are abstract worker types with no usable default constructor. Use the in-memory doubles in `tests/tff-blog-api.Unit.Tests/Infrastructure/TestHttpDoubles.cs`; NSubstitute is still used for the service and logger dependencies. The doubles register `IOptions<WorkerOptions>` with a serializer so `WriteAsJsonAsync` can produce a readable response body.
@@ -78,24 +78,26 @@ private IRenderedComponent<NavMenu> RenderNavMenu()
 
 ```csharp
 _server = WireMockServer.Start();
-_sut = new CmsService(new HttpClient(), new CmsSettings(_server.Url!, "publication-id"));
+_sut = new StoryblokContentProvider(
+    new HttpClient(),
+    new StoryblokSettings(_server.Url!, "public-token", "preview-token", ShowDrafts: false));
 
 _server
-    .Given(Request.Create().UsingPost())
+    .Given(Request.Create().WithPath("/v2/cdn/stories").UsingGet())
     .RespondWith(Response.Create()
         .WithStatusCode(200)
         .WithHeader("Content-Type", "application/json")
-        .WithBody("""{ "data": { "publication": { "posts": { "edges": [] } } } }"""));
+        .WithBody("""{ "stories": [] }"""));
 
-var posts = await _sut.GetPostsAsync("publication-id");
+var posts = await _sut.GetPostsAsync();
 ```
 
-Always dispose the server, `HttpClient`, and `CmsService` in the test class. Keep response fixtures close to the test that uses them.
+Always dispose the server and `HttpClient` in the test class. Keep response fixtures close to the test that uses them.
 
 ## API behaviour under test
 
-- `BlogFunction` validates `sortOrder` and `sortField` before calling `ICmsService`.
+- `BlogFunction` validates `sortOrder` and `sortField` before calling `IContentProvider`.
 - Invalid input returns `400` and makes no CMS call.
 - Unknown `sortField` values (for example `Tags`) return `400`.
 - Supported fields are defined by the case-insensitive whitelist in `tff-blog-api/Services/PostSorter.cs`: `Date`, `Title`, `Slug`, `Description`, `ReadTimeInMinutes`, `Draft`.
-- `CmsService` takes an injected `HttpClient` and `CmsSettings`, so integration tests point it at WireMock instead of Hashnode.
+- `StoryblokContentProvider` takes an injected `HttpClient` and `StoryblokSettings`, so integration tests point it at WireMock instead of Storyblok.

@@ -13,15 +13,13 @@ namespace Tff.Blog.Api.Unit.Tests;
 
 public class BlogFunctionTests
 {
-    private const string PublicationId = "publication-id";
-    private static readonly CmsSettings Settings = new("https://gql.hashnode.com", PublicationId);
-    private readonly ICmsService _cmsService = Substitute.For<ICmsService>();
+    private readonly IContentProvider _contentProvider = Substitute.For<IContentProvider>();
     private readonly ILogger<BlogFunction> _logger = Substitute.For<ILogger<BlogFunction>>();
     private readonly BlogFunction _sut;
 
     public BlogFunctionTests()
     {
-        _sut = new BlogFunction(_logger, _cmsService, Settings);
+        _sut = new BlogFunction(_logger, _contentProvider);
     }
 
     [Fact]
@@ -32,7 +30,7 @@ public class BlogFunctionTests
         var response = await _sut.RunAsync(request, CancellationToken.None);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        await _cmsService.DidNotReceive().GetPostsAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await _contentProvider.DidNotReceive().GetPostsAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -43,7 +41,7 @@ public class BlogFunctionTests
         var response = await _sut.RunAsync(request, CancellationToken.None);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        await _cmsService.DidNotReceive().GetPostsAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await _contentProvider.DidNotReceive().GetPostsAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -54,14 +52,14 @@ public class BlogFunctionTests
         var response = await _sut.RunAsync(request, CancellationToken.None);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        await _cmsService.DidNotReceive().GetPostsAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await _contentProvider.DidNotReceive().GetPostsAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task RunAsync_WithoutSortParameters_ReturnsPostsSortedByDateDescending()
     {
         var posts = CreatePosts();
-        _cmsService.GetPostsAsync(PublicationId, Arg.Any<CancellationToken>())
+        _contentProvider.GetPostsAsync(Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(posts));
 
         var response = await _sut.RunAsync(CreateRequest(), CancellationToken.None);
@@ -75,7 +73,7 @@ public class BlogFunctionTests
     public async Task RunAsync_WithSortParameters_SortsPosts()
     {
         var posts = CreatePosts();
-        _cmsService.GetPostsAsync(PublicationId, Arg.Any<CancellationToken>())
+        _contentProvider.GetPostsAsync(Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(posts));
 
         var response = await _sut.RunAsync(CreateRequest("?sortOrder=Ascending&sortField=Title"), CancellationToken.None);
@@ -87,22 +85,34 @@ public class BlogFunctionTests
     [Fact]
     public async Task RunAsync_WithPostName_ReturnsSinglePost()
     {
-        var posts = new List<PostModel> { CreatePosts()[1] };
-        _cmsService.GetSinglePostsAsync(PublicationId, "my-post", Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(posts));
+        var post = CreatePosts()[1];
+        _contentProvider.GetPostAsync("my-post", Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<PostModel?>(post));
 
         var response = await _sut.RunAsync(CreateRequest("?postName=my-post"), CancellationToken.None);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         ReadBody(response).Should().ContainSingle().Which.Slug.Should().Be("newest");
-        await _cmsService.Received(1).GetSinglePostsAsync(PublicationId, "my-post", Arg.Any<CancellationToken>());
+        await _contentProvider.Received(1).GetPostAsync("my-post", Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task RunAsync_WithUnknownPostName_ReturnsEmptyList()
+    {
+        _contentProvider.GetPostAsync("missing-post", Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<PostModel?>(null));
+
+        var response = await _sut.RunAsync(CreateRequest("?postName=missing-post"), CancellationToken.None);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        ReadBody(response).Should().BeEmpty();
     }
 
     [Fact]
     public async Task RunAsync_ReadsParametersFromJsonBody()
     {
         var posts = CreatePosts();
-        _cmsService.GetPostsAsync(PublicationId, Arg.Any<CancellationToken>())
+        _contentProvider.GetPostsAsync(Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(posts));
 
         var request = new TestHttpRequestData("{\"sortOrder\":\"Ascending\",\"sortField\":\"Date\"}");
@@ -115,7 +125,7 @@ public class BlogFunctionTests
     [Fact]
     public async Task RunAsync_WhenCmsThrows_ReturnsInternalServerError()
     {
-        _cmsService.GetPostsAsync(PublicationId, Arg.Any<CancellationToken>())
+        _contentProvider.GetPostsAsync(Arg.Any<CancellationToken>())
             .ThrowsAsync(new InvalidOperationException("CMS is down"));
 
         var response = await _sut.RunAsync(CreateRequest(), CancellationToken.None);
@@ -126,7 +136,7 @@ public class BlogFunctionTests
     [Fact]
     public async Task RunAsync_WhenCmsThrowsArgumentException_ReturnsBadRequest()
     {
-        _cmsService.GetPostsAsync(PublicationId, Arg.Any<CancellationToken>())
+        _contentProvider.GetPostsAsync(Arg.Any<CancellationToken>())
             .ThrowsAsync(new ArgumentException("bad field"));
 
         var response = await _sut.RunAsync(CreateRequest(), CancellationToken.None);
@@ -143,7 +153,7 @@ public class BlogFunctionTests
         var act = () => _sut.RunAsync(CreateRequest(), cancellationTokenSource.Token);
 
         await act.Should().ThrowAsync<OperationCanceledException>();
-        await _cmsService.DidNotReceive().GetPostsAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await _contentProvider.DidNotReceive().GetPostsAsync(Arg.Any<CancellationToken>());
     }
 
     private static TestHttpRequestData CreateRequest(string query = "")
