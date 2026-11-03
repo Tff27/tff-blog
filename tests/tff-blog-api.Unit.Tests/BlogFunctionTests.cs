@@ -13,13 +13,15 @@ namespace Tff.Blog.Api.Unit.Tests;
 
 public class BlogFunctionTests
 {
+    private const string PreviewSecret = "preview-secret";
+
     private readonly IContentProvider _contentProvider = Substitute.For<IContentProvider>();
     private readonly ILogger<BlogFunction> _logger = Substitute.For<ILogger<BlogFunction>>();
     private readonly BlogFunction _sut;
 
     public BlogFunctionTests()
     {
-        _sut = new BlogFunction(_logger, _contentProvider);
+        _sut = new BlogFunction(_logger, _contentProvider, new PreviewSettings(PreviewSecret));
     }
 
     [Fact]
@@ -30,7 +32,7 @@ public class BlogFunctionTests
         var response = await _sut.RunAsync(request, CancellationToken.None);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        await _contentProvider.DidNotReceive().GetPostsAsync(Arg.Any<CancellationToken>());
+        await _contentProvider.DidNotReceive().GetPostsAsync(Arg.Any<bool>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -41,7 +43,7 @@ public class BlogFunctionTests
         var response = await _sut.RunAsync(request, CancellationToken.None);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        await _contentProvider.DidNotReceive().GetPostsAsync(Arg.Any<CancellationToken>());
+        await _contentProvider.DidNotReceive().GetPostsAsync(Arg.Any<bool>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -52,14 +54,14 @@ public class BlogFunctionTests
         var response = await _sut.RunAsync(request, CancellationToken.None);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        await _contentProvider.DidNotReceive().GetPostsAsync(Arg.Any<CancellationToken>());
+        await _contentProvider.DidNotReceive().GetPostsAsync(Arg.Any<bool>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task RunAsync_WithoutSortParameters_ReturnsPostsSortedByDateDescending()
     {
         var posts = CreatePosts();
-        _contentProvider.GetPostsAsync(Arg.Any<CancellationToken>())
+        _contentProvider.GetPostsAsync(Arg.Any<bool>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(posts));
 
         var response = await _sut.RunAsync(CreateRequest(), CancellationToken.None);
@@ -73,7 +75,7 @@ public class BlogFunctionTests
     public async Task RunAsync_WithSortParameters_SortsPosts()
     {
         var posts = CreatePosts();
-        _contentProvider.GetPostsAsync(Arg.Any<CancellationToken>())
+        _contentProvider.GetPostsAsync(Arg.Any<bool>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(posts));
 
         var response = await _sut.RunAsync(CreateRequest("?sortOrder=Ascending&sortField=Title"), CancellationToken.None);
@@ -86,20 +88,20 @@ public class BlogFunctionTests
     public async Task RunAsync_WithPostName_ReturnsSinglePost()
     {
         var post = CreatePosts()[1];
-        _contentProvider.GetPostAsync("my-post", Arg.Any<CancellationToken>())
+        _contentProvider.GetPostAsync("my-post", Arg.Any<bool>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<PostModel?>(post));
 
         var response = await _sut.RunAsync(CreateRequest("?postName=my-post"), CancellationToken.None);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         ReadBody(response).Should().ContainSingle().Which.Slug.Should().Be("newest");
-        await _contentProvider.Received(1).GetPostAsync("my-post", Arg.Any<CancellationToken>());
+        await _contentProvider.Received(1).GetPostAsync("my-post", Arg.Any<bool>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task RunAsync_WithUnknownPostName_ReturnsEmptyList()
     {
-        _contentProvider.GetPostAsync("missing-post", Arg.Any<CancellationToken>())
+        _contentProvider.GetPostAsync("missing-post", Arg.Any<bool>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<PostModel?>(null));
 
         var response = await _sut.RunAsync(CreateRequest("?postName=missing-post"), CancellationToken.None);
@@ -112,7 +114,7 @@ public class BlogFunctionTests
     public async Task RunAsync_ReadsParametersFromJsonBody()
     {
         var posts = CreatePosts();
-        _contentProvider.GetPostsAsync(Arg.Any<CancellationToken>())
+        _contentProvider.GetPostsAsync(Arg.Any<bool>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(posts));
 
         var request = new TestHttpRequestData("{\"sortOrder\":\"Ascending\",\"sortField\":\"Date\"}");
@@ -125,7 +127,7 @@ public class BlogFunctionTests
     [Fact]
     public async Task RunAsync_WhenCmsThrows_ReturnsInternalServerError()
     {
-        _contentProvider.GetPostsAsync(Arg.Any<CancellationToken>())
+        _contentProvider.GetPostsAsync(Arg.Any<bool>(), Arg.Any<CancellationToken>())
             .ThrowsAsync(new InvalidOperationException("CMS is down"));
 
         var response = await _sut.RunAsync(CreateRequest(), CancellationToken.None);
@@ -136,7 +138,7 @@ public class BlogFunctionTests
     [Fact]
     public async Task RunAsync_WhenCmsThrowsArgumentException_ReturnsBadRequest()
     {
-        _contentProvider.GetPostsAsync(Arg.Any<CancellationToken>())
+        _contentProvider.GetPostsAsync(Arg.Any<bool>(), Arg.Any<CancellationToken>())
             .ThrowsAsync(new ArgumentException("bad field"));
 
         var response = await _sut.RunAsync(CreateRequest(), CancellationToken.None);
@@ -153,7 +155,65 @@ public class BlogFunctionTests
         var act = () => _sut.RunAsync(CreateRequest(), cancellationTokenSource.Token);
 
         await act.Should().ThrowAsync<OperationCanceledException>();
-        await _contentProvider.DidNotReceive().GetPostsAsync(Arg.Any<CancellationToken>());
+        await _contentProvider.DidNotReceive().GetPostsAsync(Arg.Any<bool>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task RunAsync_WithValidPreviewSecret_RequestsDraftContent()
+    {
+        _contentProvider.GetPostsAsync(true, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(new List<PostModel>()));
+
+        var response = await _sut.RunAsync(CreateRequest($"?preview={PreviewSecret}"), CancellationToken.None);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var testResponse = response.Should().BeOfType<TestHttpResponseData>().Subject;
+        testResponse.Headers.TryGetValues("Cache-Control", out var values).Should().BeTrue();
+        values.Should().ContainSingle().Which.Should().Be("no-store");
+        await _contentProvider.Received(1).GetPostsAsync(true, Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task RunAsync_WithoutPreviewSecret_RequestsPublishedContent()
+    {
+        _contentProvider.GetPostsAsync(false, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(new List<PostModel>()));
+
+        var response = await _sut.RunAsync(CreateRequest(), CancellationToken.None);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        await _contentProvider.Received(1).GetPostsAsync(false, Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task RunAsync_WithInvalidPreviewSecret_ReturnsUnauthorizedWithoutCallingCms()
+    {
+        var response = await _sut.RunAsync(CreateRequest("?preview=wrong"), CancellationToken.None);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        await _contentProvider.DidNotReceive().GetPostsAsync(Arg.Any<bool>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task RunAsync_WhenPreviewIsNotConfigured_ReturnsUnauthorized()
+    {
+        var sut = new BlogFunction(_logger, _contentProvider, new PreviewSettings(string.Empty));
+
+        var response = await sut.RunAsync(CreateRequest("?preview=anything"), CancellationToken.None);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task RunAsync_WithPreviewSecretAndPostName_RequestsTheDraftPost()
+    {
+        _contentProvider.GetPostAsync("my-post", true, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<PostModel?>(CreatePosts()[0]));
+
+        var response = await _sut.RunAsync(CreateRequest($"?postName=my-post&preview={PreviewSecret}"), CancellationToken.None);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        await _contentProvider.Received(1).GetPostAsync("my-post", true, Arg.Any<CancellationToken>());
     }
 
     private static TestHttpRequestData CreateRequest(string query = "")

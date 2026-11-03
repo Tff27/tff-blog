@@ -40,13 +40,13 @@ CI runs `dotnet test --no-build` after building the solution, so every project a
 
 ```csharp
 var contentProvider = Substitute.For<IContentProvider>();
-contentProvider.GetPostsAsync(Arg.Any<CancellationToken>())
+contentProvider.GetPostsAsync(Arg.Any<bool>(), Arg.Any<CancellationToken>())
     .Returns(Task.FromResult(posts));
 
 var response = await sut.RunAsync(request, CancellationToken.None);
 
 response.StatusCode.Should().Be(HttpStatusCode.OK);
-await contentProvider.Received(1).GetPostsAsync(Arg.Any<CancellationToken>());
+await contentProvider.Received(1).GetPostsAsync(Arg.Any<bool>(), Arg.Any<CancellationToken>());
 ```
 
 `BlogFunction` takes `HttpRequestData`/`HttpResponseData`, which are abstract worker types with no usable default constructor. Use the in-memory doubles in `tests/tff-blog-api.Unit.Tests/Infrastructure/TestHttpDoubles.cs`; NSubstitute is still used for the service and logger dependencies. The doubles register `IOptions<WorkerOptions>` with a serializer so `WriteAsJsonAsync` can produce a readable response body.

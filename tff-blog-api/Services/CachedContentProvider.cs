@@ -29,11 +29,11 @@ public sealed class CachedContentProvider : IContentProvider
 
     private bool IsCacheEnabled => _cacheTtl > TimeSpan.Zero;
 
-    public async Task<List<PostModel>> GetPostsAsync(CancellationToken cancellationToken = default)
+    public async Task<List<PostModel>> GetPostsAsync(bool preview = false, CancellationToken cancellationToken = default)
     {
-        if (!IsCacheEnabled)
+        if (preview || !IsCacheEnabled)
         {
-            return await _inner.GetPostsAsync(cancellationToken);
+            return await _inner.GetPostsAsync(preview, cancellationToken);
         }
 
         if (_cache.TryGetValue(PostsCacheKey, out List<PostModel>? cachedPosts) && cachedPosts is not null)
@@ -41,18 +41,18 @@ public sealed class CachedContentProvider : IContentProvider
             return cachedPosts;
         }
 
-        var posts = await _inner.GetPostsAsync(cancellationToken);
+        var posts = await _inner.GetPostsAsync(preview, cancellationToken);
 
         _cache.Set(PostsCacheKey, posts, _cacheTtl);
 
         return posts;
     }
 
-    public async Task<PostModel?> GetPostAsync(string slug, CancellationToken cancellationToken = default)
+    public async Task<PostModel?> GetPostAsync(string slug, bool preview = false, CancellationToken cancellationToken = default)
     {
-        if (!IsCacheEnabled)
+        if (preview || !IsCacheEnabled)
         {
-            return await _inner.GetPostAsync(slug, cancellationToken);
+            return await _inner.GetPostAsync(slug, preview, cancellationToken);
         }
 
         var cacheKey = GetPostCacheKey(slug);
@@ -62,7 +62,7 @@ public sealed class CachedContentProvider : IContentProvider
             return cachedPost;
         }
 
-        var post = await _inner.GetPostAsync(slug, cancellationToken);
+        var post = await _inner.GetPostAsync(slug, preview, cancellationToken);
 
         if (post is not null)
         {
@@ -72,11 +72,11 @@ public sealed class CachedContentProvider : IContentProvider
         return post;
     }
 
-    public async Task<PageModel?> GetPageAsync(string slug, CancellationToken cancellationToken = default)
+    public async Task<PageModel?> GetPageAsync(string slug, bool preview = false, CancellationToken cancellationToken = default)
     {
-        if (!IsCacheEnabled)
+        if (preview || !IsCacheEnabled)
         {
-            return await _inner.GetPageAsync(slug, cancellationToken);
+            return await _inner.GetPageAsync(slug, preview, cancellationToken);
         }
 
         var cacheKey = GetPageCacheKey(slug);
@@ -86,7 +86,7 @@ public sealed class CachedContentProvider : IContentProvider
             return cachedPage;
         }
 
-        var page = await _inner.GetPageAsync(slug, cancellationToken);
+        var page = await _inner.GetPageAsync(slug, preview, cancellationToken);
 
         if (page is not null)
         {

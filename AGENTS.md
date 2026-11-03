@@ -27,6 +27,7 @@ Personal blog: Blazor WebAssembly client + Azure Functions API, both on .NET 10.
 - Expected failures degrade one region only: `ContentError` shows a retryable message, a missing post/page navigates to `404`, and `AuthorComponent` hides itself. `MainLayout` wraps `<main>` and `<aside>` in per-region `ErrorBoundary` as a last resort; there is no global boundary replacing `@Body`.
 - Changing the API route requires updating both `appsettings.json` and `appsettings.Development.json`.
 - `"WebAPI"` is only registered when `ApiUrl` is non-empty. If it is missing, failures appear later at request time.
+- `BlogContentService` forwards a `preview` query parameter from the current page URL to `api/BlogPosts`, which lets Storyblok editor preview URLs load drafts.
 - Single API entrypoint: function `BlogPosts` in `tff-blog-api/BlogFunction.cs`, `AuthorizationLevel.Function`, route `api/BlogPosts`. It accepts `postName`, `sortField`, `sortOrder` from query string or JSON body. Invalid `sortOrder` or `sortField` returns `400` before any CMS call.
 - `BlogFunction` depends on `IContentProvider` (`tff-blog-api/Services/IContentProvider.cs`). The registered implementation is `CachedContentProvider` (`tff-blog-api/Services/CachedContentProvider.cs`), an `IMemoryCache` decorator over `StoryblokContentProvider` (`tff-blog-api/Cms/Storyblok/StoryblokContentProvider.cs`), a typed `HttpClient` client using `StoryblokSettings`; DI lives in `tff-blog-api/Program.cs`. Mapping from Storyblok stories to `PostModel`/`PageModel` is in `StoryblokMapper`.
 - Caching is keyed by content (`content:posts`, `content:posts:{slug}`, `content:pages:{slug}`) with an absolute TTL. Missing posts/pages and failed requests are not cached. A TTL of `0` or less bypasses the cache entirely.
@@ -35,9 +36,11 @@ Personal blog: Blazor WebAssembly client + Azure Functions API, both on .NET 10.
 
 ## Config and secrets
 
-- The API reads environment variables directly via `tff-blog-api/Configuration/Settings.cs` (`ShowDrafts`, `StoryblokEndpoint`, `StoryblokPublicToken`, `StoryblokPreviewToken`, `CacheTtlMinutes`), not `IConfiguration` or the Options pattern. `StoryblokEndpoint` defaults to `https://api.storyblok.com`.
+- The API reads environment variables directly via `tff-blog-api/Configuration/Settings.cs` (`ShowDrafts`, `StoryblokEndpoint`, `StoryblokPublicToken`, `StoryblokPreviewToken`, `CacheTtlMinutes`, `PreviewSecret`), not `IConfiguration` or the Options pattern. `StoryblokEndpoint` defaults to `https://api.storyblok.com`.
 - `ShowDrafts=true` selects the preview token and `version=draft`; production must keep it `false` so only published stories are served. Add `StoryblokPublicToken` and `StoryblokPreviewToken` to `local.settings.json` for local runs.
 - `CacheTtlMinutes` defaults to `0`, which disables caching (intended for local development). Set a positive value in Azure, for example `10`. An invalid or negative value also disables caching.
+- `PreviewSecret` enables request-scoped preview. A request with `?preview=<PreviewSecret>` serves draft stories, bypasses the content cache, and returns `Cache-Control: no-store`; a wrong secret (or a preview request while no secret is configured) returns `401`. It is independent of `ShowDrafts` and the Storyblok tokens, and previews stay disabled while it is empty.
+- Configure the Storyblok editor preview URL with the same parameter, for example `<site>/?preview=<PreviewSecret>`. Internal Blazor navigation drops the query parameter, so deep previews should include it on the target URL.
 - Local API settings live in `tff-blog-api/local.settings.json`. It is gitignored and untracked; it may contain a plaintext token in comments. Never commit, print, or copy its contents.
 - Client secrets belong in User Secrets (`UserSecretsId` is configured). `appsettings.Development.json` is tracked and only contains the local API URL.
 - Production needs no CORS config: Static Web Apps proxies `/api` same-origin. Local dev relies on `--cors *` from the launch profile.
