@@ -26,6 +26,13 @@ public static class Settings
         return GetEnvironmentVariable("StoryblokPreviewToken") ?? string.Empty;
     }
 
+    public static int GetCacheTtlMinutes()
+    {
+        return int.TryParse(GetEnvironmentVariable("CacheTtlMinutes"), out var minutes) && minutes > 0
+            ? minutes
+            : 0;
+    }
+
     private static string? GetEnvironmentVariable(string name)
     {
         return Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
