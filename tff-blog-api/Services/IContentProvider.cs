@@ -6,9 +6,9 @@ namespace Tff.Blog.Api.Services;
 
 public interface IContentProvider
 {
-    Task<List<PostModel>> GetPostsAsync(CancellationToken cancellationToken = default, bool preview = false);
+    Task<List<PostModel>> GetPostsAsync(bool preview = false, CancellationToken cancellationToken = default);
 
-    Task<PostModel?> GetPostAsync(string slug, CancellationToken cancellationToken = default, bool preview = false);
+    Task<PostModel?> GetPostAsync(string slug, bool preview = false, CancellationToken cancellationToken = default);
 
-    Task<PageModel?> GetPageAsync(string slug, CancellationToken cancellationToken = default, bool preview = false);
+    Task<PageModel?> GetPageAsync(string slug, bool preview = false, CancellationToken cancellationToken = default);
 }

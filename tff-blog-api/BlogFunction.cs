@@ -55,7 +55,7 @@ public class BlogFunction
             {
                 _logger.LogWarning("Rejected a request with an invalid preview secret.");
 
-                return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.Unauthorized, cancellationToken, "The preview secret is invalid.");
+                return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.Unauthorized, "The preview secret is invalid.", cancellationToken);
             }
 
             _logger.LogInformation("Retrieve info for {PostName}", postName ?? "all posts");
@@ -66,17 +66,17 @@ public class BlogFunction
                 {
                     _logger.LogWarning("The sort order \"{SortOrder}\" is invalid, please use Ascending/Descending.", sortOrder);
 
-                    return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.BadRequest, cancellationToken, $"The sort order \"{sortOrder}\" is invalid, please use Ascending/Descending.");
+                    return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.BadRequest, $"The sort order \"{sortOrder}\" is invalid, please use Ascending/Descending.", cancellationToken);
                 }
 
                 if (!string.IsNullOrEmpty(sortField) && !PostSorter.IsValidSortField(sortField))
                 {
                     _logger.LogWarning("The sort field \"{SortField}\" is invalid.", sortField);
 
-                    return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.BadRequest, cancellationToken, $"The sort field \"{sortField}\" is invalid.");
+                    return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.BadRequest, $"The sort field \"{sortField}\" is invalid.", cancellationToken);
                 }
 
-                var posts = await _contentProvider.GetPostsAsync(cancellationToken, isPreview);
+                var posts = await _contentProvider.GetPostsAsync(isPreview, cancellationToken);
 
                 posts = string.IsNullOrEmpty(sortOrder)
                     ? PostSorter.Sort(posts, "Date", "Descending")
@@ -84,15 +84,15 @@ public class BlogFunction
 
                 _logger.LogInformation(SuccessMessage, "all posts");
 
-                return await CreateSuccessResponseAsync(req, HttpStatusCode.OK, posts, cancellationToken, isPreview);
+                return await CreateSuccessResponseAsync(req, HttpStatusCode.OK, posts, isPreview, cancellationToken);
             }
 
-            var post = await _contentProvider.GetPostAsync(postName, cancellationToken, isPreview);
+            var post = await _contentProvider.GetPostAsync(postName, isPreview, cancellationToken);
             var matchingPosts = post is null ? new List<PostModel>() : new List<PostModel> { post };
 
             _logger.LogInformation(SuccessMessage, postName);
 
-            return await CreateSuccessResponseAsync(req, HttpStatusCode.OK, matchingPosts, cancellationToken, isPreview);
+            return await CreateSuccessResponseAsync(req, HttpStatusCode.OK, matchingPosts, isPreview, cancellationToken);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
@@ -102,13 +102,13 @@ public class BlogFunction
         {
             _logger.LogError(argumentException, ErrorMessage, argumentException.Message);
 
-            return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.BadRequest, cancellationToken, argumentException.Message);
+            return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.BadRequest, argumentException.Message, cancellationToken);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, ErrorMessage, ex.Message);
 
-            return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.InternalServerError, cancellationToken);
+            return await ErrorResponse.CreateResponseAsync(req, HttpStatusCode.InternalServerError, cancellationToken: cancellationToken);
         }
     }
 
@@ -145,8 +145,8 @@ public class BlogFunction
         HttpRequestData req,
         HttpStatusCode statusCode,
         List<PostModel> posts,
-        CancellationToken cancellationToken,
-        bool isPreview)
+        bool isPreview,
+        CancellationToken cancellationToken)
     {
         var response = await SuccessResponse.CreateResponseAsync(req, statusCode, posts, cancellationToken);
 

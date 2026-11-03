@@ -36,32 +36,32 @@ public sealed class StoryblokContentProvider : IContentProvider
         _logger = logger ?? NullLogger<StoryblokContentProvider>.Instance;
     }
 
-    public async Task<List<PostModel>> GetPostsAsync(CancellationToken cancellationToken = default, bool preview = false)
+    public async Task<List<PostModel>> GetPostsAsync(bool preview = false, CancellationToken cancellationToken = default)
     {
-        var stories = await GetStoriesAsync("post", cancellationToken, preview);
+        var stories = await GetStoriesAsync("post", preview, cancellationToken);
 
         return stories.Select(StoryblokMapper.MapToPostModel).ToList();
     }
 
-    public async Task<PostModel?> GetPostAsync(string slug, CancellationToken cancellationToken = default, bool preview = false)
+    public async Task<PostModel?> GetPostAsync(string slug, bool preview = false, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(slug);
 
-        var story = await GetStoryAsync($"posts/{slug}", cancellationToken, preview);
+        var story = await GetStoryAsync($"posts/{slug}", preview, cancellationToken);
 
         return story is null ? null : StoryblokMapper.MapToPostModel(story);
     }
 
-    public async Task<PageModel?> GetPageAsync(string slug, CancellationToken cancellationToken = default, bool preview = false)
+    public async Task<PageModel?> GetPageAsync(string slug, bool preview = false, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(slug);
 
-        var story = await GetStoryAsync($"pages/{slug}", cancellationToken, preview);
+        var story = await GetStoryAsync($"pages/{slug}", preview, cancellationToken);
 
         return story is null ? null : StoryblokMapper.MapToPageModel(story);
     }
 
-    private async Task<List<StoryblokStory>> GetStoriesAsync(string contentType, CancellationToken cancellationToken, bool preview)
+    private async Task<List<StoryblokStory>> GetStoriesAsync(string contentType, bool preview, CancellationToken cancellationToken)
     {
         var stories = new List<StoryblokStory>();
 
@@ -100,7 +100,7 @@ public sealed class StoryblokContentProvider : IContentProvider
         return stories;
     }
 
-    private async Task<StoryblokStory?> GetStoryAsync(string fullSlug, CancellationToken cancellationToken, bool preview)
+    private async Task<StoryblokStory?> GetStoryAsync(string fullSlug, bool preview, CancellationToken cancellationToken)
     {
         var response = await _httpClient.GetAsync(BuildStoryUri(fullSlug, preview), cancellationToken);
 
