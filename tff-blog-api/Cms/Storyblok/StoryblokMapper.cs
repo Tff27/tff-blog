@@ -19,7 +19,7 @@ internal static partial class StoryblokMapper
             Title = content.Title ?? story.Name ?? string.Empty,
             Description = content.Description ?? string.Empty,
             Text = SanitizeStyling(body),
-            Date = content.Date ?? story.FirstPublishedAt ?? story.PublishedAt ?? story.CreatedAt ?? default,
+            Date = story.FirstPublishedAt ?? story.PublishedAt ?? story.CreatedAt ?? default,
             Tags = story.TagList ?? [],
             Slug = story.Slug ?? GetSlugFromFullSlug(story.FullSlug),
             Image = content.Cover?.Filename ?? string.Empty,

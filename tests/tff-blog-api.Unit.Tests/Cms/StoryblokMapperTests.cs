@@ -15,13 +15,13 @@ public class StoryblokMapperTests
             FullSlug = "posts/first-post",
             TagList = ["dotnet", "blazor"],
             PublishedAt = new DateTime(2024, 4, 1, 10, 0, 0, DateTimeKind.Utc),
+            FirstPublishedAt = new DateTime(2024, 3, 1, 9, 0, 0, DateTimeKind.Utc),
             Content = new StoryblokContent
             {
                 Title = "First post",
                 Body = "## Hello",
                 Description = "A brief",
                 Cover = new StoryblokAsset { Filename = "https://example.com/cover.png" },
-                Date = new DateTime(2024, 3, 1, 9, 0, 0, DateTimeKind.Utc),
             },
         };
 
@@ -63,16 +63,16 @@ public class StoryblokMapperTests
     }
 
     [Fact]
-    public void MapToPostModel_UsesTheCustomDateOverTheSystemDate()
+    public void MapToPostModel_UsesFirstPublishedAtOverPublishedAt()
     {
         var story = new StoryblokStory
         {
             Slug = "post",
             PublishedAt = new DateTime(2024, 5, 1, 0, 0, 0, DateTimeKind.Utc),
+            FirstPublishedAt = new DateTime(2023, 6, 1, 0, 0, 0, DateTimeKind.Utc),
             Content = new StoryblokContent
             {
                 Body = "Body",
-                Date = new DateTime(2023, 6, 1, 0, 0, 0, DateTimeKind.Utc),
             },
         };
 

@@ -43,8 +43,6 @@ internal sealed class StoryblokContent
 
     public StoryblokAsset? Cover { get; set; }
 
-    public DateTime? Date { get; set; }
-
     public StoryblokAsset? Photo { get; set; }
 
     public string? Name { get; set; }
