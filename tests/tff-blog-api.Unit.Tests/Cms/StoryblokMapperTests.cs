@@ -22,7 +22,6 @@ public class StoryblokMapperTests
                 Description = "A brief",
                 Cover = new StoryblokAsset { Filename = "https://example.com/cover.png" },
                 Date = new DateTime(2024, 3, 1, 9, 0, 0, DateTimeKind.Utc),
-                ReadTime = 4,
             },
         };
 
@@ -33,7 +32,7 @@ public class StoryblokMapperTests
         model.Description.Should().Be("A brief");
         model.Text.Should().Be("## Hello");
         model.Image.Should().Be("https://example.com/cover.png");
-        model.ReadTimeInMinutes.Should().Be(4);
+        model.ReadTimeInMinutes.Should().Be(1);
         model.Date.Should().Be(new DateTime(2024, 3, 1, 9, 0, 0, DateTimeKind.Utc));
         model.Tags.Should().ContainInOrder("dotnet", "blazor");
         model.Draft.Should().BeFalse();
@@ -98,7 +97,7 @@ public class StoryblokMapperTests
     }
 
     [Fact]
-    public void MapToPostModel_WhenReadTimeIsMissing_CalculatesIt()
+    public void MapToPostModel_CalculatesReadTimeFromBody()
     {
         var body = string.Join(' ', Enumerable.Repeat("word", 450));
         var story = new StoryblokStory
