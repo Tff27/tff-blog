@@ -248,7 +248,6 @@ public class StoryblokContentProviderTests : IDisposable
                 body,
                 description = "A brief",
                 cover = coverValue,
-                date = "2024-04-01T10:00:00.000Z",
             },
             tag_list = tags ?? ["dotnet"],
             published_at = published ? "2024-04-01T10:00:00.000Z" : (string?)null,
