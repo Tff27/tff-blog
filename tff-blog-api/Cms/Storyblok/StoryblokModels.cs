@@ -45,8 +45,6 @@ internal sealed class StoryblokContent
 
     public DateTime? Date { get; set; }
 
-    public int? ReadTime { get; set; }
-
     public StoryblokAsset? Photo { get; set; }
 
     public string? Name { get; set; }

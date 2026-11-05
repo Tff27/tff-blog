@@ -31,7 +31,7 @@ public class StoryblokContentProviderTests : IDisposable
     [Fact]
     public async Task GetPostsAsync_MapsPostsFromStoryblokResponse()
     {
-        StubStories(CreateStoriesResponse(CreateStory("first-post", "First post", "## Hello", readTime: 4, tags: ["dotnet", "blazor"])));
+        StubStories(CreateStoriesResponse(CreateStory("first-post", "First post", "## Hello", tags: ["dotnet", "blazor"])));
 
         var posts = await _sut.GetPostsAsync();
 
@@ -42,7 +42,7 @@ public class StoryblokContentProviderTests : IDisposable
         post.Description.Should().Be("A brief");
         post.Image.Should().Be("https://example.com/cover.png");
         post.Text.Should().Be("## Hello");
-        post.ReadTimeInMinutes.Should().Be(4);
+        post.ReadTimeInMinutes.Should().Be(1);
         post.Date.Should().Be(new DateTime(2024, 4, 1, 10, 0, 0, DateTimeKind.Utc));
         post.Tags.Should().ContainInOrder("dotnet", "blazor");
         post.Draft.Should().BeFalse();
@@ -228,7 +228,6 @@ public class StoryblokContentProviderTests : IDisposable
         string slug,
         string title,
         string body = "Post body",
-        int? readTime = null,
         string? cover = "https://example.com/cover.png",
         bool published = true,
         string[]? tags = null)
@@ -250,7 +249,6 @@ public class StoryblokContentProviderTests : IDisposable
                 description = "A brief",
                 cover = coverValue,
                 date = "2024-04-01T10:00:00.000Z",
-                read_time = readTime,
             },
             tag_list = tags ?? ["dotnet"],
             published_at = published ? "2024-04-01T10:00:00.000Z" : (string?)null,

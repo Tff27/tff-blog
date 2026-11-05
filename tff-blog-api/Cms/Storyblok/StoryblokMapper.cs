@@ -23,7 +23,7 @@ internal static partial class StoryblokMapper
             Tags = story.TagList ?? [],
             Slug = story.Slug ?? GetSlugFromFullSlug(story.FullSlug),
             Image = content.Cover?.Filename ?? string.Empty,
-            ReadTimeInMinutes = content.ReadTime ?? CalculateReadTime(body),
+            ReadTimeInMinutes = CalculateReadTime(body),
             Draft = story.PublishedAt is null,
         };
     }
