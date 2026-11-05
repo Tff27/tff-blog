@@ -341,3 +341,7 @@ healthchecksdb
 
 # Azure Functions localsettings file
 local.settings.json
+
+# Storyblok import tool local inputs and state
+tools/storyblok-import/posts/
+tools/storyblok-import/.state/
