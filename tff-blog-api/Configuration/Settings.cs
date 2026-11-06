@@ -8,7 +8,12 @@ public static class Settings
 
     public static bool GetShowDrafts()
     {
-        return Convert.ToBoolean(GetEnvironmentVariable("ShowDrafts"));
+        return ParseBoolean(GetEnvironmentVariable("ShowDrafts"));
+    }
+
+    internal static bool ParseBoolean(string? value)
+    {
+        return bool.TryParse(value, out var parsed) && parsed;
     }
 
     public static string GetStoryblokEndpoint()
