@@ -16,7 +16,7 @@ Personal blog: Blazor WebAssembly client + Azure Functions API, both on .NET 10.
 - Run all tests: `dotnet test tff-blog.sln --no-build` (run `dotnet build` first)
 - Run client: `dotnet run --project tff-blog` (http://localhost:5000, https://localhost:5001)
 - Run API: `dotnet run --project tff-blog-api` (port 7071; launch profile adds `--cors *`)
-- CI (`.github/workflows/azure-static-web-apps-black-tree-01f647703.yml`) runs on pushes/PRs to `master` and deploys via Azure Static Web Apps (`app_location: tff-blog`, `api_location: tff-blog-api`, `output_location: wwwroot`).
+- CI (`.github/workflows/azure-static-web-apps-black-tree-01f647703.yml`) runs on pushes/PRs to `master` and deploys via Azure Static Web Apps (`app_location: tff-blog`, `api_location: tff-blog-api`, `output_location: wwwroot`). The API is hosted as managed Functions, so its runtime is selected by `platform.apiRuntime` in `tff-blog/staticwebapp.config.json` and must match the API's `TargetFramework`.
 
 ## Client ↔ API wiring
 
@@ -44,6 +44,7 @@ Personal blog: Blazor WebAssembly client + Azure Functions API, both on .NET 10.
 - Local API settings live in `tff-blog-api/local.settings.json`. It is gitignored and untracked; it may contain a plaintext token in comments. Never commit, print, or copy its contents.
 - Client secrets belong in User Secrets (`UserSecretsId` is configured). `appsettings.Development.json` is tracked and only contains the local API URL.
 - Production needs no CORS config: Static Web Apps proxies `/api` same-origin. Local dev relies on `--cors *` from the launch profile.
+- On Azure, set only the app's own settings (`StoryblokPublicToken`, `ShowDrafts`, `CacheTtlMinutes`, `StoryblokPreviewToken`, `PreviewSecret`) on the Static Web App. `AzureWeb*` and `FUNCTIONS_*` prefixes are reserved by Static Web Apps; for example `AzureWebJobsStorage=UseDevelopmentStorage=true` is a local-only value and can stop the Functions host from starting.
 
 ## Testing
 
@@ -65,7 +66,7 @@ Personal blog: Blazor WebAssembly client + Azure Functions API, both on .NET 10.
 - NuGet audit is configured to fail on vulnerable packages (`NU1901`–`NU1904` are warnings-as-errors). A dependency bump can break restore until vulnerabilities are resolved. Dependabot updates NuGet daily.
 - No `.editorconfig`, `Directory.Build.props`, or central package management. Keep the duplicated property blocks per `.csproj` consistent.
 - Markdown rendering is Markdig → HtmlSanitizer → `MarkupString` in `tff-blog/Shared/Atoms/Markdown.razor`. The sanitizer allows `class` in addition to its defaults (`tff-blog/Program.cs`). Do not bypass sanitization; extend the allowlist instead.
-- SPA routing is handled by `tff-blog/staticwebapp.config.json` (`navigationFallback` → `index.html`); client routes only need a Blazor `@page` directive.
+- SPA routing is handled by `tff-blog/staticwebapp.config.json` (`navigationFallback` → `index.html`); client routes only need a Blazor `@page` directive. The same file pins the managed Functions runtime with `platform.apiRuntime: "dotnet-isolated:10.0"`, which must match `tff-blog-api`'s `TargetFramework`. Without it the API runs on an older .NET runtime and every `/api` call returns `500 Backend call failure` after the ~45 s gateway timeout, while the static site keeps working and the deploy still reports success.
 - Client content loading goes through `IBlogContentService`; do not reintroduce `try/catch → NavigateTo("404")` or swallow failures into empty lists. `404` is only for genuinely missing content.
 
 ## Release convention
