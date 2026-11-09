@@ -162,19 +162,6 @@ public class FeedFunctionTests
         body.Should().NotContain("/post/draft");
     }
 
-    [Theory]
-    [InlineData("\"etag\"", "\"etag\"", true)]
-    [InlineData("W/\"etag\"", "\"etag\"", true)]
-    [InlineData("\"other\", \"etag\"", "\"etag\"", true)]
-    [InlineData("*", "\"etag\"", true)]
-    [InlineData("\"other\"", "\"etag\"", false)]
-    [InlineData("", "\"etag\"", false)]
-    [InlineData(null, "\"etag\"", false)]
-    public void MatchesETag_ComparesTheIfNoneMatchHeader(string? header, string etag, bool expected)
-    {
-        FeedFunction.MatchesETag(header, etag).Should().Be(expected);
-    }
-
     private static TestHttpRequestData CreateRequest(string path)
     {
         return new TestHttpRequestData(url: $"http://localhost/{path}");

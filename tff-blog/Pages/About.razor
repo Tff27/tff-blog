@@ -2,6 +2,8 @@
 @inject IBlogContentService ContentService
 @inject NavigationManager UriHelper
 
+<CanonicalLink />
+
 @if (errorMessage is not null)
 {
     <ContentError ErrorMessage="@errorMessage" OnRetry="LoadAboutAsync" />
