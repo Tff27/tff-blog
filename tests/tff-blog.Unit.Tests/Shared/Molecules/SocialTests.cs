@@ -7,28 +7,20 @@ namespace Tff.Blog.Client.Unit.Tests.Shared.Molecules;
 public class SocialTests : BunitContext
 {
     [Fact]
-    public void Social_RendersTheSocialLinks()
+    public void Social_RendersTheSocialLinksAndTheFeed()
     {
         var cut = Render<Social>();
 
-        cut.FindAll("a").Should().HaveCount(3);
+        cut.FindAll("a").Should().HaveCount(4);
         cut.FindAll("img")
             .Select(icon => icon.GetAttribute("src"))
-            .Should().ContainInOrder("icons/github.svg", "icons/linkedin.svg", "icons/x.svg");
+            .Should().ContainInOrder("icons/github.svg", "icons/linkedin.svg", "icons/x.svg", "icons/rss.svg");
     }
 
     [Fact]
-    public void Social_WithoutShowRssFeed_DoesNotRenderTheFeedLink()
+    public void Social_RendersTheFeedLink()
     {
         var cut = Render<Social>();
-
-        cut.FindAll("a[href='/rss.xml']").Should().BeEmpty();
-    }
-
-    [Fact]
-    public void Social_WithShowRssFeed_RendersTheFeedLink()
-    {
-        var cut = Render<Social>(parameters => parameters.Add(component => component.ShowRssFeed, true));
 
         var link = cut.Find("a[href='/rss.xml']");
 
@@ -40,9 +32,7 @@ public class SocialTests : BunitContext
     [Fact]
     public void Social_WithInvertColor_InvertsTheFeedIcon()
     {
-        var cut = Render<Social>(parameters => parameters
-            .Add(component => component.ShowRssFeed, true)
-            .Add(component => component.InvertColor, true));
+        var cut = Render<Social>(parameters => parameters.Add(component => component.InvertColor, true));
 
         cut.Find("a[href='/rss.xml'] img").GetAttribute("class").Should().Be("icon inverted");
     }
