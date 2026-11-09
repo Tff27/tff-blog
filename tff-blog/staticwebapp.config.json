@@ -10,10 +10,15 @@
     {
       "route": "/atom.xml",
       "rewrite": "/api/atom.xml"
+    },
+    {
+      "route": "/sitemap.xml",
+      "rewrite": "/api/sitemap.xml"
     }
   ],
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/rss.xml", "/atom.xml"]
-  }
+    "exclude": ["/rss.xml", "/atom.xml", "/sitemap.xml"]
+  },
+  "trailingSlash": "never"
 }
