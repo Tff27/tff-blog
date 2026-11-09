@@ -2,7 +2,9 @@
 @inject IBlogContentService ContentService
 @inject NavigationManager UriHelper
 
-<CanonicalLink />
+<HeadContent>
+    <CanonicalLink />
+</HeadContent>
 
 @if (errorMessage is not null)
 {
