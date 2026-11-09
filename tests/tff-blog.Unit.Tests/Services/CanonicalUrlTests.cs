@@ -66,7 +66,9 @@ public class CanonicalUrlTests
     [Fact]
     public void From_WithARelativeUrl_Throws()
     {
-        var act = () => CanonicalUrl.From("/about");
+        // A rooted path ("/about") is treated as an absolute file URI on Unix, so use a
+        // scheme-less relative URL that is rejected on every platform.
+        var act = () => CanonicalUrl.From("about/page");
 
         act.Should().Throw<UriFormatException>();
     }
