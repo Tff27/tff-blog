@@ -8,9 +8,18 @@
     <NavLink href="https://twitter.com/tff_27" target="_blank">
         <Icon IconImage="icons/x.svg" InvertColor="@InvertColor" AltIconImageText="Twitter/X icon" />
     </NavLink>
+    @if (ShowRssFeed)
+    {
+        <NavLink href="/rss.xml" title="RSS feed">
+            <Icon IconImage="icons/rss.svg" InvertColor="@InvertColor" AltIconImageText="RSS feed icon" />
+        </NavLink>
+    }
 </div>
 
 @code {
     [Parameter]
     public bool InvertColor { get; set; }
+
+    [Parameter]
+    public bool ShowRssFeed { get; set; }
 }
