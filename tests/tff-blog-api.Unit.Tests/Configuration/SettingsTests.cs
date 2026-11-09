@@ -24,4 +24,24 @@ public class SettingsTests
     {
         Settings.ParseBoolean(null).Should().BeFalse();
     }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    [InlineData("/")]
+    [InlineData("///")]
+    public void NormalizeSiteUrl_WhenNoUsableValueIsConfigured_ReturnsTheDefault(string? value)
+    {
+        Settings.NormalizeSiteUrl(value).Should().Be("https://www.tiagofonseca.dev");
+    }
+
+    [Theory]
+    [InlineData("https://example.com", "https://example.com")]
+    [InlineData("https://example.com/", "https://example.com")]
+    [InlineData("  https://example.com///  ", "https://example.com")]
+    public void NormalizeSiteUrl_TrimsWhitespaceAndTrailingSlashes(string value, string expected)
+    {
+        Settings.NormalizeSiteUrl(value).Should().Be(expected);
+    }
 }

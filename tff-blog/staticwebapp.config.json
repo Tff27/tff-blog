@@ -2,7 +2,18 @@
   "platform": {
     "apiRuntime": "dotnet-isolated:10.0"
   },
+  "routes": [
+    {
+      "route": "/rss.xml",
+      "rewrite": "/api/rss.xml"
+    },
+    {
+      "route": "/atom.xml",
+      "rewrite": "/api/atom.xml"
+    }
+  ],
   "navigationFallback": {
-    "rewrite": "/index.html"
+    "rewrite": "/index.html",
+    "exclude": ["/rss.xml", "/atom.xml"]
   }
 }

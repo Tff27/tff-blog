@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Tff.Blog.Api.Cms.Storyblok;
 using Tff.Blog.Api.Configuration;
+using Tff.Blog.Api.Feeds;
 using Tff.Blog.Api.Services;
 
 var builder = FunctionsApplication.CreateBuilder(args);
@@ -16,6 +17,7 @@ builder.Services.AddSingleton(new StoryblokSettings(
     Settings.GetStoryblokPreviewToken(),
     Settings.GetShowDrafts()));
 builder.Services.AddSingleton(new PreviewSettings(Settings.GetPreviewSecret()));
+builder.Services.AddSingleton(new FeedSettings(Settings.GetSiteUrl()));
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient<StoryblokContentProvider>();
 builder.Services.AddTransient<IContentProvider>(services => new CachedContentProvider(
