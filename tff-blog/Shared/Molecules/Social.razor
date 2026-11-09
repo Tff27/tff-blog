@@ -1,4 +1,6 @@
-﻿<div class="social">
+﻿@inject FeedLinkSettings FeedLink
+
+<div class="social">
     <NavLink href="https://github.com/Tff27" target="_blank">
         <Icon IconImage="icons/github.svg" InvertColor="@InvertColor" AltIconImageText="Github icon" />
     </NavLink>
@@ -8,7 +10,7 @@
     <NavLink href="https://twitter.com/tff_27" target="_blank">
         <Icon IconImage="icons/x.svg" InvertColor="@InvertColor" AltIconImageText="Twitter/X icon" />
     </NavLink>
-    <NavLink href="/rss.xml" title="RSS feed">
+    <NavLink href="@FeedLink.Url" title="RSS feed">
         <Icon IconImage="icons/rss.svg" InvertColor="@InvertColor" AltIconImageText="RSS feed icon" />
     </NavLink>
 </div>

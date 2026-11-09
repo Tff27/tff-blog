@@ -3,6 +3,7 @@ using Bunit;
 using Ganss.Xss;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
+using Tff.Blog.Client.Configuration;
 using Tff.Blog.Client.Services;
 using Tff.Blog.Client.Shared;
 using Tff.Blog.Shared.Models;
@@ -15,6 +16,7 @@ public class AuthorComponentTests : BunitContext
 
     public AuthorComponentTests()
     {
+        Services.AddSingleton(new FeedLinkSettings("/rss.xml"));
         Services.AddSingleton(_contentService);
 
         var sanitizer = new HtmlSanitizer();

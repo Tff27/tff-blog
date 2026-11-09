@@ -1,11 +1,18 @@
 using AwesomeAssertions;
 using Bunit;
+using Microsoft.Extensions.DependencyInjection;
+using Tff.Blog.Client.Configuration;
 using Tff.Blog.Client.Shared.Molecules;
 
 namespace Tff.Blog.Client.Unit.Tests.Shared.Molecules;
 
 public class SocialTests : BunitContext
 {
+    public SocialTests()
+    {
+        Services.AddSingleton(new FeedLinkSettings("/rss.xml"));
+    }
+
     [Fact]
     public void Social_RendersTheSocialLinksAndTheFeed()
     {
@@ -18,7 +25,7 @@ public class SocialTests : BunitContext
     }
 
     [Fact]
-    public void Social_RendersTheFeedLink()
+    public void Social_RendersTheConfiguredFeedUrl()
     {
         var cut = Render<Social>();
 
@@ -30,10 +37,20 @@ public class SocialTests : BunitContext
     }
 
     [Fact]
+    public void Social_UsesTheFeedUrlFromTheConfiguration()
+    {
+        Services.AddSingleton(new FeedLinkSettings("http://localhost:7071/api/rss.xml"));
+
+        var cut = Render<Social>();
+
+        cut.Find("a[href='http://localhost:7071/api/rss.xml']").Should().NotBeNull();
+    }
+
+    [Fact]
     public void Social_WithInvertColor_InvertsTheFeedIcon()
     {
         var cut = Render<Social>(parameters => parameters.Add(component => component.InvertColor, true));
 
-        cut.Find("a[href='/rss.xml'] img").GetAttribute("class").Should().Be("icon inverted");
+        cut.Find("a[title='RSS feed'] img").GetAttribute("class").Should().Be("icon inverted");
     }
 }
