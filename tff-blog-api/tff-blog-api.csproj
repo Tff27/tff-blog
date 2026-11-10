@@ -29,6 +29,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<!-- The post shell endpoint serves this exact file, so the metadata it injects can never
+		     drift from the shell the Blazor app boots from. -->
+		<EmbeddedResource Include="..\tff-blog\wwwroot\index.html" LogicalName="Tff.Blog.Api.Shell.index.html" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<InternalsVisibleTo Include="Tff.Blog.Api.Unit.Tests" />
 	</ItemGroup>
 

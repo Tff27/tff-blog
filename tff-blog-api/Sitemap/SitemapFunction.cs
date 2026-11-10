@@ -41,7 +41,7 @@ public class SitemapFunction
             var posts = await _contentProvider.GetPostsAsync(preview: false, cancellationToken);
             var payload = SitemapBuilder.Build(posts, _feedSettings.SiteUrl);
 
-            var response = await ConditionalXmlResponse.WriteAsync(
+            var response = await ConditionalResponse.WriteAsync(
                 req,
                 payload,
                 ContentType,
@@ -63,7 +63,7 @@ public class SitemapFunction
         {
             _logger.LogError(ex, "Error generating sitemap.xml: {Message}", ex.Message);
 
-            return await ConditionalXmlResponse.WriteFailureAsync(
+            return await ConditionalResponse.WriteFailureAsync(
                 req,
                 "The sitemap is temporarily unavailable.",
                 cancellationToken);
