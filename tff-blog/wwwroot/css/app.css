@@ -482,6 +482,30 @@ pre::-webkit-scrollbar-thumb {
     width: 40%;
 }
 
+@media (min-width: 900px) {
+    .skeleton-card--featured {
+        display: grid;
+        grid-template-columns: 1.05fr 1fr;
+        align-items: stretch;
+    }
+
+    .skeleton-card--featured .skeleton-media {
+        height: 100%;
+        aspect-ratio: auto;
+        min-height: 340px;
+    }
+
+    .skeleton-card--featured .skeleton-body {
+        align-content: center;
+        padding: clamp(1.75rem, 3vw, 2.5rem);
+    }
+
+    .skeleton-card--featured .skeleton-line--lg {
+        width: 90%;
+        height: var(--step-3);
+    }
+}
+
 @keyframes skeleton-shimmer {
     100% {
         transform: translateX(100%);

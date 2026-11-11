@@ -8,8 +8,17 @@
     }
     else if (PostList is null)
     {
+        <div class="skeleton-card skeleton-card--featured" aria-hidden="true">
+            <div class="skeleton-media"></div>
+            <div class="skeleton-body">
+                <div class="skeleton-line skeleton-line--sm"></div>
+                <div class="skeleton-line skeleton-line--lg"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line skeleton-line--sm"></div>
+            </div>
+        </div>
         <div class="post-grid" aria-hidden="true">
-            @for (var i = 0; i < 3; i++)
+            @for (var i = 0; i < 2; i++)
             {
                 <div class="skeleton-card">
                     <div class="skeleton-media"></div>
