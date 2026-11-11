@@ -171,6 +171,12 @@ hr {
     outline-offset: 3px;
 }
 
+/* FocusOnNavigate focuses the h1 after a route change and on first load. The heading is not
+   interactive, so it never needs the accent ring, which otherwise reads as selected text. */
+h1[tabindex="-1"]:focus {
+    outline: none;
+}
+
 /* ------------------------------------------------------------------
    Layout helpers
    ------------------------------------------------------------------ */
