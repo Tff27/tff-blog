@@ -26,8 +26,22 @@ public class PostListComponentTests : BunitContext
 
         var cut = Render<PostListComponent>();
 
-        cut.FindAll(".card").Should().HaveCount(2);
+        cut.FindAll(".post-card").Should().HaveCount(2);
         cut.Markup.Should().Contain("First post").And.Contain("Second post");
+    }
+
+    [Fact]
+    public void PostList_FeaturesTheNewestPost()
+    {
+        _contentService.GetPostsAsync(Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(BlogContentResult<IReadOnlyList<PostModel>>.Success(
+                [CreatePost("First post", "first-post"), CreatePost("Second post", "second-post")])));
+
+        var cut = Render<PostListComponent>();
+
+        var cards = cut.FindAll(".post-card");
+        cards[0].ClassList.Should().Contain("post-card--featured");
+        cards[1].ClassList.Should().NotContain("post-card--featured");
     }
 
     [Fact]
@@ -40,7 +54,7 @@ public class PostListComponentTests : BunitContext
 
         cut.Find(".content-error").TextContent.Should().Contain("Content unavailable");
         cut.FindAll(".retry-button").Should().ContainSingle();
-        cut.FindAll(".card").Should().BeEmpty();
+        cut.FindAll(".post-card").Should().BeEmpty();
     }
 
     [Fact]
@@ -58,7 +72,7 @@ public class PostListComponentTests : BunitContext
         cut.WaitForAssertion(() =>
         {
             cut.FindAll(".content-error").Should().BeEmpty();
-            cut.FindAll(".card").Should().ContainSingle();
+            cut.FindAll(".post-card").Should().ContainSingle();
         });
     }
 

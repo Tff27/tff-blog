@@ -1,28 +1,35 @@
-﻿@inject NavigationManager UriHelper
-
-<div class="card" @onclick="@GoToPostDetails">
-    <img src=@Post.Image alt=@Post.Title>
-    <div class="container">
-        <h1><b>@Post.Title</b></h1>
-        <div class="info-container">
-            <span>@Post.Date</span>
-            @foreach (var tag in Post.Tags)
-            {
-                <span class="tag">@tag</span>
-            }
-        </div>
-        <p>
-            @Post.Description
-        </p>
+﻿<a class="post-card @(Featured ? "post-card--featured" : null)" href="@Post.Url">
+    <div class="post-card__media">
+        <img src="@Post.Image"
+             alt=""
+             loading="@(Featured ? "eager" : "lazy")"
+             decoding="async"
+             fetchpriority="@(Featured ? "high" : "auto")" />
     </div>
-</div>
+    <div class="post-card__body">
+        <div class="post-card__meta">
+            <time datetime="@Post.IsoDate">@Post.FormattedDate</time>
+            <span class="post-card__dot" aria-hidden="true">·</span>
+            <span>@Post.ReadTime</span>
+        </div>
+        <h2 class="post-card__title">@Post.Title</h2>
+        <p class="post-card__description">@Post.Description</p>
+        @if (Post.Tags.Any())
+        {
+            <ul class="tag-list" aria-label="Tags">
+                @foreach (var tag in Post.Tags)
+                {
+                    <li class="tag">@tag</li>
+                }
+            </ul>
+        }
+    </div>
+</a>
 
 @code {
     [Parameter]
-    public required PostModel Post { get; set; }
+    public required PostViewModel Post { get; set; }
 
-    void GoToPostDetails()
-    {
-        UriHelper.NavigateTo($"post/{Post.Slug}");
-    }
+    [Parameter]
+    public bool Featured { get; set; }
 }

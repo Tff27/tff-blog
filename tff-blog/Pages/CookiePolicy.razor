@@ -2,8 +2,11 @@
 @inject IBlogContentService ContentService
 @inject NavigationManager UriHelper
 
+<PageTitle>Cookie policy - Tiago Fonseca</PageTitle>
+
 <HeadContent>
     <CanonicalLink />
+    <meta name="description" content="How this website uses cookies." />
 </HeadContent>
 
 @if (errorMessage is not null)
@@ -12,7 +15,11 @@
 }
 else if (cookiePolicyModel is not null)
 {
-    <Markdown MarkdownContent="@cookiePolicyModel.Text" />
+    <section class="page-section">
+        <div class="prose">
+            <Markdown MarkdownContent="@cookiePolicyModel.Text" />
+        </div>
+    </section>
 }
 
 @code {

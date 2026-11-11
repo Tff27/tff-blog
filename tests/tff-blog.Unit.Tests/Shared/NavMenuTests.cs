@@ -7,12 +7,12 @@ namespace Tff.Blog.Client.Unit.Tests.Shared;
 public class NavMenuTests : BunitContext
 {
     [Fact]
-    public void NavMenu_StartsCollapsed()
+    public void NavMenu_StartsClosed()
     {
         var cut = RenderNavMenu();
 
-        cut.Find(".navbar").ClassList.Should().NotContain("mobile");
-        cut.FindAll(".collapse").Should().ContainSingle();
+        cut.Find(".navbar").ClassList.Should().NotContain("is-open");
+        cut.Find(".navbar-toggler").GetAttribute("aria-expanded").Should().Be("false");
     }
 
     [Fact]
@@ -22,8 +22,8 @@ public class NavMenuTests : BunitContext
 
         cut.Find(".navbar-toggler").Click();
 
-        cut.Find(".navbar").ClassList.Should().Contain("mobile");
-        cut.FindAll(".collapse").Should().BeEmpty();
+        cut.Find(".navbar").ClassList.Should().Contain("is-open");
+        cut.Find(".navbar-toggler").GetAttribute("aria-expanded").Should().Be("true");
     }
 
     [Fact]
@@ -34,8 +34,8 @@ public class NavMenuTests : BunitContext
         cut.Find(".navbar-toggler").Click();
         cut.Find(".navbar-toggler").Click();
 
-        cut.Find(".navbar").ClassList.Should().NotContain("mobile");
-        cut.FindAll(".collapse").Should().ContainSingle();
+        cut.Find(".navbar").ClassList.Should().NotContain("is-open");
+        cut.Find(".navbar-toggler").GetAttribute("aria-expanded").Should().Be("false");
     }
 
     [Fact]
@@ -54,5 +54,3 @@ public class NavMenuTests : BunitContext
         return Render<NavMenu>((ComponentParameterCollectionBuilder<NavMenu> _) => { });
     }
 }
-
-

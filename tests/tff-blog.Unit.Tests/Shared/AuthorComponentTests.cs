@@ -37,8 +37,8 @@ public class AuthorComponentTests : BunitContext
 
         var cut = Render<AuthorComponent>();
 
-        cut.Find(".authorbar .name").TextContent.Should().Contain("Tiago Fonseca");
-        cut.Find(".authorbar img").GetAttribute("src").Should().Be("https://example.com/photo.jpg");
+        cut.Find(".author-card .author-card__name").TextContent.Should().Contain("Tiago Fonseca");
+        cut.Find(".author-card img").GetAttribute("src").Should().Be("https://example.com/photo.jpg");
     }
 
     [Fact]
@@ -49,7 +49,7 @@ public class AuthorComponentTests : BunitContext
 
         var cut = Render<AuthorComponent>();
 
-        cut.FindAll(".authorbar").Should().BeEmpty();
+        cut.FindAll(".author-card").Should().BeEmpty();
     }
 
     [Fact]
@@ -60,6 +60,6 @@ public class AuthorComponentTests : BunitContext
 
         var cut = Render<AuthorComponent>();
 
-        cut.FindAll(".authorbar").Should().BeEmpty();
+        cut.FindAll(".author-card").Should().BeEmpty();
     }
 }

@@ -2,12 +2,17 @@
 
 @if (author is not null)
 {
-    <div class="authorbar">
-        <img class="photo" src="@author.Photo" alt="Author photo" />
-        <p class="name">@author.Name</p>
-        <Social />
-        <Markdown MarkdownContent=@author.Text />
-    </div>
+    <section class="author-card" aria-labelledby="author-name">
+        <img class="author-card__photo" src="@author.Photo" alt="" loading="lazy" decoding="async" />
+        <div class="author-card__body">
+            <p class="author-card__eyebrow">About the author</p>
+            <h2 class="author-card__name" id="author-name">@author.Name</h2>
+            <div class="author-card__bio">
+                <Markdown MarkdownContent="@author.Text" />
+            </div>
+            <Social InvertColor="true" />
+        </div>
+    </section>
 }
 
 @code {

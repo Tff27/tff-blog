@@ -1,31 +1,37 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager Navigation
 
+<a class="skip-link" href="#main-content">Skip to content</a>
+
 <div class="page">
-    <header>
-        <NavMenu />
+    <header class="site-header">
+        <div class="container">
+            <NavMenu />
+        </div>
     </header>
 
-    <main>
-        <ErrorBoundary @key="Navigation.Uri">
-            <ChildContent>
-                @Body
-            </ChildContent>
-            <ErrorContent>
-                <ErrorComponent ErrorCodeText="500" ErrorText="Something went wrong while loading this page. Please try again later." />
-            </ErrorContent>
-        </ErrorBoundary>
+    <main id="main-content" class="site-main">
+        <div class="container">
+            <ErrorBoundary @key="Navigation.Uri">
+                <ChildContent>
+                    @Body
+                </ChildContent>
+                <ErrorContent>
+                    <ErrorComponent ErrorCodeText="500" ErrorText="Something went wrong while loading this page. Please try again later." />
+                </ErrorContent>
+            </ErrorBoundary>
+        </div>
     </main>
-    <aside>
-        <ErrorBoundary>
-            <ChildContent>
-                <AuthorComponent />
-            </ChildContent>
-            <ErrorContent></ErrorContent>
-        </ErrorBoundary>
-    </aside>
 
-    <footer>
-        <FooterComponent />
+    <footer class="site-footer">
+        <div class="container">
+            <ErrorBoundary>
+                <ChildContent>
+                    <AuthorComponent />
+                </ChildContent>
+                <ErrorContent></ErrorContent>
+            </ErrorBoundary>
+            <FooterComponent />
+        </div>
     </footer>
 </div>
