@@ -1,30 +1,64 @@
-﻿article {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+﻿.post {
+    max-width: 1000px;
+    margin-inline: auto;
 }
 
-.container {
-    padding: 2px 16px;
+.post-header {
+    max-width: 760px;
+    margin-inline: auto;
 }
 
-img {
-    width: 100%;
-    max-height: 50vh;
-    object-fit: cover;
+.post-header h1 {
+    margin: 0.5rem 0 1rem;
 }
 
-.info-container {
+.post-meta {
     display: flex;
-    flex-flow: wrap;
+    flex-wrap: wrap;
     align-items: center;
+    gap: 0.4rem;
+    color: var(--text-faint);
+    font-size: 0.85rem;
 }
 
-.tag {
-    border-radius: 10px;
-    border-color: var(--primary-color);
-    background: var(--secondary-color);
-    color: var(--tertiary-color);
-    margin-left: 0.4rem;
-    margin-bottom: 0.4rem;
-    padding: 0.15rem;
+.post-description {
+    margin-bottom: 1rem;
+    color: var(--text-muted);
+    font-size: var(--step-1);
+    line-height: 1.6;
+}
+
+.post-header .tag-list {
+    margin-top: 0.5rem;
+}
+
+.post-hero {
+    margin: clamp(2rem, 4vw, 3rem) auto;
+}
+
+.post-hero img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+}
+
+.post .prose {
+    margin-inline: auto;
+}
+
+.post-skeleton {
+    display: grid;
+    gap: 1rem;
+    max-width: 720px;
+    margin-inline: auto;
+    padding-block: 2rem;
+}
+
+@media (min-width: 1024px) {
+    .post-hero img {
+        aspect-ratio: 21 / 9;
+    }
 }

@@ -1,16 +1,55 @@
 ﻿@using Tff.Blog.Client.ViewModels
 @inject IBlogContentService ContentService
 
-<div class="post-container">
+<div class="post-list">
     @if (errorMessage is not null)
     {
         <ContentError ErrorMessage="@errorMessage" OnRetry="LoadPostsAsync" />
     }
-    else if (PostList is not null)
+    else if (PostList is null)
     {
-        @foreach (var post in PostList.Posts)
+        <div class="skeleton-card skeleton-card--featured" aria-hidden="true">
+            <div class="skeleton-media"></div>
+            <div class="skeleton-body">
+                <div class="skeleton-line skeleton-line--sm"></div>
+                <div class="skeleton-line skeleton-line--lg"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line skeleton-line--sm"></div>
+            </div>
+        </div>
+        <div class="post-grid" aria-hidden="true">
+            @for (var i = 0; i < 2; i++)
+            {
+                <div class="skeleton-card">
+                    <div class="skeleton-media"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-line skeleton-line--sm"></div>
+                        <div class="skeleton-line skeleton-line--lg"></div>
+                        <div class="skeleton-line"></div>
+                    </div>
+                </div>
+            }
+        </div>
+        <p class="visually-hidden" role="status">Loading posts…</p>
+    }
+    else if (!PostList.Posts.Any())
+    {
+        <p class="empty-state">No posts have been published yet.</p>
+    }
+    else
+    {
+        var posts = PostList.Posts.ToList();
+
+        <PostCardComponent Post="posts[0]" Featured="true" />
+
+        @if (posts.Count > 1)
         {
-            <PostCardComponent Post="@post" />
+            <div class="post-grid">
+                @foreach (var post in posts.Skip(1))
+                {
+                    <PostCardComponent Post="post" />
+                }
+            </div>
         }
     }
 </div>
@@ -32,7 +71,7 @@
         {
             PostList = new PostListViewModel
             {
-                Posts = result.Content ?? [],
+                Posts = (result.Content ?? []).Select(post => new PostViewModel(post)).ToList(),
             };
         }
         else

@@ -1,125 +1,128 @@
 .navbar {
-    height: 100%;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
 }
-
-    .navbar ::deep ul {
-        padding-inline-start: 0;
-        margin-block-start: 0.5em;
-    }
-
-
-    .navbar ::deep a {
-        text-decoration: none;
-    }
-
-    .navbar.mobile {
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding-top: 5px;
-    }
 
 .navbar-top {
-    width: 100%;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: var(--header-height);
 }
 
-.navbar-brand {
-    font-size: 1.1rem;
+.navbar ::deep .brand {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
 }
 
-.logo{
-    max-width: 10rem;
+.brand-logo {
+    display: block;
+    width: clamp(7.5rem, 32vw, 9rem);
+    height: auto;
 }
 
 .navbar-toggler {
-    min-height: 30px;
-    border-width: 0.1px;
-    border-color: var(--primary-color);
-    border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    background: var(--surface-2);
+    color: var(--text);
+    cursor: pointer;
+    transition: background var(--transition), border-color var(--transition);
 }
 
-    .navbar-toggler:focus {
-        outline: none;
-    }
+.navbar-toggler:hover {
+    background: var(--surface-3);
+    border-color: var(--text-faint);
+}
+
+.navbar-toggler-icon {
+    width: 22px;
+    height: 22px;
+}
 
 .navbar-menu {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    margin-bottom: 0;
-}
-
-.collapse {
     display: none;
+    padding: 0.5rem 0 1rem;
+    border-top: 1px solid var(--border);
 }
 
-.nav-item {
-    height: 3.5rem;
-    padding-bottom: 0.5rem;
-    list-style-type: none;
-    padding-left: 1rem;
+.navbar.is-open .navbar-menu {
+    display: block;
 }
 
-    .nav-item:last-of-type {
-        padding-right: 1rem;
-    }
-
-    .nav-item ::deep a {
-        line-height: 3.5rem;
-    }
-
-        .nav-item ::deep a.active {
-            text-decoration-line: underline;
-            text-underline-offset: 0.05rem;
-        }
-
-        .nav-item ::deep a:hover {
-            background-color: rgba(191, 191, 191, 0.2);
-            text-decoration-line: underline;
-        }
-
-.nav-item-text {
-    font-weight: bold;
-    text-transform: uppercase;
+.nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
-.oi {
-    width: 2rem;
-    color: var(--secondary-color);
+.navbar ::deep .nav-link {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.55rem 0.9rem;
+    border-radius: var(--radius-pill);
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color var(--transition), background var(--transition);
+}
+
+.navbar ::deep .nav-link:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.navbar ::deep .nav-link.active {
+    color: var(--accent);
+    background: var(--accent-soft);
 }
 
 @media (min-width: 768px) {
-    .logo {
-        max-width: 15rem;
-    }
-    
-    .collapse {
-        /*Never collapse the sidebar for wide screens*/
-        display: block;
-        width: 50%;
-    }
-
-    .navbar.mobile {
+    .navbar {
         flex-direction: row;
-        justify-content: space-between;
         align-items: center;
-        padding-top: 0;
+        justify-content: space-between;
+        min-height: var(--header-height);
     }
 
     .navbar-top {
-        width: auto;
+        min-height: var(--header-height);
+    }
+
+    .brand-logo {
+        width: 10.5rem;
     }
 
     .navbar-toggler {
         display: none;
+    }
+
+    .navbar-menu {
+        display: block;
+        padding: 0;
+        border-top: 0;
+    }
+
+    .nav-list {
+        flex-direction: row;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    .navbar ::deep .nav-link {
+        min-height: 40px;
     }
 }

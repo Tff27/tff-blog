@@ -33,6 +33,8 @@ public class PostTests : BunitContext
 
         cut.Find("article h1").TextContent.Should().Contain("Test post");
         cut.Markup.Should().Contain("<strong>Body</strong>");
+        cut.Find(".post-meta").TextContent.Should().Contain("January 1, 2024");
+        cut.Find(".post-meta").TextContent.Should().Contain("1 min read");
         cut.FindAll(".content-error").Should().BeEmpty();
     }
 

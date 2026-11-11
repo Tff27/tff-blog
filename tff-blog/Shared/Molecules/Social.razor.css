@@ -1,7 +1,23 @@
 ﻿.social {
     display: flex;
-    flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    margin: 15px;
+    gap: 0.25rem;
+    margin: 0;
+}
+
+.social ::deep a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: background var(--transition);
+}
+
+.social ::deep a:hover {
+    background: rgba(255, 255, 255, 0.06);
 }

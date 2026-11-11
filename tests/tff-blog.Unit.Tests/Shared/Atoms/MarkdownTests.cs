@@ -52,7 +52,7 @@ public class MarkdownTests : BunitContext
     }
 
     [Fact]
-    public void Markdown_WithEmptyContent_RendersOnlyTheStyleBlock()
+    public void Markdown_WithEmptyContent_RendersNothing()
     {
         var cut = Render<Markdown>(parameters => parameters
             .Add(component => component.MarkdownContent, string.Empty));

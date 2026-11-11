@@ -12,7 +12,12 @@ else if (postdetails == null)
         <meta property="og:image" content=@($"{UriHelper.BaseUri}/images/logo_icon.png")>
     </HeadContent>
 
-    <p><em>Loading...</em></p>
+    <div class="post-skeleton" aria-hidden="true">
+        <div class="skeleton-line skeleton-line--sm"></div>
+        <div class="skeleton-line skeleton-line--lg"></div>
+        <div class="skeleton-line"></div>
+    </div>
+    <p class="visually-hidden" role="status">Loading post…</p>
 }
 else
 {
@@ -21,13 +26,13 @@ else
     <HeadContent>
         <CanonicalLink />
 
-        <meta name="description" content="@postdetails.Title" />
+        <meta name="description" content="@postdetails.Description" />
 
         <meta property="og:url" content="@CanonicalUrl.From(UriHelper.Uri)">
         <meta property="og:title" content="@postdetails.Title">
         <meta property="og:image" content="@postdetails.Image">
         <meta property="og:image:alt" content="@postdetails.Title">
-        <meta property="og:description" content="@postdetails.Title">
+        <meta property="og:description" content="@postdetails.ShareDescription">
         <meta property="og:type" content="article">
         <meta property="og:site_name" content="Tiago Fonseca - Blog">
         <meta property="og:locale" content="en_US">
@@ -35,36 +40,58 @@ else
         <meta name="twitter:creator" content="@@tff_27">
         <meta name="twitter:url" content="@CanonicalUrl.From(UriHelper.Uri)">
         <meta name="twitter:title" content="@postdetails.Title">
-        <meta name="twitter:description" content="@postdetails.Title">
+        <meta name="twitter:description" content="@postdetails.ShareDescription">
         <meta name="twitter:image" content="@postdetails.Image">
         <meta name="twitter:image:alt" content="@postdetails.Title">
-        <meta name="twitter:card" content="summary">
+        <meta name="twitter:card" content="summary_large_image">
     </HeadContent>
 
-
-    <article>
-        <img src=@postdetails.Image alt=@postdetails.Title>
-        <div class="container">
-            <h1><b>@postdetails.Title</b></h1>
-            <div class="info-container">
-                <span>@postdetails.Date</span>
-                @foreach (var tag in postdetails.Tags)
-                {
-                    <span class="tag">@tag</span>
-                }
+    <article class="post">
+        <header class="post-header">
+            <div class="post-meta">
+                <time datetime="@postdetails.IsoDate">@postdetails.FormattedDate</time>
+                <span aria-hidden="true">·</span>
+                <span>@postdetails.ReadTime</span>
             </div>
+
+            <h1>@postdetails.Title</h1>
+
+            @if (!string.IsNullOrWhiteSpace(postdetails.Description))
+            {
+                <p class="post-description">@postdetails.Description</p>
+            }
+
+            @if (postdetails.Tags.Any())
+            {
+                <ul class="tag-list" aria-label="Tags">
+                    @foreach (var tag in postdetails.Tags)
+                    {
+                        <li class="tag">@tag</li>
+                    }
+                </ul>
+            }
+        </header>
+
+        @if (!string.IsNullOrWhiteSpace(postdetails.Image))
+        {
+            <figure class="post-hero">
+                <img src="@postdetails.Image" alt="" fetchpriority="high" decoding="async" />
+            </figure>
+        }
+
+        <div class="prose">
             <Markdown MarkdownContent="@postdetails.Text" />
         </div>
-    </article>
 
-    <SocialShare UrlToShare="@UriHelper.Uri.ToString()" TextToShare="@postdetails.Title" />
+        <SocialShare UrlToShare="@UriHelper.Uri.ToString()" TextToShare="@postdetails.Title" />
+    </article>
 }
 
 @code {
     [Parameter]
     public required string slug { get; set; }
 
-    public PostModel? postdetails;
+    public PostViewModel? postdetails;
 
     private string? errorMessage;
 
@@ -88,6 +115,6 @@ else
             return;
         }
 
-        postdetails = result.Content;
+        postdetails = result.Content is null ? null : new PostViewModel(result.Content);
     }
 }

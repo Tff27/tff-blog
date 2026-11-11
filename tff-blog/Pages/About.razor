@@ -2,8 +2,11 @@
 @inject IBlogContentService ContentService
 @inject NavigationManager UriHelper
 
+<PageTitle>About - Tiago Fonseca</PageTitle>
+
 <HeadContent>
     <CanonicalLink />
+    <meta name="description" content="About Tiago Fonseca, a software engineer from Portugal writing about .NET." />
 </HeadContent>
 
 @if (errorMessage is not null)
@@ -12,7 +15,11 @@
 }
 else if (aboutPage is not null)
 {
-    <Markdown MarkdownContent="@aboutPage.Text" />
+    <section class="page-section">
+        <div class="prose">
+            <Markdown MarkdownContent="@aboutPage.Text" />
+        </div>
+    </section>
 }
 
 @code {

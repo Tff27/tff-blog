@@ -1,8 +1,6 @@
-﻿using Tff.Blog.Shared.Models;
-
-namespace Tff.Blog.Client.ViewModels;
+﻿namespace Tff.Blog.Client.ViewModels;
 
 public class PostListViewModel
 {
-    public required IEnumerable<PostModel> Posts { get; set; } = [];
+    public required IReadOnlyList<PostViewModel> Posts { get; set; } = [];
 }
