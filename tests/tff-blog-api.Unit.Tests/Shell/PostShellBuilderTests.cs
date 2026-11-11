@@ -66,6 +66,18 @@ public class PostShellBuilderTests
     }
 
     [Fact]
+    public void Build_TruncatesTheSocialDescriptionAndKeepsTheFullMetaDescription()
+    {
+        var description = new string('a', 190) + " supercalifragilistic tail";
+
+        var result = PostShellBuilder.Build(Shell, CreatePost(description: description), SiteUrl);
+
+        result.Should().Contain($"<meta name=\"description\" content=\"{description}\" />");
+        result.Should().Contain($"<meta property=\"og:description\" content=\"{new string('a', 190)}…\" />");
+        result.Should().Contain($"<meta name=\"twitter:description\" content=\"{new string('a', 190)}…\" />");
+    }
+
+    [Fact]
     public void Build_HtmlEncodesTheValues()
     {
         var post = CreatePost(title: "Tom & Jerry", description: "A \"quoted\" <summary>");

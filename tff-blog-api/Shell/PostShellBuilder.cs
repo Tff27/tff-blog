@@ -2,6 +2,7 @@
 
 using System.Net;
 using System.Text;
+using Tff.Blog.Shared.Formatting;
 using Tff.Blog.Shared.Models;
 
 namespace Tff.Blog.Api.Shell;
@@ -43,6 +44,7 @@ public static class PostShellBuilder
         var root = siteUrl.TrimEnd('/');
         var title = post.Title ?? string.Empty;
         var description = string.IsNullOrWhiteSpace(post.Description) ? title : post.Description;
+        var shareDescription = PostSummary.ForSocialShare(description);
         var image = string.IsNullOrWhiteSpace(post.Image)
             ? $"{root}{FallbackImagePath}"
             : post.Image;
@@ -56,7 +58,7 @@ public static class PostShellBuilder
             return withTitle;
         }
 
-        var metadata = BuildMetadata(description, url, title, image);
+        var metadata = BuildMetadata(description, shareDescription, url, title, image);
 
         return withTitle[..headCloseAfterTitle] + metadata + withTitle[headCloseAfterTitle..];
     }
@@ -82,10 +84,16 @@ public static class PostShellBuilder
         return shell[..openIndex] + element + shell[(closeIndex + TitleClose.Length)..];
     }
 
-    private static string BuildMetadata(string description, string url, string title, string image)
+    private static string BuildMetadata(
+        string description,
+        string shareDescription,
+        string url,
+        string title,
+        string image)
     {
         var encodedTitle = Encode(title);
         var encodedDescription = Encode(description);
+        var encodedShareDescription = Encode(shareDescription);
         var encodedUrl = Encode(url);
         var encodedImage = Encode(image);
 
@@ -99,7 +107,7 @@ public static class PostShellBuilder
         AppendTag(builder, "meta", "property=\"og:locale\"", "content=\"en_US\"");
         AppendTag(builder, "meta", "property=\"og:url\"", $"content=\"{encodedUrl}\"");
         AppendTag(builder, "meta", "property=\"og:title\"", $"content=\"{encodedTitle}\"");
-        AppendTag(builder, "meta", "property=\"og:description\"", $"content=\"{encodedDescription}\"");
+        AppendTag(builder, "meta", "property=\"og:description\"", $"content=\"{encodedShareDescription}\"");
         AppendTag(builder, "meta", "property=\"og:image\"", $"content=\"{encodedImage}\"");
         AppendTag(builder, "meta", "property=\"og:image:alt\"", $"content=\"{encodedTitle}\"");
 
@@ -107,7 +115,7 @@ public static class PostShellBuilder
         AppendTag(builder, "meta", "name=\"twitter:creator\"", "content=\"@tff_27\"");
         AppendTag(builder, "meta", "name=\"twitter:url\"", $"content=\"{encodedUrl}\"");
         AppendTag(builder, "meta", "name=\"twitter:title\"", $"content=\"{encodedTitle}\"");
-        AppendTag(builder, "meta", "name=\"twitter:description\"", $"content=\"{encodedDescription}\"");
+        AppendTag(builder, "meta", "name=\"twitter:description\"", $"content=\"{encodedShareDescription}\"");
         AppendTag(builder, "meta", "name=\"twitter:image\"", $"content=\"{encodedImage}\"");
         AppendTag(builder, "meta", "name=\"twitter:image:alt\"", $"content=\"{encodedTitle}\"");
 
