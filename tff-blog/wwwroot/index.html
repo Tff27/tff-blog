@@ -22,6 +22,26 @@
     <meta name="theme-color" content="#0a0b0c">
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
+    <!-- Social cards. Link unfurlers never execute Blazor, so the tags the app renders at runtime are
+         invisible to them; this static block is the card every shared link falls back to, including
+         the per-post previews the API cannot serve yet. Two rules: no og:url/twitter:url, because
+         they are page-specific and a static copy of "/" would be wrong elsewhere, and no
+         name="description", because Blazor appends meta tags instead of replacing them and every
+         page component already owns that one. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Tiago Fonseca - Blog" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="Tiago Fonseca - Blog" />
+    <meta property="og:description" content="Articles about software engineering by Tiago Fonseca." />
+    <meta property="og:image" content="https://www.tiagofonseca.dev/images/social-card.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Tiago Fonseca - Blog" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@tff_27" />
+    <meta name="twitter:title" content="Tiago Fonseca - Blog" />
+    <meta name="twitter:description" content="Articles about software engineering by Tiago Fonseca." />
+    <meta name="twitter:image" content="https://www.tiagofonseca.dev/images/social-card.png" />
     <link rel="alternate" type="application/rss+xml" title="Tiago Fonseca - Blog" href="/rss.xml" />
     <link rel="alternate" type="application/atom+xml" title="Tiago Fonseca - Blog" href="/atom.xml" />
 </head>
