@@ -70,7 +70,7 @@ public class FeedFunction
             var posts = await _contentProvider.GetPostsAsync(preview: false, cancellationToken);
             var payload = buildFeed(posts, _feedSettings.SiteUrl);
 
-            var response = await ConditionalXmlResponse.WriteAsync(
+            var response = await ConditionalResponse.WriteAsync(
                 req,
                 payload,
                 contentType,
@@ -92,7 +92,7 @@ public class FeedFunction
         {
             _logger.LogError(ex, "Error generating the feed {FeedPath}: {Message}", feedPath, ex.Message);
 
-            return await ConditionalXmlResponse.WriteFailureAsync(
+            return await ConditionalResponse.WriteFailureAsync(
                 req,
                 "The feed is temporarily unavailable.",
                 cancellationToken);
