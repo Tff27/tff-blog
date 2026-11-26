@@ -4,6 +4,10 @@
   },
   "routes": [
     {
+      "route": "/post/*",
+      "rewrite": "/api/post-shell"
+    },
+    {
       "route": "/rss.xml",
       "rewrite": "/api/rss.xml"
     },

@@ -8,24 +8,28 @@ using System.Text;
 namespace Tff.Blog.Api.Responses;
 
 /// <summary>
-/// Response plumbing shared by the XML endpoints (feeds and sitemap): hashes the payload into an
-/// ETag, answers matching conditional requests with <c>304</c>, and writes failures uncached.
+/// Response plumbing shared by the cached content endpoints (feeds, sitemap and the post shell):
+/// hashes the payload into an ETag, answers matching conditional requests with <c>304</c>, and
+/// writes failures uncached.
 /// </summary>
-internal static class ConditionalXmlResponse
+internal static class ConditionalResponse
 {
     internal const string IfNoneMatchHeader = "If-None-Match";
     internal const string NoCacheValue = "no-store";
 
     /// <summary>
     /// Writes <paramref name="payload"/> as <c>200 OK</c> with an ETag, or as <c>304 Not Modified</c>
-    /// when the request already carries the current ETag.
+    /// when the request already carries the current ETag. <paramref name="extraHeaders"/> are applied
+    /// before the body is written, because headers added afterwards are lost once the host flushes
+    /// the response.
     /// </summary>
     internal static async Task<HttpResponseData> WriteAsync(
         HttpRequestData request,
         string payload,
         string contentType,
         string cacheControl,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        params (string Name, string Value)[] extraHeaders)
     {
         var etag = CreateETag(payload);
 
@@ -34,6 +38,7 @@ internal static class ConditionalXmlResponse
             var notModified = request.CreateResponse(HttpStatusCode.NotModified);
             notModified.Headers.Add("Cache-Control", cacheControl);
             notModified.Headers.Add("ETag", etag);
+            AddHeaders(notModified, extraHeaders);
 
             return notModified;
         }
@@ -42,10 +47,19 @@ internal static class ConditionalXmlResponse
         response.Headers.Add("Content-Type", $"{contentType}; charset=utf-8");
         response.Headers.Add("Cache-Control", cacheControl);
         response.Headers.Add("ETag", etag);
+        AddHeaders(response, extraHeaders);
 
         await response.WriteStringAsync(payload, cancellationToken);
 
         return response;
+    }
+
+    private static void AddHeaders(HttpResponseData response, (string Name, string Value)[] headers)
+    {
+        foreach (var (name, value) in headers)
+        {
+            response.Headers.Add(name, value);
+        }
     }
 
     /// <summary>

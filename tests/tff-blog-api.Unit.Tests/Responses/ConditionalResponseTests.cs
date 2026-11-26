@@ -3,12 +3,12 @@ using Tff.Blog.Api.Responses;
 
 namespace Tff.Blog.Api.Unit.Tests.Responses;
 
-public class ConditionalXmlResponseTests
+public class ConditionalResponseTests
 {
     [Fact]
     public void CreateETag_QuotesALowercaseSha256Hash()
     {
-        var etag = ConditionalXmlResponse.CreateETag("<root />");
+        var etag = ConditionalResponse.CreateETag("<root />");
 
         etag.Should().MatchRegex("^\"[0-9a-f]{64}\"$");
     }
@@ -16,17 +16,17 @@ public class ConditionalXmlResponseTests
     [Fact]
     public void CreateETag_IsStableForTheSamePayload()
     {
-        ConditionalXmlResponse.CreateETag("<root />")
+        ConditionalResponse.CreateETag("<root />")
             .Should()
-            .Be(ConditionalXmlResponse.CreateETag("<root />"));
+            .Be(ConditionalResponse.CreateETag("<root />"));
     }
 
     [Fact]
     public void CreateETag_ChangesWithThePayload()
     {
-        ConditionalXmlResponse.CreateETag("<root one=\"1\" />")
+        ConditionalResponse.CreateETag("<root one=\"1\" />")
             .Should()
-            .NotBe(ConditionalXmlResponse.CreateETag("<root one=\"2\" />"));
+            .NotBe(ConditionalResponse.CreateETag("<root one=\"2\" />"));
     }
 
     [Theory]
@@ -39,6 +39,6 @@ public class ConditionalXmlResponseTests
     [InlineData(null, "\"etag\"", false)]
     public void MatchesETag_ComparesTheIfNoneMatchHeader(string? header, string etag, bool expected)
     {
-        ConditionalXmlResponse.MatchesETag(header, etag).Should().Be(expected);
+        ConditionalResponse.MatchesETag(header, etag).Should().Be(expected);
     }
 }
